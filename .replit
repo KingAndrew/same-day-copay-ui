@@ -1,6 +1,7 @@
 modules = ["nodejs-20"]
 [nix]
 channel = "stable-24_05"
+packages = ["emacs"]
 
 [workflows]
 runButton = "Run"
@@ -13,3 +14,7 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx react-native start"
+
+[[ports]]
+localPort = 8081
+externalPort = 80
