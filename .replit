@@ -5,7 +5,7 @@ channel = "stable-24_05"
 packages = ["emacs"]
 
 [workflows]
-runButton = "Run"
+runButton = "Run Web"
 
 [[workflows.workflow]]
 name = "Run"
@@ -15,6 +15,15 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npx react-native start --host 0.0.0.0"
+
+[[workflows.workflow]]
+name = "Run Web"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run web"
 
 [[ports]]
 localPort = 8081
