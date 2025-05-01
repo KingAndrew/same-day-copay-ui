@@ -46,7 +46,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, "public"),
     },
-    port: 8081,
+    port: 3000,
     host: "0.0.0.0",
     hot: true,
     allowedHosts: "all", // Allow all hosts
