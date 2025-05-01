@@ -1,12 +1,11 @@
-
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: path.join(__dirname, 'index.web.js'),
+  entry: path.join(__dirname, "index.web.js"),
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: path.join(__dirname, "dist"),
+    filename: "bundle.js",
   },
   module: {
     rules: [
@@ -14,10 +13,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-            plugins: ['@babel/plugin-proposal-export-namespace-from'],
+            presets: ["@babel/preset-env", "@babel/preset-react"],
+            plugins: ["@babel/plugin-proposal-export-namespace-from"],
           },
         },
       },
@@ -25,7 +24,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
           },
         ],
       },
@@ -33,22 +32,23 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'react-native$': 'react-native-web',
+      "react-native$": "react-native-web",
     },
-    extensions: ['.web.js', '.js'],
+    extensions: [".web.js", ".js"],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'public', 'index.html'),
+      template: path.join(__dirname, "public", "index.html"),
     }),
   ],
   devServer: {
     historyApiFallback: true,
     static: {
-      directory: path.join(__dirname, 'public'),
+      directory: path.join(__dirname, "public"),
     },
     port: 8081,
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     hot: true,
+    allowedHosts: "all", // Allow all hosts
   },
 };
