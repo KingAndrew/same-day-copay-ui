@@ -106,6 +106,14 @@ const LoginScreen = ({ navigateTo }) => {
           </TouchableOpacity>
         </View>
         
+        <View style={styles.loginLogoContainer}>
+          <img 
+            src="/images/logo.png" 
+            style={styles.loginLogo} 
+            alt="Same Day Co-Pay Logo"
+          />
+        </View>
+        
         {activeTab === 'login' ? (
           <>
             <View style={styles.formGroup}>
@@ -115,6 +123,7 @@ const LoginScreen = ({ navigateTo }) => {
                 value={username}
                 onChangeText={setUsername}
                 placeholder="Enter your username"
+                placeholderTextColor="#a8a8a8"
                 autoCapitalize="none"
               />
             </View>
@@ -125,12 +134,13 @@ const LoginScreen = ({ navigateTo }) => {
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter your password"
+                placeholderTextColor="#a8a8a8"
                 secureTextEntry
               />
+              <TouchableOpacity style={styles.forgotPasswordContainer}>
+                <Text style={styles.forgotPassword}>Forgot your password?</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <Text style={styles.forgotPassword}>Forgot your password?</Text>
-            </TouchableOpacity>
             <TouchableOpacity 
               style={[
                 styles.button, 
@@ -154,6 +164,7 @@ const LoginScreen = ({ navigateTo }) => {
                 value={signupEmail}
                 onChangeText={setSignupEmail}
                 placeholder="Enter your email"
+                placeholderTextColor="#a8a8a8"
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
@@ -165,6 +176,7 @@ const LoginScreen = ({ navigateTo }) => {
                 value={signupPassword}
                 onChangeText={setSignupPassword}
                 placeholder="Create a password"
+                placeholderTextColor="#a8a8a8"
                 secureTextEntry
               />
             </View>
@@ -408,11 +420,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: '#FFFFFF',
   },
+  loginLogoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  loginLogo: {
+    width: 120,
+    height: 120,
+    resizeMode: 'contain',
+  },
+  forgotPasswordContainer: {
+    alignSelf: 'flex-end',
+    marginTop: 8,
+  },
   forgotPassword: {
     color: '#032f54',
     fontSize: 14,
-    textAlign: 'right',
-    marginBottom: 16,
     textDecorationLine: 'underline',
   },
   disabledButton: {
