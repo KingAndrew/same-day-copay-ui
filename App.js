@@ -75,6 +75,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
   const [password, setPassword] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
+  const [focusedInput, setFocusedInput] = useState(null);
 
   // Check if login form is valid
   const isLoginFormValid = username.trim() !== "" && password.trim() !== "";
@@ -153,23 +154,33 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
             <View style={styles.formGroup}>
               <Text style={styles.label}>Username</Text>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  focusedInput === 'username' && styles.inputFocused
+                ]}
                 value={username}
                 onChangeText={setUsername}
                 placeholder="Enter your username"
                 placeholderTextColor="#a8a8a8"
                 autoCapitalize="none"
+                onFocus={() => setFocusedInput('username')}
+                onBlur={() => setFocusedInput(null)}
               />
             </View>
             <View style={styles.formGroup}>
               <Text style={styles.label}>Password</Text>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  focusedInput === 'password' && styles.inputFocused
+                ]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter your password"
                 placeholderTextColor="#a8a8a8"
                 secureTextEntry
+                onFocus={() => setFocusedInput('password')}
+                onBlur={() => setFocusedInput(null)}
               />
             </View>
             <TouchableOpacity
@@ -198,24 +209,34 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
             <View style={styles.formGroup}>
               <Text style={styles.label}>Email</Text>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  focusedInput === 'email' && styles.inputFocused
+                ]}
                 value={signupEmail}
                 onChangeText={setSignupEmail}
                 placeholder="Enter your email"
                 placeholderTextColor="#a8a8a8"
                 keyboardType="email-address"
                 autoCapitalize="none"
+                onFocus={() => setFocusedInput('email')}
+                onBlur={() => setFocusedInput(null)}
               />
             </View>
             <View style={styles.formGroup}>
               <Text style={styles.label}>Password</Text>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  focusedInput === 'newpassword' && styles.inputFocused
+                ]}
                 value={signupPassword}
                 onChangeText={setSignupPassword}
                 placeholder="Create a password"
                 placeholderTextColor="#a8a8a8"
                 secureTextEntry
+                onFocus={() => setFocusedInput('newpassword')}
+                onBlur={() => setFocusedInput(null)}
               />
             </View>
             <TouchableOpacity
@@ -610,6 +631,9 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     backgroundColor: "#FFFFFF",
+  },
+  inputFocused: {
+    borderColor: "#1b702d",
   },
   loginLogoContainer: {
     alignItems: "center",
