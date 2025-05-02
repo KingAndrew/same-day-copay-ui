@@ -56,26 +56,78 @@ const HomeScreen = ({ navigateTo }) => (
   </View>
 );
 
-const LoginScreen = ({ navigateTo }) => (
-  <View style={styles.screen}>
-    <View style={styles.box}>
-      <Text style={styles.title}>Login</Text>
-      <Text style={styles.description}>Login screen placeholder</Text>
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={() => navigateTo('main-menu')}
-      >
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={[styles.button, styles.secondaryButton]} 
-        onPress={() => navigateTo('home')}
-      >
-        <Text style={styles.secondaryButtonText}>Back</Text>
-      </TouchableOpacity>
+const LoginScreen = ({ navigateTo }) => {
+  const [activeTab, setActiveTab] = useState('login');
+  
+  return (
+    <View style={styles.screen}>
+      <View style={styles.box}>
+        <View style={styles.tabContainer}>
+          <TouchableOpacity 
+            style={[
+              styles.tabButton, 
+              activeTab === 'login' && styles.activeTabButton
+            ]} 
+            onPress={() => setActiveTab('login')}
+          >
+            <Text style={[
+              styles.tabButtonText, 
+              activeTab === 'login' ? styles.activeTabText : styles.inactiveTabText
+            ]}>
+              Login
+            </Text>
+            {activeTab === 'login' && <View style={styles.tabIndicator} />}
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[
+              styles.tabButton, 
+              activeTab === 'signup' && styles.activeTabButton
+            ]} 
+            onPress={() => setActiveTab('signup')}
+          >
+            <Text style={[
+              styles.tabButtonText, 
+              activeTab === 'signup' ? styles.activeTabText : styles.inactiveTabText
+            ]}>
+              Sign up
+            </Text>
+            {activeTab === 'signup' && <View style={styles.tabIndicator} />}
+          </TouchableOpacity>
+        </View>
+        
+        {activeTab === 'login' ? (
+          <>
+            <Text style={styles.description}>Login screen placeholder</Text>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() => navigateTo('main-menu')}
+            >
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <Text style={styles.description}>Sign up screen placeholder</Text>
+            <TouchableOpacity 
+              style={styles.button} 
+              onPress={() => navigateTo('main-menu')}
+            >
+              <Text style={styles.buttonText}>Sign up</Text>
+            </TouchableOpacity>
+          </>
+        )}
+        
+        <TouchableOpacity 
+          style={[styles.button, styles.secondaryButton]} 
+          onPress={() => navigateTo('home')}
+        >
+          <Text style={styles.secondaryButtonText}>Back</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const MainMenuScreen = ({ navigateTo }) => (
   <View style={styles.screen}>
@@ -238,6 +290,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333333',
     fontWeight: '500',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#DDDDDD',
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  activeTabButton: {
+    borderBottomColor: '#032f54',
+  },
+  tabButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    fontFamily: 'Montserrat Bold, sans-serif',
+  },
+  activeTabText: {
+    color: '#032f54',
+  },
+  inactiveTabText: {
+    color: '#999999',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: -1,
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: '#032f54',
   }
 });
 
