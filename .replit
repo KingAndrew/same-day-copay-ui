@@ -2,7 +2,6 @@
 modules = ["nodejs-20"]
 [nix]
 channel = "stable-24_05"
-packages = ["emacs"]
 
 [workflows]
 runButton = "Run Web"
@@ -14,7 +13,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npx react-native start --host 0.0.0.0"
+args = "bash ./pre_stop.sh && npx react-native start --host 0.0.0.0"
 
 [[workflows.workflow]]
 name = "Run Web"
@@ -23,7 +22,7 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run web"
+args = "bash ./pre_stop.sh && npm run web"
 
 [[ports]]
 localPort = 3000
