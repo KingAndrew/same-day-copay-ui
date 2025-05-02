@@ -1,72 +1,50 @@
-
 import React from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Text style={styles.sectionTitle}>Same Day Copay UI</Text>
-          <Text style={styles.sectionDescription}>
-            Welcome to the Same Day Copay mobile application
-          </Text>
-        </View>
-      </ScrollView>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.box}>
+        <Text style={styles.title}>Same Day Copay UI</Text>
+        <Text style={styles.description}>
+          Welcome to the Same Day Copay mobile application
+        </Text>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
   },
-  sectionTitle: {
+  box: {
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    margin: 20,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  title: {
     fontSize: 24,
     fontWeight: '600',
-    padding: 24,
+    marginBottom: 16,
+    color: '#333333',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    padding: 24,
-  },
-  highlight: {
-    fontWeight: '700',
+  description: {
+    fontSize: 16,
+    color: '#666666',
+    lineHeight: 24,
   },
 });
 
