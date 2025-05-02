@@ -2,6 +2,7 @@
 modules = ["nodejs-20"]
 [nix]
 channel = "stable-24_05"
+packages = ["unixtools.netstat"]
 
 [workflows]
 runButton = "Run Web"
