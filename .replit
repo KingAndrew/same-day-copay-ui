@@ -26,5 +26,9 @@ task = "shell.exec"
 args = "npm run web"
 
 [[ports]]
+localPort = 3000
+externalPort = 3000
+
+[[ports]]
 localPort = 8081
 externalPort = 80
