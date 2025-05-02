@@ -641,6 +641,7 @@ const styles = StyleSheet.create({
   },
   inputFocused: {
     borderColor: "#1b702d",
+    borderWidth: 2,
   },
   loginLogoContainer: {
     alignItems: "center",
