@@ -325,8 +325,8 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
           >
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
-                <View style={[styles.menuIcon, { backgroundColor: "#1b702d" }]}>
-                  <Text style={styles.iconText}>+</Text>
+                <View style={[styles.menuIcon, { backgroundColor: "#1b702d", padding: 0 }]}>
+                  <img src="/images/dollar-sign.png" style={{ width: 36, height: 36 }} alt="Dollar Sign" />
                 </View>
               </View>
               <Text style={styles.menuItemText}>New Purchase</Text>
@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     flexDirection: "row",
-    backgroundColor: "#F8F8F8",
+    backgroundColor: "#032f54",
     padding: 16,
     borderRadius: 6,
     alignItems: "center",
@@ -735,7 +735,7 @@ const styles = StyleSheet.create({
   },
   subMenuItem: {
     flexDirection: "row",
-    backgroundColor: "#F8F8F8",
+    backgroundColor: "#032f54",
     padding: 12,
     paddingLeft: 30,
     borderRadius: 6,
