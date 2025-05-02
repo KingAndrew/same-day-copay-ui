@@ -37,7 +37,13 @@ function App() {
 const HomeScreen = ({ navigateTo }) => (
   <View style={styles.screen}>
     <View style={styles.box}>
-      <Text style={styles.title}>Same Day Copay UI</Text>
+      <View style={styles.logoContainer}>
+        <img 
+          src="/images/logo.png" 
+          style={styles.logo} 
+          alt="Same Day Co-Pay Logo"
+        />
+      </View>
       <Text style={styles.description}>
         Welcome to the Same Day Copay mobile application
       </Text>
@@ -163,6 +169,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
   },
   box: {
     padding: 20,
