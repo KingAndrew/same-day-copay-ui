@@ -339,7 +339,7 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
                 <View style={[styles.menuIcon, { backgroundColor: "#1b702d", padding: 0 }]}>
-                  <img src="/images/dollar-sign-icon.png" style={{ width: 36, height: 36 }} alt="Dollar Sign" />
+                  <img src="/images/dollar-sign.png" style={{ width: 36, height: 36 }} alt="Dollar Sign" />
                 </View>
               </View>
               <Text style={styles.menuItemText}>New Purchase</Text>
@@ -354,7 +354,7 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
                 <View style={[styles.menuIcon, { backgroundColor: "#032f54", padding: 0 }]}>
-                  <img src="/images/account-icon.png" style={{ width: 36, height: 36 }} alt="Account" />
+                  <img src="/attached_assets/account_circle_icon.png" style={{ width: 36, height: 36 }} alt="Account" />
                 </View>
               </View>
               <Text style={styles.menuItemText}>Account</Text>
