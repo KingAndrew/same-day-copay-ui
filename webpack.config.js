@@ -37,6 +37,13 @@ module.exports = {
   resolve: {
     alias: {
       'react-native$': 'react-native-web',
+      // Add specific module resolutions for react-native components
+      'react-native/Libraries/EventEmitter/': 'react-native-web/dist/vendor/react-native/EventEmitter/',
+      'react-native/Libraries/vendor/emitter/': 'react-native-web/dist/vendor/react-native/emitter/',
+      'react-native/Libraries/Components/View/': 'react-native-web/dist/exports/View/',
+      'react-native/Libraries/Image/': 'react-native-web/dist/exports/Image/',
+      'react-native/Libraries/Text/': 'react-native-web/dist/exports/Text/',
+      'react-native/Libraries/Utilities/': 'react-native-web/dist/modules/',
     },
     extensions: ['.web.js', '.js'],
   },
