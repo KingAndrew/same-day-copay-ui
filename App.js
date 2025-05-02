@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  TextInput,
 } from 'react-native';
 
 function App() {
@@ -58,6 +59,15 @@ const HomeScreen = ({ navigateTo }) => (
 
 const LoginScreen = ({ navigateTo }) => {
   const [activeTab, setActiveTab] = useState('login');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [signupPassword, setSignupPassword] = useState('');
+  
+  // Check if login form is valid
+  const isLoginFormValid = username.trim() !== '' && password.trim() !== '';
+  // Check if signup form is valid
+  const isSignupFormValid = signupEmail.trim() !== '' && signupPassword.trim() !== '';
   
   return (
     <View style={styles.screen}>
@@ -98,22 +108,78 @@ const LoginScreen = ({ navigateTo }) => {
         
         {activeTab === 'login' ? (
           <>
-            <Text style={styles.description}>Login screen placeholder</Text>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Username</Text>
+              <TextInput
+                style={styles.input}
+                value={username}
+                onChangeText={setUsername}
+                placeholder="Enter your username"
+                autoCapitalize="none"
+              />
+            </View>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Enter your password"
+                secureTextEntry
+              />
+            </View>
+            <TouchableOpacity>
+              <Text style={styles.forgotPassword}>Forgot your password?</Text>
+            </TouchableOpacity>
             <TouchableOpacity 
-              style={styles.button} 
-              onPress={() => navigateTo('main-menu')}
+              style={[
+                styles.button, 
+                !isLoginFormValid && styles.disabledButton
+              ]} 
+              onPress={() => isLoginFormValid && navigateTo('main-menu')}
+              disabled={!isLoginFormValid}
             >
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={[
+                styles.buttonText,
+                !isLoginFormValid && styles.disabledButtonText
+              ]}>Login</Text>
             </TouchableOpacity>
           </>
         ) : (
           <>
-            <Text style={styles.description}>Sign up screen placeholder</Text>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                value={signupEmail}
+                onChangeText={setSignupEmail}
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                style={styles.input}
+                value={signupPassword}
+                onChangeText={setSignupPassword}
+                placeholder="Create a password"
+                secureTextEntry
+              />
+            </View>
             <TouchableOpacity 
-              style={styles.button} 
-              onPress={() => navigateTo('main-menu')}
+              style={[
+                styles.button,
+                !isSignupFormValid && styles.disabledButton
+              ]} 
+              onPress={() => isSignupFormValid && navigateTo('main-menu')}
+              disabled={!isSignupFormValid}
             >
-              <Text style={styles.buttonText}>Sign up</Text>
+              <Text style={[
+                styles.buttonText,
+                !isSignupFormValid && styles.disabledButtonText
+              ]}>Sign up</Text>
             </TouchableOpacity>
           </>
         )}
@@ -257,7 +323,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#4285F4',
+    backgroundColor: '#1b702d',
     padding: 14,
     borderRadius: 6,
     alignItems: 'center',
@@ -283,7 +349,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 6,
     borderLeftWidth: 4,
-    borderLeftColor: '#4285F4',
+    borderLeftColor: '#1b702d',
     marginBottom: 12,
   },
   menuItemText: {
@@ -324,6 +390,37 @@ const styles = StyleSheet.create({
     right: 0,
     height: 2,
     backgroundColor: '#032f54',
+  },
+  formGroup: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+    color: '#333333',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    borderRadius: 6,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: '#FFFFFF',
+  },
+  forgotPassword: {
+    color: '#032f54',
+    fontSize: 14,
+    textAlign: 'right',
+    marginBottom: 16,
+    textDecorationLine: 'underline',
+  },
+  disabledButton: {
+    backgroundColor: '#1b702d',
+    opacity: 0.5,
+  },
+  disabledButtonText: {
+    opacity: 0.8,
   }
 });
 
