@@ -267,11 +267,18 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
   const [accountExpanded, setAccountExpanded] = useState(false);
   const amountAnim = useRef(new Animated.Value(0)).current;
   const [displayedAmount, setDisplayedAmount] = useState("0.00");
+  const audioRef = useRef(null);
 
   useEffect(() => {
+    // Initialize audio
+    audioRef.current = new Audio('/banknote-counter-106014.mp3');
+    
     // Animate the counting effect
     const totalAmount = userData?.totalRefunded || 1024.56;
     const duration = 1500; // 1.5 seconds
+
+    // Play the sound
+    audioRef.current.play().catch(e => console.log("Audio play error:", e));
 
     Animated.timing(amountAnim, {
       toValue: totalAmount * 100, // Convert to cents for smoother animation
@@ -296,7 +303,13 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
 
     updateCounter();
 
-    return () => amountAnim.removeAllListeners();
+    return () => {
+      amountAnim.removeAllListeners();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
   }, []);
 
   return (
@@ -326,7 +339,7 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
                 <View style={[styles.menuIcon, { backgroundColor: "#1b702d", padding: 0 }]}>
-                  <img src="/images/dollar-sign.png" style={{ width: 36, height: 36 }} alt="Dollar Sign" />
+                  <img src="/images/dollar-sign-icon.png" style={{ width: 36, height: 36 }} alt="Dollar Sign" />
                 </View>
               </View>
               <Text style={styles.menuItemText}>New Purchase</Text>
@@ -340,8 +353,8 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
           >
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
-                <View style={[styles.menuIcon, { backgroundColor: "#032f54" }]}>
-                  <Text style={styles.iconText}>@</Text>
+                <View style={[styles.menuIcon, { backgroundColor: "#032f54", padding: 0 }]}>
+                  <img src="/images/account-icon.png" style={{ width: 36, height: 36 }} alt="Account" />
                 </View>
               </View>
               <Text style={styles.menuItemText}>Account</Text>
