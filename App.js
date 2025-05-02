@@ -531,7 +531,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: "#032f54",
     textAlign: "center",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   description: {
     fontSize: 16,
@@ -539,7 +540,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 20,
     textAlign: "center",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   button: {
     backgroundColor: "#1b702d",
@@ -552,7 +554,8 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   secondaryButton: {
     backgroundColor: "#FFFFFF",
@@ -563,7 +566,8 @@ const styles = StyleSheet.create({
     color: "#666666",
     fontSize: 16,
     fontWeight: "600",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   menuItem: {
     flexDirection: "row",
@@ -578,7 +582,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "500",
     flex: 1,
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   tabContainer: {
     flexDirection: "row",
@@ -598,7 +603,8 @@ const styles = StyleSheet.create({
   tabButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   activeTabText: {
     color: "#032f54",
@@ -622,7 +628,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginBottom: 8,
     color: "#032f54",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   input: {
     borderWidth: 1,
@@ -652,7 +659,8 @@ const styles = StyleSheet.create({
     color: "#032f54",
     fontSize: 14,
     textDecorationLine: "underline",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   disabledButton: {
     backgroundColor: "#1b702d",
@@ -666,27 +674,31 @@ const styles = StyleSheet.create({
     color: "#032f54",
     textAlign: "center",
     marginBottom: 8,
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   usernameText: {
     fontSize: 20,
     color: "#032f54",
     textAlign: "center",
     marginBottom: 24,
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   totalRefundedLabel: {
     fontSize: 18,
     color: "#1b702d",
     textAlign: "center",
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   amountText: {
     fontSize: 64,
     color: "#032f54",
     textAlign: "center",
     marginBottom: 30,
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
   menuContainer: {
     width: "100%",
@@ -733,7 +745,8 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "500",
     flex: 1,
-    fontFamily: "Montserrat Bold, sans-serif",
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
   },
 });
 
