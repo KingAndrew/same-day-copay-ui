@@ -126,47 +126,55 @@ const FormInput = ({
 );
 
 // Tab component for login/signup
-const TabSelector = ({ activeTab, setActiveTab }) => (
-  <View style={styles.tabContainer}>
-    <TouchableOpacity
-      style={[
-        styles.tabButton,
-        activeTab === "login" && styles.activeTabButton,
-      ]}
-      onPress={() => setActiveTab("login")}
-    >
-      <Text
-        style={[
-          styles.tabButtonText,
-          activeTab === "login" ? styles.activeTabText : styles.inactiveTabText,
-        ]}
-      >
-        Login
-      </Text>
-      {activeTab === "login" && <View style={styles.tabIndicator} />}
-    </TouchableOpacity>
+const TabSelector = ({ activeTab, setActiveTab }) => {
+  // Animation ref to track position
+  const [indicatorLeft, setIndicatorLeft] = useState(activeTab === "login" ? "0%" : "50%");
+  
+  // Update indicator position with animation effect
+  useEffect(() => {
+    setIndicatorLeft(activeTab === "login" ? "0%" : "50%");
+  }, [activeTab]);
 
-    <TouchableOpacity
-      style={[
-        styles.tabButton,
-        activeTab === "signup" && styles.activeTabButton,
-      ]}
-      onPress={() => setActiveTab("signup")}
-    >
-      <Text
-        style={[
-          styles.tabButtonText,
-          activeTab === "signup"
-            ? styles.activeTabText
-            : styles.inactiveTabText,
-        ]}
+  return (
+    <View style={styles.tabContainer}>
+      <TouchableOpacity
+        style={styles.tabButton}
+        onPress={() => setActiveTab("login")}
       >
-        Sign up
-      </Text>
-      {activeTab === "signup" && <View style={styles.tabIndicator} />}
-    </TouchableOpacity>
-  </View>
-);
+        <Text
+          style={[
+            styles.tabButtonText,
+            activeTab === "login" ? styles.activeTabText : styles.inactiveTabText,
+          ]}
+        >
+          Login
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.tabButton}
+        onPress={() => setActiveTab("signup")}
+      >
+        <Text
+          style={[
+            styles.tabButtonText,
+            activeTab === "signup" ? styles.activeTabText : styles.inactiveTabText,
+          ]}
+        >
+          Sign up
+        </Text>
+      </TouchableOpacity>
+      
+      {/* Sliding indicator */}
+      <View 
+        style={[
+          styles.tabIndicator, 
+          { left: indicatorLeft, transition: "all 0.3s ease-in-out" }
+        ]} 
+      />
+    </View>
+  );
+};
 
 const LoginScreen = ({ navigateTo, setUserData }) => {
   const [activeTab, setActiveTab] = useState("login");
@@ -772,21 +780,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: Colors.LIGHT_GRAY,
+    position: "relative",
+    height: 36,
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 8,
     alignItems: "center",
-    position: "relative",
-  },
-  activeTabButton: {
-    borderBottomColor: Colors.NAVY_BLUE,
   },
   tabButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 14,
     fontFamily: "Montserrat, sans-serif",
-    fontWeight: "700",
+    fontWeight: "500",
   },
   activeTabText: {
     color: Colors.NAVY_BLUE,
@@ -797,8 +802,7 @@ const styles = StyleSheet.create({
   tabIndicator: {
     position: "absolute",
     bottom: -1,
-    left: 0,
-    right: 0,
+    width: "50%",
     height: 2,
     backgroundColor: Colors.NAVY_BLUE,
   },
@@ -827,11 +831,12 @@ const styles = StyleSheet.create({
   },
   loginLogoContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 30,
+    marginTop: 10,
   },
   loginLogo: {
-    width: 120,
-    height: 120,
+    width: 160,
+    height: 160,
     resizeMode: "contain",
   },
   forgotPasswordContainer: {
