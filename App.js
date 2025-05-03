@@ -10,7 +10,7 @@ import {
   Animated,
   Image,
 } from "react-native";
-import { URLs, Colors } from './constants';
+import { URLs, Colors } from "./constants";
 
 // Reusable UI components
 const AppButton = ({ onPress, text, style, textStyle, disabled }) => {
@@ -20,16 +20,23 @@ const AppButton = ({ onPress, text, style, textStyle, disabled }) => {
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={[styles.buttonText, textStyle, disabled && styles.disabledButtonText]}>
+      <Text
+        style={[
+          styles.buttonText,
+          textStyle,
+          disabled && styles.disabledButtonText,
+        ]}
+      >
         {text}
       </Text>
     </TouchableOpacity>
   );
 };
 
-const AppLogo = ({ size = 'large' }) => {
-  const logoStyle = size === 'large' ? styles.logo : styles.loginLogo;
-  const containerStyle = size === 'large' ? styles.logoContainer : styles.loginLogoContainer;
+const AppLogo = ({ size = "large" }) => {
+  const logoStyle = size === "large" ? styles.logo : styles.loginLogo;
+  const containerStyle =
+    size === "large" ? styles.logoContainer : styles.loginLogoContainer;
 
   return (
     <View style={containerStyle}>
@@ -84,23 +91,27 @@ const HomeScreen = ({ navigateTo }) => (
       <Text style={styles.description}>
         Welcome to the Same Day Copay mobile application
       </Text>
-      <AppButton 
-        text="Get Started" 
-        onPress={() => navigateTo("login")} 
-      />
+      <AppButton text="Get Started" onPress={() => navigateTo("login")} />
     </View>
   </View>
 );
 
 // Reusable form input component
-const FormInput = ({ label, value, onChangeText, placeholder, secureTextEntry = false, keyboardType = "default", inputId, focusedInput, setFocusedInput }) => (
+const FormInput = ({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  secureTextEntry = false,
+  keyboardType = "default",
+  inputId,
+  focusedInput,
+  setFocusedInput,
+}) => (
   <View style={styles.formGroup}>
     <Text style={styles.label}>{label}</Text>
     <TextInput
-      style={[
-        styles.input,
-        focusedInput === inputId && styles.inputFocused,
-      ]}
+      style={[styles.input, focusedInput === inputId && styles.inputFocused]}
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
@@ -127,9 +138,7 @@ const TabSelector = ({ activeTab, setActiveTab }) => (
       <Text
         style={[
           styles.tabButtonText,
-          activeTab === "login"
-            ? styles.activeTabText
-            : styles.inactiveTabText,
+          activeTab === "login" ? styles.activeTabText : styles.inactiveTabText,
         ]}
       >
         Login
@@ -170,7 +179,8 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
   // Check if login form is valid
   const isLoginFormValid = username.trim() !== "" && password.trim() !== "";
   // Check if signup form is valid
-  const isSignupFormValid = signupEmail.trim() !== "" && signupPassword.trim() !== "";
+  const isSignupFormValid =
+    signupEmail.trim() !== "" && signupPassword.trim() !== "";
 
   const handleLogin = () => {
     // Mock authentication
@@ -189,7 +199,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
     <View style={styles.screen}>
       <View style={styles.box}>
         <TabSelector activeTab={activeTab} setActiveTab={setActiveTab} />
-        <AppLogo size="small" />
+        <AppLogo size="medium" />
 
         {activeTab === "login" ? (
           <>
@@ -265,14 +275,16 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
 };
 
 // Reusable menu item component
-const MenuItem = ({ icon, text, onPress, chevronText = '›' }) => (
-  <TouchableOpacity
-    style={styles.menuItemContainer}
-    onPress={onPress}
-  >
+const MenuItem = ({ icon, text, onPress, chevronText = "›" }) => (
+  <TouchableOpacity style={styles.menuItemContainer} onPress={onPress}>
     <View style={styles.menuItem}>
       <View style={styles.menuIconContainer}>
-        <View style={[styles.menuIcon, { backgroundColor: Colors.NAVY_BLUE, padding: 0 }]}>
+        <View
+          style={[
+            styles.menuIcon,
+            { backgroundColor: Colors.NAVY_BLUE, padding: 0 },
+          ]}
+        >
           <Image
             source={{ uri: `${URLs.IMAGES}/${icon}` }}
             style={{ width: 36, height: 36 }}
@@ -288,10 +300,7 @@ const MenuItem = ({ icon, text, onPress, chevronText = '›' }) => (
 
 // Reusable sub-menu item component
 const SubMenuItem = ({ text, onPress }) => (
-  <TouchableOpacity
-    style={styles.subMenuItemContainer}
-    onPress={onPress}
-  >
+  <TouchableOpacity style={styles.subMenuItemContainer} onPress={onPress}>
     <View style={styles.subMenuItem}>
       <Text style={styles.subMenuItemText}>{text}</Text>
       <Text style={styles.chevron}>›</Text>
@@ -358,7 +367,7 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
   return (
     <View style={styles.screen}>
       <View style={styles.boxFull}>
-        <AppLogo size="small" />
+        <AppLogo size="medium" />
 
         <Text style={styles.welcomeText}>Welcome Back</Text>
         <Text style={styles.usernameText}>
@@ -370,38 +379,38 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
 
         <View style={styles.menuContainer}>
           {/* New Purchase Menu Item */}
-          <MenuItem 
-            icon="dollar_circle_icon.png" 
-            text="New Purchase" 
-            onPress={() => navigateTo("new-purchase")} 
+          <MenuItem
+            icon="dollar_circle_icon.png"
+            text="New Purchase"
+            onPress={() => navigateTo("new-purchase")}
           />
 
           {/* Account Menu Item */}
-          <MenuItem 
-            icon="account_circle_icon.png" 
-            text="Account" 
-            onPress={() => setAccountExpanded(!accountExpanded)} 
+          <MenuItem
+            icon="account_circle_icon.png"
+            text="Account"
+            onPress={() => setAccountExpanded(!accountExpanded)}
             chevronText={accountExpanded ? "⌃" : "⌄"}
           />
 
           {accountExpanded && (
             <>
-              <SubMenuItem 
-                text="Account Setup" 
-                onPress={() => navigateTo("account-setup")} 
+              <SubMenuItem
+                text="Account Setup"
+                onPress={() => navigateTo("account-setup")}
               />
-              <SubMenuItem 
-                text="Account History" 
-                onPress={() => navigateTo("account-history")} 
+              <SubMenuItem
+                text="Account History"
+                onPress={() => navigateTo("account-history")}
               />
             </>
           )}
 
           {/* About Menu Item */}
-          <MenuItem 
-            icon="info_ic_icon.png" 
-            text="About" 
-            onPress={() => navigateTo("about")} 
+          <MenuItem
+            icon="info_ic_icon.png"
+            text="About"
+            onPress={() => navigateTo("about")}
           />
         </View>
       </View>
@@ -416,8 +425,8 @@ const BasicScreen = ({ title, description, children, navigateTo }) => (
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
       {children}
-      <AppButton 
-        text="Back" 
+      <AppButton
+        text="Back"
         onPress={() => navigateTo("main-menu")}
         style={styles.secondaryButton}
         textStyle={styles.secondaryButtonText}
@@ -427,52 +436,46 @@ const BasicScreen = ({ title, description, children, navigateTo }) => (
 );
 
 const AccountSetupScreen = ({ navigateTo }) => (
-  <BasicScreen 
-    title="Account Setup" 
-    description="Account setup placeholder" 
+  <BasicScreen
+    title="Account Setup"
+    description="Account setup placeholder"
     navigateTo={navigateTo}
   />
 );
 
 const AccountHistoryScreen = ({ navigateTo }) => (
-  <BasicScreen 
-    title="Account History" 
-    description="Account history placeholder" 
+  <BasicScreen
+    title="Account History"
+    description="Account history placeholder"
     navigateTo={navigateTo}
   />
 );
 
 const AboutScreen = ({ navigateTo }) => (
-  <BasicScreen 
-    title="About" 
-    description="About page placeholder" 
+  <BasicScreen
+    title="About"
+    description="About page placeholder"
     navigateTo={navigateTo}
   />
 );
 
 const NewPurchaseScreen = ({ navigateTo }) => (
-  <BasicScreen 
-    title="New Purchase" 
-    description="New purchase form placeholder" 
+  <BasicScreen
+    title="New Purchase"
+    description="New purchase form placeholder"
     navigateTo={navigateTo}
   >
-    <AppButton 
-      text="Submit" 
-      onPress={() => navigateTo("main-menu")}
-    />
+    <AppButton text="Submit" onPress={() => navigateTo("main-menu")} />
   </BasicScreen>
 );
 
 const SnapReceiptScreen = ({ navigateTo }) => (
-  <BasicScreen 
-    title="Snap Receipt" 
-    description="Camera interface placeholder" 
+  <BasicScreen
+    title="Snap Receipt"
+    description="Camera interface placeholder"
     navigateTo={navigateTo}
   >
-    <AppButton 
-      text="Take Photo" 
-      onPress={() => navigateTo("main-menu")}
-    />
+    <AppButton text="Take Photo" onPress={() => navigateTo("main-menu")} />
   </BasicScreen>
 );
 
@@ -502,7 +505,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: "100%",
     maxWidth: 500,
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     elevation: 3,
   },
   boxFull: {
@@ -513,7 +516,7 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     height: "100%",
     maxHeight: 800,
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
     elevation: 3,
   },
   title: {
