@@ -10,6 +10,7 @@ import {
   Animated,
   Image,
 } from "react-native";
+import { URLs, Colors } from './constants'; // Importing constants
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("home");
@@ -156,14 +157,14 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === 'username' && styles.inputFocused
+                  focusedInput === "username" && styles.inputFocused,
                 ]}
                 value={username}
                 onChangeText={setUsername}
                 placeholder="Enter your username"
                 placeholderTextColor="#a8a8a8"
                 autoCapitalize="none"
-                onFocus={() => setFocusedInput('username')}
+                onFocus={() => setFocusedInput("username")}
                 onBlur={() => setFocusedInput(null)}
               />
             </View>
@@ -172,14 +173,14 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === 'password' && styles.inputFocused
+                  focusedInput === "password" && styles.inputFocused,
                 ]}
                 value={password}
                 onChangeText={setPassword}
                 placeholder="Enter your password"
                 placeholderTextColor="#a8a8a8"
                 secureTextEntry
-                onFocus={() => setFocusedInput('password')}
+                onFocus={() => setFocusedInput("password")}
                 onBlur={() => setFocusedInput(null)}
               />
             </View>
@@ -211,7 +212,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === 'email' && styles.inputFocused
+                  focusedInput === "email" && styles.inputFocused,
                 ]}
                 value={signupEmail}
                 onChangeText={setSignupEmail}
@@ -219,7 +220,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
                 placeholderTextColor="#a8a8a8"
                 keyboardType="email-address"
                 autoCapitalize="none"
-                onFocus={() => setFocusedInput('email')}
+                onFocus={() => setFocusedInput("email")}
                 onBlur={() => setFocusedInput(null)}
               />
             </View>
@@ -228,14 +229,14 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               <TextInput
                 style={[
                   styles.input,
-                  focusedInput === 'newpassword' && styles.inputFocused
+                  focusedInput === "newpassword" && styles.inputFocused,
                 ]}
                 value={signupPassword}
                 onChangeText={setSignupPassword}
                 placeholder="Create a password"
                 placeholderTextColor="#a8a8a8"
                 secureTextEntry
-                onFocus={() => setFocusedInput('newpassword')}
+                onFocus={() => setFocusedInput("newpassword")}
                 onBlur={() => setFocusedInput(null)}
               />
             </View>
@@ -271,14 +272,14 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
 
   useEffect(() => {
     // Initialize audio
-    audioRef.current = new Audio('/banknote-counter-106014.mp3');
-    
+    audioRef.current = new Audio("/audio/banknote-counter-106014.mp3");
+
     // Animate the counting effect
     const totalAmount = userData?.totalRefunded || 1024.56;
     const duration = 1500; // 1.5 seconds
 
     // Play the sound
-    audioRef.current.play().catch(e => console.log("Audio play error:", e));
+    audioRef.current.play().catch((e) => console.log("Audio play error:", e));
 
     Animated.timing(amountAnim, {
       toValue: totalAmount * 100, // Convert to cents for smoother animation
@@ -338,23 +339,40 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
           >
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
-                <View style={[styles.menuIcon, { backgroundColor: "#1b702d", padding: 0 }]}>
-                  <img src="/images/dollar-sign.png" style={{ width: 36, height: 36 }} alt="Dollar Sign" />
+                <View
+                  style={[
+                    styles.menuIcon,
+                    { backgroundColor: "#032f54", padding: 0 },
+                  ]}
+                >
+                  <img
+                    src="/images/dollar_circle_icon.png"
+                    style={{ width: 36, height: 36 }}
+                    alt="Dollar Sign"
+                  />
                 </View>
               </View>
               <Text style={styles.menuItemText}>New Purchase</Text>
               <Text style={styles.chevron}>›</Text>
             </View>
           </TouchableOpacity>
-
           <TouchableOpacity
             style={styles.menuItemContainer}
             onPress={() => setAccountExpanded(!accountExpanded)}
           >
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
-                <View style={[styles.menuIcon, { backgroundColor: "#032f54", padding: 0 }]}>
-                  <img src="/attached_assets/account_circle_icon.png" style={{ width: 36, height: 36 }} alt="Account" />
+                <View
+                  style={[
+                    styles.menuIcon,
+                    { backgroundColor: "#032f54", padding: 0 },
+                  ]}
+                >
+                  <img
+                    src="/images/account_circle_icon.png"
+                    style={{ width: 36, height: 36 }}
+                    alt="Account"
+                  />
                 </View>
               </View>
               <Text style={styles.menuItemText}>Account</Text>
@@ -384,15 +402,23 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
               </TouchableOpacity>
             </>
           )}
-
           <TouchableOpacity
             style={styles.menuItemContainer}
             onPress={() => navigateTo("about")}
           >
             <View style={styles.menuItem}>
               <View style={styles.menuIconContainer}>
-                <View style={[styles.menuIcon, { backgroundColor: "#1b702d" }]}>
-                  <Text style={styles.iconText}>i</Text>
+                <View
+                  style={[
+                    styles.menuIcon,
+                    { backgroundColor: "#032f54", padding: 0 },
+                  ]}
+                >
+                  <img
+                    src="/images/info_ic_icon.png"
+                    style={{ width: 36, height: 36 }}
+                    alt="About"
+                  />
                 </View>
               </View>
               <Text style={styles.menuItemText}>About</Text>
@@ -495,7 +521,7 @@ const SnapReceiptScreen = ({ navigateTo }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: Colors.BACKGROUND,
   },
   screen: {
     flex: 1,
@@ -514,7 +540,7 @@ const styles = StyleSheet.create({
   },
   box: {
     padding: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.WHITE,
     borderRadius: 8,
     width: "100%",
     maxWidth: 500,
@@ -526,7 +552,7 @@ const styles = StyleSheet.create({
   },
   boxFull: {
     padding: 20,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.WHITE,
     borderRadius: 8,
     width: "100%",
     maxWidth: 500,
@@ -557,21 +583,21 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   button: {
-    backgroundColor: "#1b702d",
+    backgroundColor: Colors.FOREST_GREEN,
     padding: 14,
     borderRadius: 6,
     alignItems: "center",
     marginVertical: 8,
   },
   buttonText: {
-    color: "#FFFFFF",
+    color: Colors.WHITE,
     fontSize: 16,
     fontWeight: "600",
     fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
   },
   secondaryButton: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.WHITE,
     borderWidth: 1,
     borderColor: "#DDDDDD",
   },
