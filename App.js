@@ -30,11 +30,11 @@ const AppButton = ({ onPress, text, style, textStyle, disabled }) => {
 const AppLogo = ({ size = 'large' }) => {
   const logoStyle = size === 'large' ? styles.logo : styles.loginLogo;
   const containerStyle = size === 'large' ? styles.logoContainer : styles.loginLogoContainer;
-  
+
   return (
     <View style={containerStyle}>
-      <img
-        src={`${URLs.IMAGES}/logo.png`}
+      <Image
+        source={{ uri: `${URLs.IMAGES}/logo.png` }}
         style={logoStyle}
         alt="Same Day Co-Pay Logo"
       />
@@ -202,7 +202,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
             />
-            
+
             <FormInput
               label="Password"
               value={password}
@@ -213,7 +213,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
             />
-            
+
             <AppButton
               text="Login"
               onPress={() => isLoginFormValid && handleLogin()}
@@ -221,7 +221,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               style={!isLoginFormValid && styles.disabledButton}
               textStyle={!isLoginFormValid && styles.disabledButtonText}
             />
-            
+
             <TouchableOpacity style={styles.forgotPasswordContainer}>
               <Text style={styles.forgotPassword}>Forgot your password?</Text>
             </TouchableOpacity>
@@ -238,7 +238,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
             />
-            
+
             <FormInput
               label="Password"
               value={signupPassword}
@@ -249,7 +249,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
             />
-            
+
             <AppButton
               text="Sign up"
               onPress={() => isSignupFormValid && navigateTo("main-menu")}
@@ -273,8 +273,8 @@ const MenuItem = ({ icon, text, onPress, chevronText = '›' }) => (
     <View style={styles.menuItem}>
       <View style={styles.menuIconContainer}>
         <View style={[styles.menuIcon, { backgroundColor: Colors.NAVY_BLUE, padding: 0 }]}>
-          <img
-            src={`${URLs.IMAGES}/${icon}`}
+          <Image
+            source={{ uri: `${URLs.IMAGES}/${icon}` }}
             style={{ width: 36, height: 36 }}
             alt={text}
           />
@@ -375,7 +375,7 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
             text="New Purchase" 
             onPress={() => navigateTo("new-purchase")} 
           />
-          
+
           {/* Account Menu Item */}
           <MenuItem 
             icon="account_circle_icon.png" 
@@ -396,7 +396,7 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
               />
             </>
           )}
-          
+
           {/* About Menu Item */}
           <MenuItem 
             icon="info_ic_icon.png" 
@@ -502,10 +502,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: "100%",
     maxWidth: 500,
-    shadowColor: Colors.BLACK,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
     elevation: 3,
   },
   boxFull: {
@@ -516,10 +513,7 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     height: "100%",
     maxHeight: 800,
-    shadowColor: Colors.BLACK,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
     elevation: 3,
   },
   title: {

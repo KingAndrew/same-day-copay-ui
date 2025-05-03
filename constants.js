@@ -9,6 +9,8 @@ export const URLs = {
   API_BASE: 'https://api.samedaycopay.com',
   TERMS_OF_SERVICE: 'https://samedaycopay.com/terms',
   PRIVACY_POLICY: 'https://samedaycopay.com/privacy',
+  IMAGES: '/images',
+  AUDIO: '/audio',
 };
 
 // Colors used throughout the application
