@@ -10,7 +10,37 @@ import {
   Animated,
   Image,
 } from "react-native";
-import { URLs, Colors } from './constants'; // Importing constants
+import { URLs, Colors } from './constants';
+
+// Reusable UI components
+const AppButton = ({ onPress, text, style, textStyle, disabled }) => {
+  return (
+    <TouchableOpacity
+      style={[styles.button, style, disabled && styles.disabledButton]}
+      onPress={onPress}
+      disabled={disabled}
+    >
+      <Text style={[styles.buttonText, textStyle, disabled && styles.disabledButtonText]}>
+        {text}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+const AppLogo = ({ size = 'large' }) => {
+  const logoStyle = size === 'large' ? styles.logo : styles.loginLogo;
+  const containerStyle = size === 'large' ? styles.logoContainer : styles.loginLogoContainer;
+  
+  return (
+    <View style={containerStyle}>
+      <img
+        src={`${URLs.IMAGES}/logo.png`}
+        style={logoStyle}
+        alt="Same Day Co-Pay Logo"
+      />
+    </View>
+  );
+};
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("home");
@@ -50,23 +80,82 @@ function App() {
 const HomeScreen = ({ navigateTo }) => (
   <View style={styles.screen}>
     <View style={styles.box}>
-      <View style={styles.logoContainer}>
-        <img
-          src="/images/logo.png"
-          style={styles.logo}
-          alt="Same Day Co-Pay Logo"
-        />
-      </View>
+      <AppLogo size="large" />
       <Text style={styles.description}>
         Welcome to the Same Day Copay mobile application
       </Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigateTo("login")}
-      >
-        <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
+      <AppButton 
+        text="Get Started" 
+        onPress={() => navigateTo("login")} 
+      />
     </View>
+  </View>
+);
+
+// Reusable form input component
+const FormInput = ({ label, value, onChangeText, placeholder, secureTextEntry = false, keyboardType = "default", inputId, focusedInput, setFocusedInput }) => (
+  <View style={styles.formGroup}>
+    <Text style={styles.label}>{label}</Text>
+    <TextInput
+      style={[
+        styles.input,
+        focusedInput === inputId && styles.inputFocused,
+      ]}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      placeholderTextColor={Colors.MEDIUM_GRAY}
+      secureTextEntry={secureTextEntry}
+      keyboardType={keyboardType}
+      autoCapitalize="none"
+      onFocus={() => setFocusedInput(inputId)}
+      onBlur={() => setFocusedInput(null)}
+    />
+  </View>
+);
+
+// Tab component for login/signup
+const TabSelector = ({ activeTab, setActiveTab }) => (
+  <View style={styles.tabContainer}>
+    <TouchableOpacity
+      style={[
+        styles.tabButton,
+        activeTab === "login" && styles.activeTabButton,
+      ]}
+      onPress={() => setActiveTab("login")}
+    >
+      <Text
+        style={[
+          styles.tabButtonText,
+          activeTab === "login"
+            ? styles.activeTabText
+            : styles.inactiveTabText,
+        ]}
+      >
+        Login
+      </Text>
+      {activeTab === "login" && <View style={styles.tabIndicator} />}
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      style={[
+        styles.tabButton,
+        activeTab === "signup" && styles.activeTabButton,
+      ]}
+      onPress={() => setActiveTab("signup")}
+    >
+      <Text
+        style={[
+          styles.tabButtonText,
+          activeTab === "signup"
+            ? styles.activeTabText
+            : styles.inactiveTabText,
+        ]}
+      >
+        Sign up
+      </Text>
+      {activeTab === "signup" && <View style={styles.tabIndicator} />}
+    </TouchableOpacity>
   </View>
 );
 
@@ -81,8 +170,7 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
   // Check if login form is valid
   const isLoginFormValid = username.trim() !== "" && password.trim() !== "";
   // Check if signup form is valid
-  const isSignupFormValid =
-    signupEmail.trim() !== "" && signupPassword.trim() !== "";
+  const isSignupFormValid = signupEmail.trim() !== "" && signupPassword.trim() !== "";
 
   const handleLogin = () => {
     // Mock authentication
@@ -100,163 +188,75 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
   return (
     <View style={styles.screen}>
       <View style={styles.box}>
-        <View style={styles.tabContainer}>
-          <TouchableOpacity
-            style={[
-              styles.tabButton,
-              activeTab === "login" && styles.activeTabButton,
-            ]}
-            onPress={() => setActiveTab("login")}
-          >
-            <Text
-              style={[
-                styles.tabButtonText,
-                activeTab === "login"
-                  ? styles.activeTabText
-                  : styles.inactiveTabText,
-              ]}
-            >
-              Login
-            </Text>
-            {activeTab === "login" && <View style={styles.tabIndicator} />}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.tabButton,
-              activeTab === "signup" && styles.activeTabButton,
-            ]}
-            onPress={() => setActiveTab("signup")}
-          >
-            <Text
-              style={[
-                styles.tabButtonText,
-                activeTab === "signup"
-                  ? styles.activeTabText
-                  : styles.inactiveTabText,
-              ]}
-            >
-              Sign up
-            </Text>
-            {activeTab === "signup" && <View style={styles.tabIndicator} />}
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.loginLogoContainer}>
-          <img
-            src="/images/logo.png"
-            style={styles.loginLogo}
-            alt="Same Day Co-Pay Logo"
-          />
-        </View>
+        <TabSelector activeTab={activeTab} setActiveTab={setActiveTab} />
+        <AppLogo size="small" />
 
         {activeTab === "login" ? (
           <>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Username</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedInput === "username" && styles.inputFocused,
-                ]}
-                value={username}
-                onChangeText={setUsername}
-                placeholder="Enter your username"
-                placeholderTextColor="#a8a8a8"
-                autoCapitalize="none"
-                onFocus={() => setFocusedInput("username")}
-                onBlur={() => setFocusedInput(null)}
-              />
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedInput === "password" && styles.inputFocused,
-                ]}
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Enter your password"
-                placeholderTextColor="#a8a8a8"
-                secureTextEntry
-                onFocus={() => setFocusedInput("password")}
-                onBlur={() => setFocusedInput(null)}
-              />
-            </View>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                !isLoginFormValid && styles.disabledButton,
-              ]}
+            <FormInput
+              label="Username"
+              value={username}
+              onChangeText={setUsername}
+              placeholder="Enter your username"
+              inputId="username"
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+            />
+            
+            <FormInput
+              label="Password"
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Enter your password"
+              secureTextEntry={true}
+              inputId="password"
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+            />
+            
+            <AppButton
+              text="Login"
               onPress={() => isLoginFormValid && handleLogin()}
               disabled={!isLoginFormValid}
-            >
-              <Text
-                style={[
-                  styles.buttonText,
-                  !isLoginFormValid && styles.disabledButtonText,
-                ]}
-              >
-                Login
-              </Text>
-            </TouchableOpacity>
+              style={!isLoginFormValid && styles.disabledButton}
+              textStyle={!isLoginFormValid && styles.disabledButtonText}
+            />
+            
             <TouchableOpacity style={styles.forgotPasswordContainer}>
               <Text style={styles.forgotPassword}>Forgot your password?</Text>
             </TouchableOpacity>
           </>
         ) : (
           <>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedInput === "email" && styles.inputFocused,
-                ]}
-                value={signupEmail}
-                onChangeText={setSignupEmail}
-                placeholder="Enter your email"
-                placeholderTextColor="#a8a8a8"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onFocus={() => setFocusedInput("email")}
-                onBlur={() => setFocusedInput(null)}
-              />
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedInput === "newpassword" && styles.inputFocused,
-                ]}
-                value={signupPassword}
-                onChangeText={setSignupPassword}
-                placeholder="Create a password"
-                placeholderTextColor="#a8a8a8"
-                secureTextEntry
-                onFocus={() => setFocusedInput("newpassword")}
-                onBlur={() => setFocusedInput(null)}
-              />
-            </View>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                !isSignupFormValid && styles.disabledButton,
-              ]}
+            <FormInput
+              label="Email"
+              value={signupEmail}
+              onChangeText={setSignupEmail}
+              placeholder="Enter your email"
+              keyboardType="email-address"
+              inputId="email"
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+            />
+            
+            <FormInput
+              label="Password"
+              value={signupPassword}
+              onChangeText={setSignupPassword}
+              placeholder="Create a password"
+              secureTextEntry={true}
+              inputId="newpassword"
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+            />
+            
+            <AppButton
+              text="Sign up"
               onPress={() => isSignupFormValid && navigateTo("main-menu")}
               disabled={!isSignupFormValid}
-            >
-              <Text
-                style={[
-                  styles.buttonText,
-                  !isSignupFormValid && styles.disabledButtonText,
-                ]}
-              >
-                Sign up
-              </Text>
-            </TouchableOpacity>
+              style={!isSignupFormValid && styles.disabledButton}
+              textStyle={!isSignupFormValid && styles.disabledButtonText}
+            />
           </>
         )}
       </View>
@@ -264,18 +264,53 @@ const LoginScreen = ({ navigateTo, setUserData }) => {
   );
 };
 
-const MainMenuScreen = ({ navigateTo, userData }) => {
-  const [accountExpanded, setAccountExpanded] = useState(false);
+// Reusable menu item component
+const MenuItem = ({ icon, text, onPress, chevronText = '›' }) => (
+  <TouchableOpacity
+    style={styles.menuItemContainer}
+    onPress={onPress}
+  >
+    <View style={styles.menuItem}>
+      <View style={styles.menuIconContainer}>
+        <View style={[styles.menuIcon, { backgroundColor: Colors.NAVY_BLUE, padding: 0 }]}>
+          <img
+            src={`${URLs.IMAGES}/${icon}`}
+            style={{ width: 36, height: 36 }}
+            alt={text}
+          />
+        </View>
+      </View>
+      <Text style={styles.menuItemText}>{text}</Text>
+      <Text style={styles.chevron}>{chevronText}</Text>
+    </View>
+  </TouchableOpacity>
+);
+
+// Reusable sub-menu item component
+const SubMenuItem = ({ text, onPress }) => (
+  <TouchableOpacity
+    style={styles.subMenuItemContainer}
+    onPress={onPress}
+  >
+    <View style={styles.subMenuItem}>
+      <Text style={styles.subMenuItemText}>{text}</Text>
+      <Text style={styles.chevron}>›</Text>
+    </View>
+  </TouchableOpacity>
+);
+
+// Function to animate counting
+const useAmountCounter = (amount) => {
   const amountAnim = useRef(new Animated.Value(0)).current;
   const [displayedAmount, setDisplayedAmount] = useState("0.00");
   const audioRef = useRef(null);
 
   useEffect(() => {
     // Initialize audio
-    audioRef.current = new Audio("/audio/banknote-counter-106014.mp3");
+    audioRef.current = new Audio(`${URLs.AUDIO}/banknote-counter-106014.mp3`);
 
     // Animate the counting effect
-    const totalAmount = userData?.totalRefunded || 1024.56;
+    const totalAmount = amount || 1024.56;
     const duration = 1500; // 1.5 seconds
 
     // Play the sound
@@ -313,16 +348,17 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
     };
   }, []);
 
+  return displayedAmount;
+};
+
+const MainMenuScreen = ({ navigateTo, userData }) => {
+  const [accountExpanded, setAccountExpanded] = useState(false);
+  const displayedAmount = useAmountCounter(userData?.totalRefunded);
+
   return (
     <View style={styles.screen}>
       <View style={styles.boxFull}>
-        <View style={styles.loginLogoContainer}>
-          <img
-            src="/images/logo.png"
-            style={styles.loginLogo}
-            alt="Same Day Co-Pay Logo"
-          />
-        </View>
+        <AppLogo size="small" />
 
         <Text style={styles.welcomeText}>Welcome Back</Text>
         <Text style={styles.usernameText}>
@@ -333,189 +369,111 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
         <Text style={styles.amountText}>${displayedAmount}</Text>
 
         <View style={styles.menuContainer}>
-          <TouchableOpacity
-            style={styles.menuItemContainer}
-            onPress={() => navigateTo("new-purchase")}
-          >
-            <View style={styles.menuItem}>
-              <View style={styles.menuIconContainer}>
-                <View
-                  style={[
-                    styles.menuIcon,
-                    { backgroundColor: "#032f54", padding: 0 },
-                  ]}
-                >
-                  <img
-                    src="/images/dollar_circle_icon.png"
-                    style={{ width: 36, height: 36 }}
-                    alt="Dollar Sign"
-                  />
-                </View>
-              </View>
-              <Text style={styles.menuItemText}>New Purchase</Text>
-              <Text style={styles.chevron}>›</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.menuItemContainer}
-            onPress={() => setAccountExpanded(!accountExpanded)}
-          >
-            <View style={styles.menuItem}>
-              <View style={styles.menuIconContainer}>
-                <View
-                  style={[
-                    styles.menuIcon,
-                    { backgroundColor: "#032f54", padding: 0 },
-                  ]}
-                >
-                  <img
-                    src="/images/account_circle_icon.png"
-                    style={{ width: 36, height: 36 }}
-                    alt="Account"
-                  />
-                </View>
-              </View>
-              <Text style={styles.menuItemText}>Account</Text>
-              <Text style={styles.chevron}>{accountExpanded ? "⌃" : "⌄"}</Text>
-            </View>
-          </TouchableOpacity>
+          {/* New Purchase Menu Item */}
+          <MenuItem 
+            icon="dollar_circle_icon.png" 
+            text="New Purchase" 
+            onPress={() => navigateTo("new-purchase")} 
+          />
+          
+          {/* Account Menu Item */}
+          <MenuItem 
+            icon="account_circle_icon.png" 
+            text="Account" 
+            onPress={() => setAccountExpanded(!accountExpanded)} 
+            chevronText={accountExpanded ? "⌃" : "⌄"}
+          />
 
           {accountExpanded && (
             <>
-              <TouchableOpacity
-                style={styles.subMenuItemContainer}
-                onPress={() => navigateTo("account-setup")}
-              >
-                <View style={styles.subMenuItem}>
-                  <Text style={styles.subMenuItemText}>Account Setup</Text>
-                  <Text style={styles.chevron}>›</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.subMenuItemContainer}
-                onPress={() => navigateTo("account-history")}
-              >
-                <View style={styles.subMenuItem}>
-                  <Text style={styles.subMenuItemText}>Account History</Text>
-                  <Text style={styles.chevron}>›</Text>
-                </View>
-              </TouchableOpacity>
+              <SubMenuItem 
+                text="Account Setup" 
+                onPress={() => navigateTo("account-setup")} 
+              />
+              <SubMenuItem 
+                text="Account History" 
+                onPress={() => navigateTo("account-history")} 
+              />
             </>
           )}
-          <TouchableOpacity
-            style={styles.menuItemContainer}
-            onPress={() => navigateTo("about")}
-          >
-            <View style={styles.menuItem}>
-              <View style={styles.menuIconContainer}>
-                <View
-                  style={[
-                    styles.menuIcon,
-                    { backgroundColor: "#032f54", padding: 0 },
-                  ]}
-                >
-                  <img
-                    src="/images/info_ic_icon.png"
-                    style={{ width: 36, height: 36 }}
-                    alt="About"
-                  />
-                </View>
-              </View>
-              <Text style={styles.menuItemText}>About</Text>
-              <Text style={styles.chevron}>›</Text>
-            </View>
-          </TouchableOpacity>
+          
+          {/* About Menu Item */}
+          <MenuItem 
+            icon="info_ic_icon.png" 
+            text="About" 
+            onPress={() => navigateTo("about")} 
+          />
         </View>
       </View>
     </View>
   );
 };
 
-const AccountSetupScreen = ({ navigateTo }) => (
+// Reusable screen layout component
+const BasicScreen = ({ title, description, children, navigateTo }) => (
   <View style={styles.screen}>
     <View style={styles.box}>
-      <Text style={styles.title}>Account Setup</Text>
-      <Text style={styles.description}>Account setup placeholder</Text>
-      <TouchableOpacity
-        style={[styles.button, styles.secondaryButton]}
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.description}>{description}</Text>
+      {children}
+      <AppButton 
+        text="Back" 
         onPress={() => navigateTo("main-menu")}
-      >
-        <Text style={styles.secondaryButtonText}>Back</Text>
-      </TouchableOpacity>
+        style={styles.secondaryButton}
+        textStyle={styles.secondaryButtonText}
+      />
     </View>
   </View>
+);
+
+const AccountSetupScreen = ({ navigateTo }) => (
+  <BasicScreen 
+    title="Account Setup" 
+    description="Account setup placeholder" 
+    navigateTo={navigateTo}
+  />
 );
 
 const AccountHistoryScreen = ({ navigateTo }) => (
-  <View style={styles.screen}>
-    <View style={styles.box}>
-      <Text style={styles.title}>Account History</Text>
-      <Text style={styles.description}>Account history placeholder</Text>
-      <TouchableOpacity
-        style={[styles.button, styles.secondaryButton]}
-        onPress={() => navigateTo("main-menu")}
-      >
-        <Text style={styles.secondaryButtonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
+  <BasicScreen 
+    title="Account History" 
+    description="Account history placeholder" 
+    navigateTo={navigateTo}
+  />
 );
 
 const AboutScreen = ({ navigateTo }) => (
-  <View style={styles.screen}>
-    <View style={styles.box}>
-      <Text style={styles.title}>About</Text>
-      <Text style={styles.description}>About page placeholder</Text>
-      <TouchableOpacity
-        style={[styles.button, styles.secondaryButton]}
-        onPress={() => navigateTo("main-menu")}
-      >
-        <Text style={styles.secondaryButtonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
+  <BasicScreen 
+    title="About" 
+    description="About page placeholder" 
+    navigateTo={navigateTo}
+  />
 );
 
 const NewPurchaseScreen = ({ navigateTo }) => (
-  <View style={styles.screen}>
-    <View style={styles.box}>
-      <Text style={styles.title}>New Purchase</Text>
-      <Text style={styles.description}>New purchase form placeholder</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigateTo("main-menu")}
-      >
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, styles.secondaryButton]}
-        onPress={() => navigateTo("main-menu")}
-      >
-        <Text style={styles.secondaryButtonText}>Cancel</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
+  <BasicScreen 
+    title="New Purchase" 
+    description="New purchase form placeholder" 
+    navigateTo={navigateTo}
+  >
+    <AppButton 
+      text="Submit" 
+      onPress={() => navigateTo("main-menu")}
+    />
+  </BasicScreen>
 );
 
 const SnapReceiptScreen = ({ navigateTo }) => (
-  <View style={styles.screen}>
-    <View style={styles.box}>
-      <Text style={styles.title}>Snap Receipt</Text>
-      <Text style={styles.description}>Camera interface placeholder</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigateTo("main-menu")}
-      >
-        <Text style={styles.buttonText}>Take Photo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, styles.secondaryButton]}
-        onPress={() => navigateTo("main-menu")}
-      >
-        <Text style={styles.secondaryButtonText}>Back</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
+  <BasicScreen 
+    title="Snap Receipt" 
+    description="Camera interface placeholder" 
+    navigateTo={navigateTo}
+  >
+    <AppButton 
+      text="Take Photo" 
+      onPress={() => navigateTo("main-menu")}
+    />
+  </BasicScreen>
 );
 
 const styles = StyleSheet.create({
@@ -544,7 +502,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: "100%",
     maxWidth: 500,
-    shadowColor: "#000",
+    shadowColor: Colors.BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -558,7 +516,7 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     height: "100%",
     maxHeight: 800,
-    shadowColor: "#000",
+    shadowColor: Colors.BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -568,14 +526,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "600",
     marginBottom: 16,
-    color: "#032f54",
+    color: Colors.NAVY_BLUE,
     textAlign: "center",
     fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
   },
   description: {
     fontSize: 16,
-    color: "#666666",
+    color: Colors.DARK_GRAY,
     lineHeight: 24,
     marginBottom: 20,
     textAlign: "center",
@@ -599,10 +557,10 @@ const styles = StyleSheet.create({
   secondaryButton: {
     backgroundColor: Colors.WHITE,
     borderWidth: 1,
-    borderColor: "#DDDDDD",
+    borderColor: Colors.LIGHT_GRAY,
   },
   secondaryButtonText: {
-    color: "#666666",
+    color: Colors.DARK_GRAY,
     fontSize: 16,
     fontWeight: "600",
     fontFamily: "Montserrat, sans-serif",
@@ -610,7 +568,7 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     flexDirection: "row",
-    backgroundColor: "#032f54",
+    backgroundColor: Colors.NAVY_BLUE,
     padding: 16,
     borderRadius: 6,
     alignItems: "center",
@@ -618,7 +576,7 @@ const styles = StyleSheet.create({
   },
   menuItemText: {
     fontSize: 16,
-    color: "white",
+    color: Colors.WHITE,
     fontWeight: "500",
     flex: 1,
     fontFamily: "Montserrat, sans-serif",
@@ -628,7 +586,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#DDDDDD",
+    borderBottomColor: Colors.LIGHT_GRAY,
   },
   tabButton: {
     flex: 1,
@@ -637,7 +595,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   activeTabButton: {
-    borderBottomColor: "#032f54",
+    borderBottomColor: Colors.NAVY_BLUE,
   },
   tabButtonText: {
     fontSize: 16,
@@ -646,10 +604,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   activeTabText: {
-    color: "#032f54",
+    color: Colors.NAVY_BLUE,
   },
   inactiveTabText: {
-    color: "#999999",
+    color: Colors.MEDIUM_GRAY,
   },
   tabIndicator: {
     position: "absolute",
@@ -657,7 +615,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 2,
-    backgroundColor: "#032f54",
+    backgroundColor: Colors.NAVY_BLUE,
   },
   formGroup: {
     marginBottom: 16,
@@ -666,20 +624,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     marginBottom: 8,
-    color: "#032f54",
+    color: Colors.NAVY_BLUE,
     fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#DDDDDD",
+    borderColor: Colors.LIGHT_GRAY,
     borderRadius: 6,
     padding: 12,
     fontSize: 16,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.WHITE,
   },
   inputFocused: {
-    borderColor: "#1b702d",
+    borderColor: Colors.FOREST_GREEN,
     borderWidth: 2,
   },
   loginLogoContainer: {
@@ -696,14 +654,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   forgotPassword: {
-    color: "#032f54",
+    color: Colors.NAVY_BLUE,
     fontSize: 14,
     textDecorationLine: "underline",
     fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
   },
   disabledButton: {
-    backgroundColor: "#1b702d",
+    backgroundColor: Colors.FOREST_GREEN,
     opacity: 0.5,
   },
   disabledButtonText: {
@@ -711,7 +669,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 28,
-    color: "#032f54",
+    color: Colors.NAVY_BLUE,
     textAlign: "center",
     marginBottom: 8,
     fontFamily: "Montserrat, sans-serif",
@@ -719,7 +677,7 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     fontSize: 20,
-    color: "#032f54",
+    color: Colors.NAVY_BLUE,
     textAlign: "center",
     marginBottom: 24,
     fontFamily: "Montserrat, sans-serif",
@@ -727,14 +685,14 @@ const styles = StyleSheet.create({
   },
   totalRefundedLabel: {
     fontSize: 18,
-    color: "#1b702d",
+    color: Colors.FOREST_GREEN,
     textAlign: "center",
     fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
   },
   amountText: {
     fontSize: 64,
-    color: "#032f54",
+    color: Colors.NAVY_BLUE,
     textAlign: "center",
     marginBottom: 30,
     fontFamily: "Montserrat, sans-serif",
@@ -758,12 +716,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconText: {
-    color: "white",
+    color: Colors.WHITE,
     fontSize: 20,
     fontWeight: "bold",
   },
   chevron: {
-    color: "white",
+    color: Colors.WHITE,
     fontSize: 24,
     fontWeight: "bold",
   },
@@ -774,7 +732,7 @@ const styles = StyleSheet.create({
   },
   subMenuItem: {
     flexDirection: "row",
-    backgroundColor: "#032f54",
+    backgroundColor: Colors.NAVY_BLUE,
     padding: 12,
     paddingLeft: 30,
     borderRadius: 6,
@@ -782,7 +740,7 @@ const styles = StyleSheet.create({
   },
   subMenuItemText: {
     fontSize: 14,
-    color: "white",
+    color: Colors.WHITE,
     fontWeight: "500",
     flex: 1,
     fontFamily: "Montserrat, sans-serif",
