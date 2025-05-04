@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.LIGHT_GRAY,
   },
   screenHeaderLogo: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     resizeMode: "contain",
   },
   screenHeaderTitle: {
@@ -88,12 +88,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NAVY_BLUE,
   },
   secondaryButton: {
-    backgroundColor: Colors.WHITE,
-    borderWidth: 1,
-    borderColor: Colors.LIGHT_GRAY,
+    backgroundColor: Colors.FOREST_GREEN,
+    borderWidth: 0,
   },
   secondaryButtonText: {
-    color: Colors.DARK_GRAY,
+    color: Colors.WHITE,
     fontSize: 16,
     fontWeight: "700",
     fontFamily: "Montserrat, sans-serif",
