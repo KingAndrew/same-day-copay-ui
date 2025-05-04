@@ -49,13 +49,13 @@ function App() {
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case "main-menu":
-        return (
-          <MainMenuScreen 
-            navigateTo={handleNavigate}
-            userData={userData}
-          />
-        );
+      case "main-menu": {
+        const props = {
+          navigateTo: handleNavigate,
+          userData: userData
+        };
+        return <MainMenuScreen {...props} />;
+      }
       case "login":
         return (
           <LoginScreen navigateTo={handleNavigate} setUserData={setUserData} />

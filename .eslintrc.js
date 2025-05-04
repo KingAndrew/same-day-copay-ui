@@ -8,7 +8,9 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -18,14 +20,17 @@ module.exports = {
   },
   plugins: [
     'react',
+    '@typescript-eslint',
   ],
-  rules: {
-    'react/jsx-uses-react': 'error',
-    'react/jsx-uses-vars': 'error',
-  },
   settings: {
     react: {
       version: 'detect',
     },
+  },
+  rules: {
+    'react/jsx-uses-react': 'error',
+    'react/jsx-uses-vars': 'error',
+    'react/prop-types': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
 };
