@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { Colors } from "./constants";
@@ -50,24 +49,20 @@ function App() {
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case "login":
-        return (
-          <LoginScreen
-            navigateTo={handleNavigate}
-            setUserData={setUserData}
-          />
-        );
       case "main-menu":
         return (
           <MainMenuScreen 
             navigateTo={handleNavigate} 
-            userData={userData} 
-          />
+            userData={userData} />
+        );
+      case "login":
+        return (
+          <LoginScreen navigateTo={handleNavigate} setUserData={setUserData} />
         );
       case "new-purchase":
         return (
-          <NewPurchaseScreen 
-            navigateTo={handleNavigate} 
+          <NewPurchaseScreen
+            navigateTo={handleNavigate}
             frontReceiptImage={frontReceiptImage}
             backReceiptImage={backReceiptImage}
           />
@@ -80,8 +75,8 @@ function App() {
         return <AboutScreen navigateTo={handleNavigate} />;
       case "snap-receipt":
         return (
-          <SnapReceiptScreen 
-            navigateTo={handleNavigate} 
+          <SnapReceiptScreen
+            navigateTo={handleNavigate}
             isFrontSide={!frontReceiptImage}
             setFrontReceiptImage={setFrontReceiptImage}
             setBackReceiptImage={setBackReceiptImage}
