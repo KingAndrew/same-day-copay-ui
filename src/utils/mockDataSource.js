@@ -46,8 +46,8 @@ const mockData = {
   "David.accountSetup.personal": {
     firstName: "David",
     lastName: "Smith",
-    email: "david.smith@example.com",
-    preferredName: "Dave"
+    email: "David",
+    preferredName: "David Smith"
   },
   
   "David.accountSetup.bank": {
