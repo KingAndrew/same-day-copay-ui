@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Colors } from '../constants';
-import { ScreenTemplate, AppButton, TabSelector } from '../components';
+import { ScreenTemplate, AppButton, TabSelector, FormInput } from '../components';
 import { dataAPI } from '../utils/dataAPI'; // Import the dataAPI from utils directory
 
 
@@ -11,18 +11,7 @@ const SectionHeader = ({ title }) => (
   </View>
 );
 
-const FormField = ({ label, value, onChangeText, placeholder, secureTextEntry = false }) => (
-  <View style={styles.formField}>
-    <Text style={styles.fieldLabel}>{label}</Text>
-    <TextInput
-      style={styles.textInput}
-      value={value}
-      onChangeText={onChangeText}
-      placeholder={placeholder}
-      secureTextEntry={secureTextEntry}
-    />
-  </View>
-);
+// We'll use the FormInput component directly instead of this custom FormField
 
 const AccountSetupScreen = ({ navigateTo, userData }) => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -129,9 +118,11 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
       await dataAPI.saveUserData(email, 'accountSetup.sameDay', sameDayData);
 
       console.log('Account setup data saved successfully');
-      navigateTo('main-menu');
+      // Stay on current screen and show success message
+      alert('Account setup data saved successfully!');
     } catch (error) {
       console.error('Error saving account setup data:', error);
+      alert('Error saving account setup data. Please try again.');
     }
   };
 
@@ -175,29 +166,41 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
         {activeTab === "personal" && (
           <>
             <SectionHeader title="Personal Information" />
-            <FormField
+            <FormInput
               label="First Name"
               value={personalData.firstName}
               onChangeText={(value) => handlePersonalChange('firstName', value)}
               placeholder="Your first name"
+              inputId="firstName"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
-            <FormField
+            <FormInput
               label="Last Name"
               value={personalData.lastName}
               onChangeText={(value) => handlePersonalChange('lastName', value)}
               placeholder="Your last name"
+              inputId="lastName"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
-            <FormField
+            <FormInput
               label="Email"
               value={personalData.email}
               onChangeText={(value) => handlePersonalChange('email', value)}
               placeholder="Your email address"
+              inputId="email"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
-            <FormField
+            <FormInput
               label="Preferred Name"
               value={personalData.preferredName}
               onChangeText={(value) => handlePersonalChange('preferredName', value)}
               placeholder="Your preferred name"
+              inputId="preferredName"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
           </>
         )}
@@ -205,23 +208,32 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
         {activeTab === "bank" && (
           <>
             <SectionHeader title="Banking Information" />
-            <FormField
+            <FormInput
               label="Bank Name"
               value={bankData.bankName}
               onChangeText={(value) => handleBankChange('bankName', value)}
               placeholder="Your bank name"
+              inputId="bankName"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
-            <FormField
+            <FormInput
               label="Routing Number"
               value={bankData.routingNumber}
               onChangeText={(value) => handleBankChange('routingNumber', value)}
               placeholder="Your routing number"
+              inputId="routingNumber"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
-            <FormField
+            <FormInput
               label="Account Number"
               value={bankData.accountNumber}
               onChangeText={(value) => handleBankChange('accountNumber', value)}
               placeholder="Your account number"
+              inputId="accountNumber"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
           </>
         )}
@@ -230,17 +242,23 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
           <>
             <SectionHeader title="Insurance Information" />
             <InsuranceProviderSelector />
-            <FormField
+            <FormInput
               label="Policy Number"
               value={insuranceData.policyNumber}
               onChangeText={(value) => handleInsuranceChange('policyNumber', value)}
               placeholder="Your policy number"
+              inputId="policyNumber"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
-            <FormField
+            <FormInput
               label="Group Number"
               value={insuranceData.groupNumber}
               onChangeText={(value) => handleInsuranceChange('groupNumber', value)}
               placeholder="Your group number"
+              inputId="groupNumber"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
           </>
         )}
@@ -248,17 +266,23 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
         {activeTab === "sameday" && (
           <>
             <SectionHeader title="Same Day Co-Pay Information" />
-            <FormField
+            <FormInput
               label="Payment Method"
               value={sameDayData.paymentMethod}
               onChangeText={(value) => handleSameDayChange('paymentMethod', value)}
               placeholder="Your preferred payment method"
+              inputId="paymentMethod"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
-            <FormField
+            <FormInput
               label="Preferred Bank"
               value={sameDayData.preferredBank}
               onChangeText={(value) => handleSameDayChange('preferredBank', value)}
               placeholder="Your preferred bank for same-day payments"
+              inputId="preferredBank"
+              focusedInput={activeTab}
+              setFocusedInput={() => {}}
             />
           </>
         )}
