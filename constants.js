@@ -11,6 +11,31 @@ export const URLs = {
   PRIVACY_POLICY: 'https://samedaycopay.com/privacy',
   IMAGES: '/images',
   AUDIO: '/audio',
+  
+  // API endpoints
+  API: {
+    // Authentication
+    LOGIN: '/auth/login',
+    LOGOUT: '/auth/logout',
+    REGISTER: '/auth/register',
+    
+    // User data
+    USER_PROFILE: '/user/profile',
+    ACCOUNT_HISTORY: '/user/history',
+    
+    // Receipt processing
+    UPLOAD_RECEIPT: '/receipts/upload',
+    RECEIPT_STATUS: '/receipts/status',
+    
+    // Faxing service
+    FAX_RECEIPT: '/fax/send',
+    FAX_STATUS: '/fax/status',
+    
+    // Banking/payment operations
+    BANK_ACCOUNTS: '/banking/accounts',
+    PAYMENT_STATUS: '/banking/payments',
+    INITIATE_PAYMENT: '/banking/payments/create',
+  }
 };
 
 // Colors used throughout the application
