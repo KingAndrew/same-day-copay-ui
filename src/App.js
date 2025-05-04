@@ -49,62 +49,61 @@ function App() {
   };
 
   const renderScreen = () => {
-    switch (currentScreen) {
-      case "main-menu":
-        return (
-          <MainMenuScreen
-            navigateTo={handleNavigate}
-            userData={userData}
-          />
-        );
-      case "login":
-        return (
-          <LoginScreen
-            navigateTo={handleNavigate}
-            setUserData={setUserData}
-          />
-        );
-      case "new-purchase":
-        return (
-          <NewPurchaseScreen
-            navigateTo={handleNavigate}
-            frontReceiptImage={frontReceiptImage}
-            backReceiptImage={backReceiptImage}
-          />
-        );
-      case "account-setup":
-        return (
-          <AccountSetupScreen 
-            navigateTo={handleNavigate} 
-          />
-        );
-      case "account-history":
-        return (
-          <AccountHistoryScreen 
-            navigateTo={handleNavigate} 
-          />
-        );
-      case "about":
-        return (
-          <AboutScreen 
-            navigateTo={handleNavigate} 
-          />
-        );
-      case "snap-receipt":
-        return (
-          <SnapReceiptScreen
-            navigateTo={handleNavigate}
-            isFrontSide={!frontReceiptImage}
-            setFrontReceiptImage={setFrontReceiptImage}
-            setBackReceiptImage={setBackReceiptImage}
-          />
-        );
-      default:
-        return (
-          <HomeScreen 
-            navigateTo={handleNavigate} 
-          />
-        );
+    if (currentScreen === "main-menu") {
+      return (
+        <MainMenuScreen
+          navigateTo={handleNavigate}
+          userData={userData}
+        />
+      );
+    } else if (currentScreen === "login") {
+      return (
+        <LoginScreen
+          navigateTo={handleNavigate}
+          setUserData={setUserData}
+        />
+      );
+    } else if (currentScreen === "new-purchase") {
+      return (
+        <NewPurchaseScreen
+          navigateTo={handleNavigate}
+          frontReceiptImage={frontReceiptImage}
+          backReceiptImage={backReceiptImage}
+        />
+      );
+    } else if (currentScreen === "account-setup") {
+      return (
+        <AccountSetupScreen 
+          navigateTo={handleNavigate} 
+        />
+      );
+    } else if (currentScreen === "account-history") {
+      return (
+        <AccountHistoryScreen 
+          navigateTo={handleNavigate} 
+        />
+      );
+    } else if (currentScreen === "about") {
+      return (
+        <AboutScreen 
+          navigateTo={handleNavigate} 
+        />
+      );
+    } else if (currentScreen === "snap-receipt") {
+      return (
+        <SnapReceiptScreen
+          navigateTo={handleNavigate}
+          isFrontSide={!frontReceiptImage}
+          setFrontReceiptImage={setFrontReceiptImage}
+          setBackReceiptImage={setBackReceiptImage}
+        />
+      );
+    } else {
+      return (
+        <HomeScreen 
+          navigateTo={handleNavigate} 
+        />
+      );
     }
   };
 
