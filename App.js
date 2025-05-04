@@ -313,7 +313,7 @@ const SubMenuItem = ({ text, onPress, icon }) => (
       {icon && (
         <View style={styles.subMenuIconContainer}>
           <Image
-            source={{ uri: `${URLs.IMAGES}/${icon}` }}
+            source={require(`./public/images/${icon}`)}
             style={styles.subMenuIcon}
             alt={text}
           />
