@@ -499,11 +499,13 @@ const BasicScreen = ({ title, description, children, navigateTo }) => (
 );
 
 const AccountSetupScreen = ({ navigateTo }) => (
-  <BasicScreen
-    title="Account Setup"
-    description="Account setup placeholder"
-    navigateTo={navigateTo}
-  />
+  <ScreenTemplate title="Account Setup" navigateTo={navigateTo}>
+    <View style={{alignItems: "center"}}>
+      <Text style={{color: Colors.WHITE, fontSize: 16, marginVertical: 20}}>
+        Account setup placeholder content
+      </Text>
+    </View>
+  </ScreenTemplate>
 );
 
 const AccountHistoryScreen = ({ navigateTo }) => (
@@ -995,6 +997,75 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: "row",
+
+
+  screenHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    backgroundColor: Colors.WHITE,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.LIGHT_GRAY,
+  },
+  screenHeaderLogo: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
+  },
+  screenHeaderTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: Colors.NAVY_BLUE,
+    textAlign: "center",
+    flex: 1,
+    marginRight: 50, // To offset the logo and center the title
+    fontFamily: "Montserrat, sans-serif",
+  },
+  screenContent: {
+    flex: 1,
+    width: "100%",
+    backgroundColor: Colors.NAVY_BLUE,
+    padding: 15,
+  },
+  backButtonContainer: {
+    width: "100%",
+    padding: 15,
+    backgroundColor: Colors.NAVY_BLUE,
+  },
+
+// Reusable screen template component that follows the standard layout
+const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) => (
+  <View style={styles.screen}>
+    <View style={styles.boxFull}>
+      <View style={styles.screenHeader}>
+        <Image
+          source={{ uri: `${URLs.IMAGES}/logo.png` }}
+          style={styles.screenHeaderLogo}
+          alt="Same Day Co-Pay Logo"
+        />
+        <Text style={styles.screenHeaderTitle}>{title}</Text>
+      </View>
+      
+      <View style={styles.screenContent}>
+        {children}
+      </View>
+      
+      {showBackButton && (
+        <View style={styles.backButtonContainer}>
+          <AppButton
+            text="Back"
+            onPress={() => navigateTo("main-menu")}
+            style={styles.secondaryButton}
+            textStyle={styles.secondaryButtonText}
+          />
+        </View>
+      )}
+    </View>
+  </View>
+);
+
     marginBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: Colors.LIGHT_GRAY,
