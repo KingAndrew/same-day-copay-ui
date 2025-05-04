@@ -1,6 +1,5 @@
-
 import { AppRegistry } from "react-native";
-import App from "./App";
+import App from "./src/App";
 import appInfo from "./app.json";
 
 const appName = appInfo.name || "SameDayCopayUI";
