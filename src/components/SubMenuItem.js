@@ -7,11 +7,18 @@ const SubMenuItem = ({ icon, text, onPress }) => (
   <TouchableOpacity style={styles.subMenuItemContainer} onPress={onPress}>
     <View style={styles.subMenuItem}>
       <View style={styles.subMenuIconContainer}>
-        <Image
-          source={{ uri: `${URLs.IMAGES}/${icon}` }}
-          style={styles.subMenuIcon}
-          alt={text}
-        />
+        <View
+          style={[
+            styles.subMenuIconBackground,
+            { backgroundColor: Colors.NAVY_BLUE, padding: 0 },
+          ]}
+        >
+          <Image
+            source={{ uri: `${URLs.IMAGES}/${icon}` }}
+            style={{ width: 24, height: 24 }}
+            alt={text}
+          />
+        </View>
       </View>
       <Text style={styles.subMenuItemText}>{text}</Text>
       <Text style={styles.chevron}>›</Text>
@@ -43,15 +50,15 @@ const styles = StyleSheet.create({
   },
   subMenuIconContainer: {
     marginRight: 10,
-    width: 24,
-    height: 24,
     justifyContent: "center",
     alignItems: "center",
   },
-  subMenuIcon: {
+  subMenuIconBackground: {
     width: 24,
     height: 24,
-    tintColor: Colors.WHITE,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
   },
   chevron: {
     color: Colors.WHITE,

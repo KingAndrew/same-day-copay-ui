@@ -19,6 +19,7 @@
 ## Technical Requirements
 - Maintain cross-platform compatibility (iOS, Android, Web)
 - Follow React best practices and component reusability
+- Prioritize code reuse and refactoring over creating new code
 - Prioritize performance and accessibility
 - Implement proper error handling and user feedback
 
