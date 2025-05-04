@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { Colors } from "../constants";
 import renderScreen from "./utils/screenRenderer";
+import handleImageCapture from "./utils/imageCapture";
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("home");
@@ -13,29 +14,16 @@ function App() {
   const [backReceiptImage, setBackReceiptImage] = useState(null);
 
   const handleNavigate = (screen) => {
-    // Special handling for snap-receipt screen
-    if (screen === "snap-receipt") {
-      // Determine if we're capturing front or back based on current state
-      if (!frontReceiptImage) {
-        // We're capturing front
-      } else if (!backReceiptImage) {
-        // We're capturing back
-      }
-    }
-
-    // Handle returning from snap-receipt with captured image
-    if (currentScreen === "snap-receipt" && screen === "new-purchase") {
-      // Simulate capturing an image when returning
-      const now = new Date();
-      const mockImageUri = `/images/snap-receipt.png?t=${now.getTime()}`;
-
-      if (!frontReceiptImage) {
-        setFrontReceiptImage(mockImageUri);
-      } else if (!backReceiptImage) {
-        setBackReceiptImage(mockImageUri);
-      }
-    }
-
+    // Handle image capture logic in separate file
+    handleImageCapture(
+      currentScreen, 
+      screen, 
+      frontReceiptImage, 
+      backReceiptImage, 
+      setFrontReceiptImage, 
+      setBackReceiptImage
+    );
+    
     setCurrentScreen(screen);
   };
   
