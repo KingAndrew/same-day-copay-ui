@@ -5,8 +5,8 @@
  * mock data and the middle tier API seamlessly
  */
 
-import { URLs } from '../../constants';
-import mockData from './mockDataSource';
+const { URLs } = require('../../constants');
+const mockData = require('./mockDataSource');
 
 // DataSource implementation for mock data (file)
 class MockDataSource {
@@ -83,7 +83,7 @@ if (URLs.DATA_SOURCE.startsWith('file://')) {
 }
 
 // Public API for data access
-export const dataAPI = {
+const dataAPI = {
   /**
    * Get data by key
    * @param {string} key - The data key in format: [email.]screenName.dataName
@@ -130,3 +130,5 @@ export const dataAPI = {
     return await dataSourceInstance.saveData(`${email}.${key}`, value);
   }
 };
+
+module.exports = { dataAPI };

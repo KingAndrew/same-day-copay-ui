@@ -67,6 +67,4 @@ const mockData = {
   }
 };
 
-// Make sure mockData is mutable so we can update it
-// Note: We're exporting the same object, not creating a new one
-module.exports = { default: mockData };
+module.exports = mockData;
