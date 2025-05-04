@@ -51,9 +51,7 @@ function App() {
   const renderScreen = () => {
     if (currentScreen === "main-menu") {
       return (
-        <MainMenuScreen
-          navigateTo={handleNavigate}
-          userData={userData}
+        <MainMenuScreen navigateTo={handleNavigate} userData={userData}
         />
       );
     } else if (currentScreen === "login") {
