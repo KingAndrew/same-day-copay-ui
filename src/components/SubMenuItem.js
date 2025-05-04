@@ -3,19 +3,16 @@ import React from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
 import { Colors, URLs } from '../constants';
 
-const SubMenuItem = ({ text, onPress, icon }) => (
+const SubMenuItem = ({ icon, text, onPress }) => (
   <TouchableOpacity style={styles.subMenuItemContainer} onPress={onPress}>
     <View style={styles.subMenuItem}>
-      {icon && (
-        <View style={styles.subMenuIconContainer}>
-          <Image
-            source={{ uri: `${URLs.IMAGES}/${icon}` }}
-            style={styles.subMenuIcon}
-            resizeMode="contain"
-            alt={text}
-          />
-        </View>
-      )}
+      <View style={styles.subMenuIconContainer}>
+        <Image
+          source={{ uri: `${URLs.IMAGES}/${icon}` }}
+          style={styles.subMenuIcon}
+          alt={text}
+        />
+      </View>
       <Text style={styles.subMenuItemText}>{text}</Text>
       <Text style={styles.chevron}>›</Text>
     </View>
@@ -46,18 +43,15 @@ const styles = StyleSheet.create({
   },
   subMenuIconContainer: {
     marginRight: 10,
+    width: 24,
+    height: 24,
+    justifyContent: "center",
+    alignItems: "center",
   },
   subMenuIcon: {
     width: 24,
     height: 24,
     tintColor: Colors.WHITE,
-  },
-  subMenuIconContainer: {
-    marginRight: 10,
-    width: 24,
-    height: 24,
-    justifyContent: "center",
-    alignItems: "center",
   },
   chevron: {
     color: Colors.WHITE,
