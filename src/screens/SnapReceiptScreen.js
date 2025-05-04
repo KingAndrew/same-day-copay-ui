@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { Colors } from '../constants';
-import { AppButton } from '../components';
+import { AppButton, ScreenTemplate } from '../components';
 // Import only the mock camera for web
 import { Camera } from '../components/CameraMock';
 
@@ -48,18 +48,24 @@ const SnapReceiptScreen = ({ navigateTo, setFrontReceiptImage, setBackReceiptIma
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+  
   return (
-    <View style={styles.screen}>
-      <View style={styles.boxFull}>
-        <Text style={styles.title}>
-          {isFrontSide ? 'Front' : 'Back'} Receipt Capture
-        </Text>
+    <ScreenTemplate 
+      title={`${isFrontSide ? 'Front' : 'Back'} Receipt Capture`}
+      navigateTo={navigateTo}
+    >
+      <View style={styles.container}>
         <View style={styles.cameraPreviewContainer}>
           {photoTaken ? (
             <View style={styles.confirmationContainer}>
               <Image source={{ uri: capturedImage }} style={styles.cameraPreview} resizeMode="cover" />
               <View style={styles.confirmationButtonsRow}>
-                <AppButton text="Retake" onPress={() => {setPhotoTaken(false); setCapturedImage(null);}} style={styles.secondaryButton} textStyle={styles.secondaryButtonText} />
+                <AppButton 
+                  text="Retake" 
+                  onPress={() => {setPhotoTaken(false); setCapturedImage(null);}} 
+                  style={styles.secondaryButton} 
+                  textStyle={styles.secondaryButtonText} 
+                />
                 <AppButton text="Confirm" onPress={handleConfirmPhoto} />
               </View>
             </View>
@@ -67,42 +73,25 @@ const SnapReceiptScreen = ({ navigateTo, setFrontReceiptImage, setBackReceiptIma
             <Camera style={styles.cameraPreview} type={type} ref={cameraRef}>
               <View style={styles.cameraControlsContainer}>
                 <AppButton text="Take Photo" onPress={takePicture} />
-                <AppButton text="Cancel" onPress={() => navigateTo("new-purchase")} style={styles.secondaryButton} textStyle={styles.secondaryButtonText} />
+                <AppButton 
+                  text="Cancel" 
+                  onPress={() => navigateTo("new-purchase")} 
+                  style={styles.secondaryButton} 
+                  textStyle={styles.secondaryButtonText} 
+                />
               </View>
             </Camera>
           )}
         </View>
       </View>
-    </View>
+    </ScreenTemplate>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  boxFull: {
-    padding: 20,
     backgroundColor: Colors.WHITE,
-    borderRadius: 8,
-    width: "100%",
-    maxWidth: 500,
-    height: "100%",
-    maxHeight: 800,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    marginBottom: 16,
-    color: Colors.NAVY_BLUE,
-    textAlign: "center",
-    fontFamily: "Montserrat, sans-serif",
-    fontWeight: "700",
   },
   cameraPreviewContainer: {
     width: "100%",

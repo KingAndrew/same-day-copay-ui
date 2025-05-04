@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
-import { Colors } from '../constants';
+import { Colors, URLs } from '../constants';
 
 const SubMenuItem = ({ text, onPress, icon }) => (
   <TouchableOpacity style={styles.subMenuItemContainer} onPress={onPress}>
@@ -9,8 +9,9 @@ const SubMenuItem = ({ text, onPress, icon }) => (
       {icon && (
         <View style={styles.subMenuIconContainer}>
           <Image
-            source={{uri: icon === "settings_icon.png" ? "/images/settings_icon.png" : "/images/history.png"}}
+            source={{ uri: `${URLs.IMAGES}/${icon}` }}
             style={styles.subMenuIcon}
+            resizeMode="contain"
             alt={text}
           />
         </View>

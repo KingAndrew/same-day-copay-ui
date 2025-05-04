@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { Colors, URLs } from '../constants';
@@ -6,18 +7,21 @@ import AppButton from './AppButton';
 // Reusable screen template component that follows the standard layout
 const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) => (
   <View style={styles.screen}>
-    <View style={styles.boxFull}>
-      <View style={styles.screenHeader}>
-        <Image
-          source={{ uri: `${URLs.IMAGES}/logo.png` }}
-          style={styles.screenHeaderLogo}
-          alt="Same Day Co-Pay Logo"
-        />
-        <Text style={styles.screenHeaderTitle}>{title}</Text>
-      </View>
+    <View style={styles.blueBackground}>
+      <View style={styles.whiteContentBox}>
+        <View style={styles.screenHeader}>
+          <Image
+            source={{ uri: `${URLs.IMAGES}/logo.png` }}
+            style={styles.screenHeaderLogo}
+            resizeMode="contain"
+            alt="Same Day Co-Pay Logo"
+          />
+          <Text style={styles.screenHeaderTitle}>{title}</Text>
+        </View>
 
-      <View style={styles.screenContent}>
-        {children}
+        <View style={styles.screenContent}>
+          {children}
+        </View>
       </View>
 
       {showBackButton && (
@@ -41,16 +45,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  boxFull: {
-    padding: 20,
-    backgroundColor: Colors.WHITE,
+  blueBackground: {
+    padding: 0,
+    backgroundColor: Colors.NAVY_BLUE,
     borderRadius: 8,
     width: "100%",
     maxWidth: 500,
     height: "100%",
     maxHeight: 800,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-    elevation: 3,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+  },
+  whiteContentBox: {
+    backgroundColor: Colors.WHITE,
+    margin: 15,
+    marginBottom: 0,
+    borderRadius: 8,
+    flex: 1,
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
   },
   screenHeader: {
     flexDirection: "row",
@@ -65,7 +80,6 @@ const styles = StyleSheet.create({
   screenHeaderLogo: {
     width: 100,
     height: 100,
-    resizeMode: "contain",
   },
   screenHeaderTitle: {
     fontSize: 20,
@@ -79,13 +93,11 @@ const styles = StyleSheet.create({
   screenContent: {
     flex: 1,
     width: "100%",
-    backgroundColor: Colors.NAVY_BLUE,
     padding: 15,
   },
   backButtonContainer: {
     width: "100%",
     padding: 15,
-    backgroundColor: Colors.NAVY_BLUE,
   },
   secondaryButton: {
     backgroundColor: Colors.FOREST_GREEN,

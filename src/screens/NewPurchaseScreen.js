@@ -117,6 +117,7 @@ const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) 
             text={currentStep === 3 ? "Submit" : "Continue"} 
             onPress={currentStep === 3 ? () => navigateTo("main-menu") : handleContinue} 
             disabled={currentStep === 1 && (!frontReceiptImage || !backReceiptImage)}
+            style={styles.submitButton}
           />
         </View>
       </View>
@@ -255,11 +256,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 30,
     width: "100%",
+    position: "sticky",
+    bottom: 0,
+    paddingVertical: 15,
+    backgroundColor: Colors.WHITE,
   },
   cancelButton: {
     backgroundColor: Colors.CORAL_RED,
     flex: 1,
     marginRight: 10,
+  },
+  submitButton: {
+    flex: 1,
   },
   cancelButtonText: {
     color: Colors.WHITE,
