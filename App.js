@@ -697,6 +697,37 @@ const NewPurchaseScreen = ({ navigateTo }) => {
   );
 };
 
+// Reusable screen template component that follows the standard layout
+const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) => (
+  <View style={styles.screen}>
+    <View style={styles.boxFull}>
+      <View style={styles.screenHeader}>
+        <Image
+          source={{ uri: `${URLs.IMAGES}/logo.png` }}
+          style={styles.screenHeaderLogo}
+          alt="Same Day Co-Pay Logo"
+        />
+        <Text style={styles.screenHeaderTitle}>{title}</Text>
+      </View>
+      
+      <View style={styles.screenContent}>
+        {children}
+      </View>
+      
+      {showBackButton && (
+        <View style={styles.backButtonContainer}>
+          <AppButton
+            text="Back"
+            onPress={() => navigateTo("main-menu")}
+            style={styles.secondaryButton}
+            textStyle={styles.secondaryButtonText}
+          />
+        </View>
+      )}
+    </View>
+  </View>
+);
+
 const SnapReceiptScreen = ({ navigateTo }) => {
   const [photoTaken, setPhotoTaken] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -997,8 +1028,10 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: "row",
-
-
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.LIGHT_GRAY,
+  },
   screenHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -1034,41 +1067,6 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: Colors.NAVY_BLUE,
   },
-
-// Reusable screen template component that follows the standard layout
-const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) => (
-  <View style={styles.screen}>
-    <View style={styles.boxFull}>
-      <View style={styles.screenHeader}>
-        <Image
-          source={{ uri: `${URLs.IMAGES}/logo.png` }}
-          style={styles.screenHeaderLogo}
-          alt="Same Day Co-Pay Logo"
-        />
-        <Text style={styles.screenHeaderTitle}>{title}</Text>
-      </View>
-      
-      <View style={styles.screenContent}>
-        {children}
-      </View>
-      
-      {showBackButton && (
-        <View style={styles.backButtonContainer}>
-          <AppButton
-            text="Back"
-            onPress={() => navigateTo("main-menu")}
-            style={styles.secondaryButton}
-            textStyle={styles.secondaryButtonText}
-          />
-        </View>
-      )}
-    </View>
-  </View>
-);
-
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.LIGHT_GRAY,
     position: "relative",
     height: 36,
   },
