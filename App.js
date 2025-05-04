@@ -491,7 +491,8 @@ const AboutScreen = ({ navigateTo }) => (
 
 const NewPurchaseScreen = ({ navigateTo }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [receiptImage, setReceiptImage] = useState(null);
+  const [frontReceiptImage, setFrontReceiptImage] = useState(null);
+  const [backReceiptImage, setBackReceiptImage] = useState(null);
   const [isFormComplete, setIsFormComplete] = useState(false);
   
   const handleContinue = () => {
@@ -514,39 +515,105 @@ const NewPurchaseScreen = ({ navigateTo }) => {
           <Text style={styles.title}>New Purchase</Text>
         </View>
         
-        <View style={styles.stepContainer}>
-          <View style={[styles.stepCircle, currentStep >= 1 && styles.activeStep]}>
-            <Text style={styles.stepNumber}>1</Text>
-          </View>
-          <Text style={styles.stepText}>Add Purchase Receipt</Text>
+        {/* Steps as Blue Menu Items */}
+        <View style={styles.stepsMenuContainer}>
+          {/* Step 1 */}
+          <TouchableOpacity 
+            style={[styles.stepMenuItem, currentStep === 1 && styles.activeStepMenu]} 
+            onPress={() => setCurrentStep(1)}
+          >
+            <View style={styles.stepMenuContent}>
+              <View style={[styles.stepCircle, currentStep >= 1 && styles.activeStep]}>
+                <Text style={styles.stepNumber}>1</Text>
+              </View>
+              <Text style={styles.stepMenuText}>Snap Receipt</Text>
+            </View>
+            
+            {(frontReceiptImage || backReceiptImage) && (
+              <View style={styles.receiptThumbnailsContainer}>
+                {frontReceiptImage && (
+                  <Image 
+                    source={{ uri: frontReceiptImage }} 
+                    style={styles.receiptThumbnail} 
+                    alt="Front receipt"
+                  />
+                )}
+                {backReceiptImage && (
+                  <Image 
+                    source={{ uri: backReceiptImage }} 
+                    style={styles.receiptThumbnail} 
+                    alt="Back receipt"
+                  />
+                )}
+              </View>
+            )}
+          </TouchableOpacity>
           
-          {receiptImage && (
-            <View style={styles.receiptThumbnailContainer}>
-              <Image 
-                source={{ uri: receiptImage }} 
-                style={styles.receiptThumbnail} 
-                alt="Receipt thumbnail"
-              />
+          {/* Step 2 */}
+          <TouchableOpacity 
+            style={[styles.stepMenuItem, currentStep === 2 && styles.activeStepMenu]} 
+            onPress={() => frontReceiptImage && backReceiptImage && setCurrentStep(2)}
+            disabled={!frontReceiptImage || !backReceiptImage}
+          >
+            <View style={styles.stepMenuContent}>
+              <View style={[styles.stepCircle, currentStep >= 2 && styles.activeStep]}>
+                <Text style={styles.stepNumber}>2</Text>
+              </View>
+              <Text style={styles.stepMenuText}>Verify Details</Text>
+            </View>
+          </TouchableOpacity>
+          
+          {/* Step 3 */}
+          <TouchableOpacity 
+            style={[styles.stepMenuItem, currentStep === 3 && styles.activeStepMenu]} 
+            onPress={() => currentStep >= 2 && setCurrentStep(3)}
+            disabled={currentStep < 2}
+          >
+            <View style={styles.stepMenuContent}>
+              <View style={[styles.stepCircle, currentStep >= 3 && styles.activeStep]}>
+                <Text style={styles.stepNumber}>3</Text>
+              </View>
+              <Text style={styles.stepMenuText}>Request Refund</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        
+        {/* Step Content Area */}
+        <View style={styles.stepContentArea}>
+          {currentStep === 1 && (
+            <View style={styles.snapReceiptContainer}>
+              {(!frontReceiptImage || !backReceiptImage) && (
+                <AppButton 
+                  text={!frontReceiptImage ? "Snap Front of Receipt" : "Snap Back of Receipt"} 
+                  onPress={() => navigateTo("snap-receipt")} 
+                />
+              )}
+              
+              {frontReceiptImage && backReceiptImage && (
+                <Text style={styles.receiptCapturedText}>
+                  Receipt captured successfully! Proceed to verify details.
+                </Text>
+              )}
             </View>
           )}
-        </View>
-        
-        <View style={styles.stepSeparator} />
-        
-        <View style={styles.stepContainer}>
-          <View style={[styles.stepCircle, currentStep >= 2 && styles.activeStep]}>
-            <Text style={styles.stepNumber}>2</Text>
-          </View>
-          <Text style={styles.stepText}>Enter Purchase Details</Text>
-        </View>
-        
-        <View style={styles.stepSeparator} />
-        
-        <View style={styles.stepContainer}>
-          <View style={[styles.stepCircle, currentStep >= 3 && styles.activeStep]}>
-            <Text style={styles.stepNumber}>3</Text>
-          </View>
-          <Text style={styles.stepText}>Submit Claim</Text>
+          
+          {currentStep === 2 && (
+            <View>
+              <Text style={styles.detailsText}>
+                Please verify the receipt details are correct
+              </Text>
+              {/* Here would go the form fields for receipt details */}
+            </View>
+          )}
+          
+          {currentStep === 3 && (
+            <View>
+              <Text style={styles.detailsText}>
+                Submit your refund request
+              </Text>
+              {/* Here would go final confirmation details */}
+            </View>
+          )}
         </View>
         
         <View style={styles.buttonsRow}>
@@ -558,64 +625,134 @@ const NewPurchaseScreen = ({ navigateTo }) => {
           />
           
           <AppButton 
-            text="Submit" 
-            onPress={() => isFormComplete && navigateTo("main-menu")} 
-            disabled={!isFormComplete}
-            style={!isFormComplete ? styles.disabledButton : {}}
-            textStyle={!isFormComplete ? styles.disabledButtonText : {}}
+            text={currentStep === 3 ? "Submit" : "Continue"} 
+            onPress={currentStep === 3 ? () => navigateTo("main-menu") : handleContinue} 
+            disabled={currentStep === 1 && (!frontReceiptImage || !backReceiptImage)}
+            style={(currentStep === 1 && (!frontReceiptImage || !backReceiptImage)) ? styles.disabledButton : {}}
+            textStyle={(currentStep === 1 && (!frontReceiptImage || !backReceiptImage)) ? styles.disabledButtonText : {}}
           />
         </View>
-        
-        {!receiptImage && (
-          <View style={styles.snapButtonContainer}>
-            <AppButton 
-              text="Snap Receipt" 
-              onPress={() => navigateTo("snap-receipt")} 
-            />
-          </View>
-        )}
       </View>
     </View>
   );
 };
 
 const SnapReceiptScreen = ({ navigateTo }) => {
-  const handleTakePhoto = () => {
-    // In a real implementation, this would access the camera
-    // and capture an image. For now, we'll simulate this with
-    // a static image path
-    const mockedReceiptImagePath = `${URLs.IMAGES}/receipt_preview.png`;
+  const [photoTaken, setPhotoTaken] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [currentTimestamp, setCurrentTimestamp] = useState('');
+  const [isFrontSide, setIsFrontSide] = useState(true);
+  
+  // Simulate camera access by setting states
+  useEffect(() => {
+    // Request camera permission would happen here in a real app
+    console.log("Requesting camera access...");
     
-    // In a real app, we would pass the captured image through params
-    navigateTo("new-purchase");
+    // Cleanup function
+    return () => {
+      // Release camera would happen here
+      console.log("Releasing camera...");
+    };
+  }, []);
+  
+  const handleTakePhoto = () => {
+    // Simulate taking a photo
+    setPhotoTaken(true);
+    setShowConfirmation(true);
+    
+    // Create timestamp for the image
+    const now = new Date();
+    const timestamp = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+    setCurrentTimestamp(timestamp);
+  };
+  
+  const handleConfirmPhoto = () => {
+    // In a real implementation, we would save the photo
+    // For now, simulate this with a mock receipt image path
+    const mockedReceiptImagePath = `${URLs.IMAGES}/snap-receipt.png`;
+    
+    // Navigation would include parameters in a real app
+    // Here we'll navigate back to new-purchase
+    setPhotoTaken(false);
+    setShowConfirmation(false);
+    
+    if (isFrontSide) {
+      // We've captured the front, now get the back
+      setIsFrontSide(false);
+    } else {
+      // We've captured both sides, go back to main screen
+      setIsFrontSide(true);
+      navigateTo("new-purchase");
+    }
+  };
+  
+  const handleRetakePhoto = () => {
+    setPhotoTaken(false);
+    setShowConfirmation(false);
   };
   
   return (
     <View style={styles.screen}>
       <View style={styles.boxFull}>
-        <Text style={styles.title}>Snap Receipt</Text>
+        <Text style={styles.title}>
+          Snap {isFrontSide ? "Front" : "Back"} of Receipt
+        </Text>
         
         <View style={styles.cameraPreviewContainer}>
-          <Image 
-            source={{ uri: `${URLs.IMAGES}/snap-receipt.png` }} 
-            style={styles.cameraPreview} 
-            alt="Camera preview"
-          />
+          {showConfirmation ? (
+            <View style={styles.confirmationContainer}>
+              <Image 
+                source={{ uri: `${URLs.IMAGES}/snap-receipt.png` }} 
+                style={styles.cameraPreview} 
+                alt="Captured image"
+              />
+              <Text style={styles.timestampText}>Captured: {currentTimestamp}</Text>
+              <Text style={styles.confirmationQuestion}>
+                Is this image of the {isFrontSide ? "front" : "back"} clear?
+              </Text>
+              
+              <View style={styles.confirmationButtonsRow}>
+                <AppButton 
+                  text="Retake" 
+                  onPress={handleRetakePhoto}
+                  style={styles.secondaryButton}
+                  textStyle={styles.secondaryButtonText}
+                />
+                <AppButton 
+                  text="Continue" 
+                  onPress={handleConfirmPhoto}
+                />
+              </View>
+            </View>
+          ) : (
+            <>
+              <Image 
+                source={{ uri: `${URLs.IMAGES}/snap-receipt.png` }} 
+                style={styles.cameraPreview} 
+                alt="Camera preview"
+              />
+              <Text style={styles.cameraInstructions}>
+                Position the {isFrontSide ? "front" : "back"} of your receipt within the frame
+              </Text>
+            </>
+          )}
         </View>
         
-        <View style={styles.cameraControlsContainer}>
-          <AppButton 
-            text="Take Photo" 
-            onPress={handleTakePhoto} 
-          />
-          
-          <AppButton
-            text="Cancel" 
-            onPress={() => navigateTo("new-purchase")} 
-            style={styles.secondaryButton}
-            textStyle={styles.secondaryButtonText}
-          />
-        </View>
+        {!showConfirmation && (
+          <View style={styles.cameraControlsContainer}>
+            <AppButton 
+              text="Take Photo" 
+              onPress={handleTakePhoto} 
+            />
+            
+            <AppButton
+              text="Cancel" 
+              onPress={() => navigateTo("new-purchase")} 
+              style={styles.secondaryButton}
+              textStyle={styles.secondaryButtonText}
+            />
+          </View>
+        )}
       </View>
     </View>
   );
@@ -973,8 +1110,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   newPurchaseLogo: {
-    width: 50,
-    height: 50,
+    width: 100, // Increased size 2x from 50
+    height: 100, // Increased size 2x from 50
     resizeMode: "contain",
     marginRight: 15,
   },
@@ -995,6 +1132,117 @@ const styles = StyleSheet.create({
   snapButtonContainer: {
     marginTop: 15,
     width: "100%",
+  },
+  // New styles for the menu-style steps
+  stepsMenuContainer: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  stepMenuItem: {
+    flexDirection: "column",
+    backgroundColor: Colors.NAVY_BLUE,
+    padding: 16,
+    borderRadius: 6,
+    marginBottom: 12,
+    width: "100%",
+  },
+  activeStepMenu: {
+    backgroundColor: Colors.SKY_BLUE,
+  },
+  stepMenuContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  stepMenuText: {
+    fontSize: 16,
+    color: Colors.WHITE,
+    fontWeight: "500",
+    flex: 1,
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "700",
+  },
+  receiptThumbnailsContainer: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "flex-start",
+  },
+  receiptThumbnail: {
+    width: 60,
+    height: 80,
+    borderRadius: 4,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: Colors.WHITE,
+  },
+  stepContentArea: {
+    padding: 15,
+    backgroundColor: Colors.LIGHT_GRAY,
+    borderRadius: 6,
+    minHeight: 150,
+    marginBottom: 20,
+  },
+  snapReceiptContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
+  },
+  receiptCapturedText: {
+    fontSize: 16,
+    color: Colors.FOREST_GREEN,
+    fontWeight: "600",
+    textAlign: "center",
+    fontFamily: "Montserrat, sans-serif",
+  },
+  detailsText: {
+    fontSize: 16,
+    color: Colors.NAVY_BLUE,
+    fontWeight: "600",
+    fontFamily: "Montserrat, sans-serif",
+  },
+  // New styles for the SnapReceiptScreen
+  confirmationContainer: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
+  timestampText: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    color: Colors.WHITE,
+    padding: 5,
+    borderRadius: 3,
+    fontSize: 12,
+  },
+  confirmationQuestion: {
+    fontSize: 18,
+    color: Colors.NAVY_BLUE,
+    fontWeight: "600",
+    textAlign: "center",
+    marginTop: 15,
+    marginBottom: 15,
+    fontFamily: "Montserrat, sans-serif",
+  },
+  confirmationButtonsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  cameraInstructions: {
+    position: "absolute",
+    bottom: 20,
+    left: 0,
+    right: 0,
+    textAlign: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    color: Colors.WHITE,
+    padding: 10,
+    fontSize: 14,
+    fontFamily: "Montserrat, sans-serif",
   },
 });
 
