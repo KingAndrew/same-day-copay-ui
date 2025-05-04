@@ -27,7 +27,7 @@ const MenuItem = ({ icon, text, onPress, chevronText = "›" }) => (
 
 const styles = StyleSheet.create({
   menuItemContainer: {
-    marginBottom: 12,
+    marginBottom: 2,
     width: "100%",
   },
   menuItem: {

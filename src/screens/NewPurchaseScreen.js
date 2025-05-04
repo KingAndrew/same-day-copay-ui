@@ -70,7 +70,7 @@ const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) 
             disabled={!frontReceiptImage}
           >
             <View style={styles.stepMenuContent}>
-              <View style={[styles.stepCircle, currentStep >= 2 && styles.activeStep]}>
+              <View style={styles.stepCircle}>
                 <Text style={styles.stepNumber}>2</Text>
               </View>
               <Text style={styles.stepMenuText}>Back Receipt Capture</Text>
@@ -96,7 +96,7 @@ const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) 
             disabled={!frontReceiptImage || !backReceiptImage}
           >
             <View style={styles.stepMenuContent}>
-              <View style={[styles.stepCircle, currentStep >= 3 && styles.activeStep]}>
+              <View style={styles.stepCircle}>
                 <Text style={styles.stepNumber}>3</Text>
               </View>
               <Text style={styles.stepMenuText}>Verify Data</Text>
@@ -185,16 +185,13 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Colors.LIGHT_GRAY,
+    backgroundColor: Colors.FOREST_GREEN,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 15,
   },
-  activeStep: {
-    backgroundColor: Colors.FOREST_GREEN,
-  },
   stepNumber: {
-    color: Colors.WHITE,
+    color: Colors.NAVY_BLUE,
     fontSize: 18,
     fontWeight: "bold",
     fontFamily: "Montserrat, sans-serif",

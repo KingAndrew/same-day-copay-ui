@@ -24,7 +24,7 @@ const SubMenuItem = ({ text, onPress, icon }) => (
 
 const styles = StyleSheet.create({
   subMenuItemContainer: {
-    marginBottom: 12,
+    marginBottom: 2,
     width: "90%",
     alignSelf: "flex-end",
   },
