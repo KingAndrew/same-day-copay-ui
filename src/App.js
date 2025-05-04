@@ -53,15 +53,15 @@ function App() {
       case "main-menu":
         return (
           <MainMenuScreen 
-            navigateTo={handleNavigate} 
-            userData={userData} 
+            navigateTo={handleNavigate}
+            userData={userData}
           />
         );
       case "login":
         return (
           <LoginScreen 
-            navigateTo={handleNavigate} 
-            setUserData={setUserData} 
+            navigateTo={handleNavigate}
+            setUserData={setUserData}
           />
         );
       case "new-purchase":
