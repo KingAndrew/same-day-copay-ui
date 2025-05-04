@@ -1,3 +1,13 @@
+mkdir src
+mv App.js src/App.js
+touch index.js
+
+// index.js
+import App from './src/App';
+export default App;
+
+
+// src/App.js
 import React, { useState, useEffect, useRef } from "react";
 import {
   SafeAreaView,
@@ -1007,7 +1017,7 @@ const styles = StyleSheet.create({
     color: Colors.NAVY_BLUE,
     textAlign: "center",
     flex: 1,
-    marginRight: 50, // To offset the logo and center the title
+    marginRight: 50, 
     fontFamily: "Montserrat, sans-serif",
   },
   screenContent: {
@@ -1191,8 +1201,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   newPurchaseLogo: {
-    width: 100, // Increased size 2x from 50
-    height: 100, // Increased size 2x from 50
+    width: 100, 
+    height: 100, 
     resizeMode: "contain",
     marginRight: 15,
   },
@@ -1214,7 +1224,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     width: "100%",
   },
-  // New styles for the menu-style steps
   stepsMenuContainer: {
     width: "100%",
     marginBottom: 20,
@@ -1286,7 +1295,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontFamily: "Montserrat, sans-serif",
   },
-  // New styles for the SnapReceiptScreen
   confirmationContainer: {
     width: "100%",
     height: "100%",
