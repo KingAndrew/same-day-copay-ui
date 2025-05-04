@@ -52,7 +52,11 @@ function App() {
     );
   };
 
-  return <SafeAreaView style={styles.container}>{renderCurrentScreen()}</SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.container}>
+      {renderCurrentScreen()}
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
