@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { Colors } from "./constants";
@@ -49,16 +50,19 @@ function App() {
 
   const renderScreen = () => {
     switch (currentScreen) {
-      case "main-menu": {
-        const props = {
-          navigateTo: handleNavigate,
-          userData: userData
-        };
-        return <MainMenuScreen {...props} />;
-      }
+      case "main-menu":
+        return (
+          <MainMenuScreen 
+            navigateTo={handleNavigate} 
+            userData={userData} 
+          />
+        );
       case "login":
         return (
-          <LoginScreen navigateTo={handleNavigate} setUserData={setUserData} />
+          <LoginScreen 
+            navigateTo={handleNavigate} 
+            setUserData={setUserData} 
+          />
         );
       case "new-purchase":
         return (
