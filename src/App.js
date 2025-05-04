@@ -59,7 +59,10 @@ function App() {
         );
       case "main-menu":
         return (
-          <MainMenuScreen navigateTo={handleNavigate} userData={userData} />
+          <MainMenuScreen 
+            navigateTo={handleNavigate} 
+            userData={userData} 
+          />
         );
       case "new-purchase":
         return (
