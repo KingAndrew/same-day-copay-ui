@@ -1,92 +1,103 @@
 
 import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
+
+// Mock components that mirror the ones in your App.js
+const MainMenuScreen = ({ navigateTo, userData }) => <div>Main Menu Screen</div>;
+const LoginScreen = ({ navigateTo, setUserData }) => <div>Login Screen</div>;
+const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) => <div>New Purchase Screen</div>;
+const AccountSetupScreen = ({ navigateTo }) => <div>Account Setup Screen</div>;
+const AccountHistoryScreen = ({ navigateTo }) => <div>Account History Screen</div>;
+const AboutScreen = ({ navigateTo }) => <div>About Screen</div>;
+const SnapReceiptScreen = ({ navigateTo, isFrontSide, setFrontReceiptImage, setBackReceiptImage }) => <div>Snap Receipt Screen</div>;
+const HomeScreen = ({ navigateTo }) => <div>Home Screen</div>;
 
 // This is a test function to debug switch/case statements with JSX
 function SwitchCaseTest() {
   const [currentScreen, setCurrentScreen] = useState("home");
   const [userData, setUserData] = useState(null);
+  const [frontReceiptImage, setFrontReceiptImage] = useState(null);
+  const [backReceiptImage, setBackReceiptImage] = useState(null);
 
   // Simple function that simulates navigation
   const handleNavigate = (screen) => {
     setCurrentScreen(screen);
   };
 
-  // Simple render function with switch/case
+  // This mirrors exactly your App.js renderScreen function
   const renderScreen = () => {
     switch (currentScreen) {
       case "main-menu":
         return (
-          <div>
-            Main Menu Screen - User: {userData?.name || "Not logged in"}
-          </div>
-        );
-      case "login":
-        return (
-          <div>
-            Login Screen
-          </div>
-        );
-      case "about":
-        return (
-          <div>
-            About Screen
-          </div>
-        );
-      default:
-        return (
-          <div>
-            Home Screen
-          </div>
-        );
-    }
-  };
-
-  // Now let's make it gradually more complex (like your App.js)
-  const renderComplexScreen = () => {
-    switch (currentScreen) {
-      case "main-menu":
-        return (
-          <div
+          <MainMenuScreen
             navigateTo={handleNavigate}
             userData={userData}
-          >
-            Main Menu Content
-          </div>
+          />
         );
       case "login":
         return (
-          <div
+          <LoginScreen
             navigateTo={handleNavigate}
             setUserData={setUserData}
-          >
-            Login Content
-          </div>
+          />
         );
       case "new-purchase":
         return (
-          <div
+          <NewPurchaseScreen
             navigateTo={handleNavigate}
-            frontReceiptImage={"test.jpg"}
-            backReceiptImage={"test2.jpg"}
-          >
-            New Purchase Content
-          </div>
+            frontReceiptImage={frontReceiptImage}
+            backReceiptImage={backReceiptImage}
+          />
+        );
+      case "account-setup":
+        return (
+          <AccountSetupScreen 
+            navigateTo={handleNavigate} 
+          />
+        );
+      case "account-history":
+        return (
+          <AccountHistoryScreen 
+            navigateTo={handleNavigate} 
+          />
         );
       case "about":
-        return <div navigateTo={handleNavigate}>About Content</div>;
+        return (
+          <AboutScreen 
+            navigateTo={handleNavigate} 
+          />
+        );
+      case "snap-receipt":
+        return (
+          <SnapReceiptScreen
+            navigateTo={handleNavigate}
+            isFrontSide={!frontReceiptImage}
+            setFrontReceiptImage={setFrontReceiptImage}
+            setBackReceiptImage={setBackReceiptImage}
+          />
+        );
       default:
-        return <div navigateTo={handleNavigate}>Home Content</div>;
+        return (
+          <HomeScreen 
+            navigateTo={handleNavigate} 
+          />
+        );
     }
   };
 
   return (
-    <div>
+    <div style={styles.container}>
       <h1>Test Component</h1>
       {renderScreen()}
-      <hr />
-      {renderComplexScreen()}
     </div>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f5f5f7",
+  },
+});
 
 export default SwitchCaseTest;
