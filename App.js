@@ -53,31 +53,75 @@ function App() {
   const [currentScreen, setCurrentScreen] = useState("home");
   const [userData, setUserData] = useState(null);
 
+  // Global state for captured receipt images
+  const [frontReceiptImage, setFrontReceiptImage] = useState(null);
+  const [backReceiptImage, setBackReceiptImage] = useState(null);
+
+  const handleNavigate = (screen) => {
+    // Special handling for snap-receipt screen
+    if (screen === "snap-receipt") {
+      // Determine if we're capturing front or back based on current state
+      if (!frontReceiptImage) {
+        // We're capturing front
+      } else if (!backReceiptImage) {
+        // We're capturing back
+      }
+    }
+    
+    // Handle returning from snap-receipt with captured image
+    if (currentScreen === "snap-receipt" && screen === "new-purchase") {
+      // Simulate capturing an image when returning
+      const now = new Date();
+      const mockImageUri = `${URLs.IMAGES}/snap-receipt.png?t=${now.getTime()}`;
+      
+      if (!frontReceiptImage) {
+        setFrontReceiptImage(mockImageUri);
+      } else if (!backReceiptImage) {
+        setBackReceiptImage(mockImageUri);
+      }
+    }
+    
+    setCurrentScreen(screen);
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case "login":
         return (
           <LoginScreen
-            navigateTo={setCurrentScreen}
+            navigateTo={handleNavigate}
             setUserData={setUserData}
           />
         );
       case "main-menu":
         return (
-          <MainMenuScreen navigateTo={setCurrentScreen} userData={userData} />
+          <MainMenuScreen navigateTo={handleNavigate} userData={userData} />
         );
       case "new-purchase":
-        return <NewPurchaseScreen navigateTo={setCurrentScreen} />;
+        return (
+          <NewPurchaseScreen 
+            navigateTo={handleNavigate} 
+            frontReceiptImage={frontReceiptImage}
+            backReceiptImage={backReceiptImage}
+          />
+        );
       case "account-setup":
-        return <AccountSetupScreen navigateTo={setCurrentScreen} />;
+        return <AccountSetupScreen navigateTo={handleNavigate} />;
       case "account-history":
-        return <AccountHistoryScreen navigateTo={setCurrentScreen} />;
+        return <AccountHistoryScreen navigateTo={handleNavigate} />;
       case "about":
-        return <AboutScreen navigateTo={setCurrentScreen} />;
+        return <AboutScreen navigateTo={handleNavigate} />;
       case "snap-receipt":
-        return <SnapReceiptScreen navigateTo={setCurrentScreen} />;
+        return (
+          <SnapReceiptScreen 
+            navigateTo={handleNavigate} 
+            isFrontSide={!frontReceiptImage}
+            setFrontReceiptImage={setFrontReceiptImage}
+            setBackReceiptImage={setBackReceiptImage}
+          />
+        );
       default:
-        return <HomeScreen navigateTo={setCurrentScreen} />;
+        return <HomeScreen navigateTo={handleNavigate} />;
     }
   };
 
@@ -495,10 +539,20 @@ const NewPurchaseScreen = ({ navigateTo }) => {
   const [backReceiptImage, setBackReceiptImage] = useState(null);
   const [isFormComplete, setIsFormComplete] = useState(false);
   
+  // Pass receipt state to other screens and retrieve on return
+  useEffect(() => {
+    // When front and back images are captured, we can progress to step 3
+    if (frontReceiptImage && backReceiptImage) {
+      setCurrentStep(3);
+      setIsFormComplete(true);
+    } else if (frontReceiptImage) {
+      setCurrentStep(2);
+    }
+  }, [frontReceiptImage, backReceiptImage]);
+  
   const handleContinue = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
-    } else {
+    if (currentStep === 3) {
+      // Submit the form
       navigateTo("main-menu");
     }
   };
@@ -520,31 +574,23 @@ const NewPurchaseScreen = ({ navigateTo }) => {
           {/* Step 1 */}
           <TouchableOpacity 
             style={[styles.stepMenuItem, currentStep === 1 && styles.activeStepMenu]} 
-            onPress={() => setCurrentStep(1)}
+            onPress={() => navigateTo("snap-receipt")}
           >
             <View style={styles.stepMenuContent}>
               <View style={[styles.stepCircle, currentStep >= 1 && styles.activeStep]}>
                 <Text style={styles.stepNumber}>1</Text>
               </View>
-              <Text style={styles.stepMenuText}>Snap Receipt</Text>
+              <Text style={styles.stepMenuText}>Front Receipt Capture</Text>
+              <Text style={styles.stepChevron}>›</Text>
             </View>
             
-            {(frontReceiptImage || backReceiptImage) && (
+            {frontReceiptImage && (
               <View style={styles.receiptThumbnailsContainer}>
-                {frontReceiptImage && (
-                  <Image 
-                    source={{ uri: frontReceiptImage }} 
-                    style={styles.receiptThumbnail} 
-                    alt="Front receipt"
-                  />
-                )}
-                {backReceiptImage && (
-                  <Image 
-                    source={{ uri: backReceiptImage }} 
-                    style={styles.receiptThumbnail} 
-                    alt="Back receipt"
-                  />
-                )}
+                <Image 
+                  source={{ uri: frontReceiptImage }} 
+                  style={styles.receiptThumbnail} 
+                  alt="Front receipt"
+                />
               </View>
             )}
           </TouchableOpacity>
@@ -552,28 +598,40 @@ const NewPurchaseScreen = ({ navigateTo }) => {
           {/* Step 2 */}
           <TouchableOpacity 
             style={[styles.stepMenuItem, currentStep === 2 && styles.activeStepMenu]} 
-            onPress={() => frontReceiptImage && backReceiptImage && setCurrentStep(2)}
-            disabled={!frontReceiptImage || !backReceiptImage}
+            onPress={() => frontReceiptImage && navigateTo("snap-receipt")}
+            disabled={!frontReceiptImage}
           >
             <View style={styles.stepMenuContent}>
               <View style={[styles.stepCircle, currentStep >= 2 && styles.activeStep]}>
                 <Text style={styles.stepNumber}>2</Text>
               </View>
-              <Text style={styles.stepMenuText}>Verify Details</Text>
+              <Text style={styles.stepMenuText}>Back Receipt Capture</Text>
+              <Text style={styles.stepChevron}>›</Text>
             </View>
+            
+            {backReceiptImage && (
+              <View style={styles.receiptThumbnailsContainer}>
+                <Image 
+                  source={{ uri: backReceiptImage }} 
+                  style={styles.receiptThumbnail} 
+                  alt="Back receipt"
+                />
+              </View>
+            )}
           </TouchableOpacity>
           
           {/* Step 3 */}
           <TouchableOpacity 
             style={[styles.stepMenuItem, currentStep === 3 && styles.activeStepMenu]} 
-            onPress={() => currentStep >= 2 && setCurrentStep(3)}
-            disabled={currentStep < 2}
+            onPress={() => frontReceiptImage && backReceiptImage && setCurrentStep(3)}
+            disabled={!frontReceiptImage || !backReceiptImage}
           >
             <View style={styles.stepMenuContent}>
               <View style={[styles.stepCircle, currentStep >= 3 && styles.activeStep]}>
                 <Text style={styles.stepNumber}>3</Text>
               </View>
               <Text style={styles.stepMenuText}>Request Refund</Text>
+              <Text style={styles.stepChevron}>›</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -642,9 +700,14 @@ const SnapReceiptScreen = ({ navigateTo }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [currentTimestamp, setCurrentTimestamp] = useState('');
   const [isFrontSide, setIsFrontSide] = useState(true);
+  const [capturedPhotoUri, setCapturedPhotoUri] = useState(null);
   
-  // Simulate camera access by setting states
+  // Check which side we need to capture based on NewPurchaseScreen state
   useEffect(() => {
+    // In a real app, we would get this from navigation params
+    // Here we simulate by checking global App state
+    // For simplicity, we assume front side needs to be captured if we're in this screen
+    
     // Request camera permission would happen here in a real app
     console.log("Requesting camera access...");
     
@@ -664,51 +727,47 @@ const SnapReceiptScreen = ({ navigateTo }) => {
     const now = new Date();
     const timestamp = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
     setCurrentTimestamp(timestamp);
+    
+    // Mock captured photo URI with timestamp to make it unique
+    setCapturedPhotoUri(`${URLs.IMAGES}/snap-receipt.png?t=${now.getTime()}`);
   };
   
   const handleConfirmPhoto = () => {
-    // In a real implementation, we would save the photo
-    // For now, simulate this with a mock receipt image path
-    const mockedReceiptImagePath = `${URLs.IMAGES}/snap-receipt.png`;
+    // Save the captured photo to appropriate state in NewPurchaseScreen
+    // In a real app, we would actually save the photo to storage
     
-    // Navigation would include parameters in a real app
-    // Here we'll navigate back to new-purchase
+    // Here we'll navigate back to new-purchase with the captured image info
     setPhotoTaken(false);
     setShowConfirmation(false);
     
-    if (isFrontSide) {
-      // We've captured the front, now get the back
-      setIsFrontSide(false);
-    } else {
-      // We've captured both sides, go back to main screen
-      setIsFrontSide(true);
-      navigateTo("new-purchase");
-    }
+    // Return to the main purchase screen with the captured image
+    navigateTo("new-purchase");
   };
   
   const handleRetakePhoto = () => {
     setPhotoTaken(false);
     setShowConfirmation(false);
+    setCapturedPhotoUri(null);
   };
   
   return (
     <View style={styles.screen}>
       <View style={styles.boxFull}>
         <Text style={styles.title}>
-          Snap {isFrontSide ? "Front" : "Back"} of Receipt
+          Front Receipt Capture
         </Text>
         
         <View style={styles.cameraPreviewContainer}>
           {showConfirmation ? (
             <View style={styles.confirmationContainer}>
               <Image 
-                source={{ uri: `${URLs.IMAGES}/snap-receipt.png` }} 
+                source={{ uri: capturedPhotoUri || `${URLs.IMAGES}/snap-receipt.png` }} 
                 style={styles.cameraPreview} 
                 alt="Captured image"
               />
               <Text style={styles.timestampText}>Captured: {currentTimestamp}</Text>
               <Text style={styles.confirmationQuestion}>
-                Is this image of the {isFrontSide ? "front" : "back"} clear?
+                Is this image clear? You can retake it if needed.
               </Text>
               
               <View style={styles.confirmationButtonsRow}>
@@ -732,7 +791,7 @@ const SnapReceiptScreen = ({ navigateTo }) => {
                 alt="Camera preview"
               />
               <Text style={styles.cameraInstructions}>
-                Position the {isFrontSide ? "front" : "back"} of your receipt within the frame
+                Position the receipt within the frame
               </Text>
             </>
           )}
@@ -1147,7 +1206,12 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   activeStepMenu: {
-    backgroundColor: Colors.SKY_BLUE,
+    backgroundColor: Colors.NAVY_BLUE,
+  },
+  stepChevron: {
+    color: Colors.WHITE,
+    fontSize: 24,
+    fontWeight: "bold",
   },
   stepMenuContent: {
     flexDirection: "row",
