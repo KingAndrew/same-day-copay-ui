@@ -313,7 +313,7 @@ const SubMenuItem = ({ text, onPress, icon }) => (
       {icon && (
         <View style={styles.subMenuIconContainer}>
           <Image
-            source={require(`./public/images/${icon}`)}
+            source={{uri: icon === "settings_icon.png" ? "/images/settings_icon.png" : "/images/history.png"}}
             style={styles.subMenuIcon}
             alt={text}
           />
@@ -492,6 +492,7 @@ const AboutScreen = ({ navigateTo }) => (
 const NewPurchaseScreen = ({ navigateTo }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [receiptImage, setReceiptImage] = useState(null);
+  const [isFormComplete, setIsFormComplete] = useState(false);
   
   const handleContinue = () => {
     if (currentStep < 3) {
@@ -504,7 +505,14 @@ const NewPurchaseScreen = ({ navigateTo }) => {
   return (
     <View style={styles.screen}>
       <View style={styles.box}>
-        <Text style={styles.title}>New Purchase</Text>
+        <View style={styles.headerContainer}>
+          <Image
+            source={{ uri: `${URLs.IMAGES}/logo.png` }}
+            style={styles.newPurchaseLogo}
+            alt="Same Day Co-Pay Logo"
+          />
+          <Text style={styles.title}>New Purchase</Text>
+        </View>
         
         <View style={styles.stepContainer}>
           <View style={[styles.stepCircle, currentStep >= 1 && styles.activeStep]}>
@@ -541,28 +549,31 @@ const NewPurchaseScreen = ({ navigateTo }) => {
           <Text style={styles.stepText}>Submit Claim</Text>
         </View>
         
-        <View style={styles.buttonContainer}>
-          {!receiptImage && (
+        <View style={styles.buttonsRow}>
+          <AppButton
+            text="Cancel" 
+            onPress={() => navigateTo("main-menu")} 
+            style={styles.cancelButton}
+            textStyle={styles.cancelButtonText}
+          />
+          
+          <AppButton 
+            text="Submit" 
+            onPress={() => isFormComplete && navigateTo("main-menu")} 
+            disabled={!isFormComplete}
+            style={!isFormComplete ? styles.disabledButton : {}}
+            textStyle={!isFormComplete ? styles.disabledButtonText : {}}
+          />
+        </View>
+        
+        {!receiptImage && (
+          <View style={styles.snapButtonContainer}>
             <AppButton 
               text="Snap Receipt" 
               onPress={() => navigateTo("snap-receipt")} 
             />
-          )}
-          
-          {receiptImage && (
-            <AppButton 
-              text={currentStep === 3 ? "Submit" : "Continue"} 
-              onPress={handleContinue} 
-            />
-          )}
-          
-          <AppButton
-            text="Back" 
-            onPress={() => navigateTo("main-menu")} 
-            style={styles.secondaryButton}
-            textStyle={styles.secondaryButtonText}
-          />
-        </View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -954,6 +965,36 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     tintColor: Colors.WHITE,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    width: "100%",
+  },
+  newPurchaseLogo: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
+    marginRight: 15,
+  },
+  buttonsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 30,
+    width: "100%",
+  },
+  cancelButton: {
+    backgroundColor: Colors.CORAL_RED,
+    flex: 1,
+    marginRight: 10,
+  },
+  cancelButtonText: {
+    color: Colors.WHITE,
+  },
+  snapButtonContainer: {
+    marginTop: 15,
+    width: "100%",
   },
 });
 
