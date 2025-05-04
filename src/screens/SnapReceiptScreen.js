@@ -57,7 +57,7 @@ const SnapReceiptScreen = ({ navigateTo, setFrontReceiptImage, setBackReceiptIma
         <View style={styles.cameraPreviewContainer}>
           {photoTaken ? (
             <View style={styles.confirmationContainer}>
-              <Image source={{ uri: capturedImage }} style={styles.cameraPreview} />
+              <Image source={{ uri: capturedImage }} style={styles.cameraPreview} resizeMode="cover" />
               <View style={styles.confirmationButtonsRow}>
                 <AppButton text="Retake" onPress={() => {setPhotoTaken(false); setCapturedImage(null);}} style={styles.secondaryButton} textStyle={styles.secondaryButtonText} />
                 <AppButton text="Confirm" onPress={handleConfirmPhoto} />
@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
   cameraPreview: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
   },
   cameraControlsContainer: {
     width: "100%",

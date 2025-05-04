@@ -13,6 +13,7 @@ const AppLogo = ({ size = "large" }) => {
       <Image
         source={{ uri: `${URLs.IMAGES}/logo.png` }}
         style={logoStyle}
+        resizeMode="contain"
         alt="Same Day Co-Pay Logo"
       />
     </View>
@@ -27,7 +28,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 200,
     height: 200,
-    resizeMode: "contain",
   },
   loginLogoContainer: {
     alignItems: "center",
@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
   loginLogo: {
     width: 160,
     height: 160,
-    resizeMode: "contain",
   },
 });
 

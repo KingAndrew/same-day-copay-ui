@@ -55,7 +55,8 @@ const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) 
               <View style={styles.receiptThumbnailsContainer}>
                 <Image 
                   source={{ uri: frontReceiptImage }} 
-                  style={styles.receiptThumbnail} 
+                  style={styles.receiptThumbnail}
+                  resizeMode="cover" 
                   alt="Front receipt"
                 />
               </View>
@@ -80,7 +81,8 @@ const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) 
               <View style={styles.receiptThumbnailsContainer}>
                 <Image 
                   source={{ uri: backReceiptImage }} 
-                  style={styles.receiptThumbnail} 
+                  style={styles.receiptThumbnail}
+                  resizeMode="cover" 
                   alt="Back receipt"
                 />
               </View>
