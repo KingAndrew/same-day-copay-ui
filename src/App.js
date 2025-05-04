@@ -3,16 +3,6 @@ import React, { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { Colors } from "../constants";
 import renderScreen from "./utils/screenRenderer";
-import {
-  HomeScreen,
-  LoginScreen,
-  MainMenuScreen,
-  NewPurchaseScreen,
-  AccountSetupScreen,
-  AccountHistoryScreen,
-  AboutScreen,
-  SnapReceiptScreen,
-} from "./screens";
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState("home");

@@ -24,7 +24,7 @@ const renderScreen = (
     return (
       <MainMenuScreen 
         navigateTo={handleNavigate} 
-        userData={userData}
+        userData={userData.userData}
       />
     );
   } else if (currentScreen === "login") {
