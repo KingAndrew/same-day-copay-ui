@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Colors } from '../constants';
-import { ScreenTemplate, AppButton } from '../components';
+import { ScreenTemplate, AppButton, TabSelector } from '../components';
 import { dataAPI } from '../utils/dataAPI'; // Import the dataAPI from utils directory
 
 
@@ -143,20 +143,7 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
     { id: 'sameday', label: 'Same Day' }
   ];
 
-  // Reusable TabSelector component
-  const TabSelector = ({ tabs, activeTab, setActiveTab }) => (
-    <View style={styles.tabContainer}>
-      {tabs.map((tab) => (
-        <TouchableOpacity
-          key={tab.id}
-          style={[styles.tab, activeTab === tab.id && styles.activeTab]}
-          onPress={() => setActiveTab(tab.id)}
-        >
-          <Text style={[styles.tabText, activeTab === tab.id && styles.activeTabText]}>{tab.label}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+  // Import TabSelector from components instead of using a local implementation
 
 
   // Insurance provider selector component
