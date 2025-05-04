@@ -3,50 +3,52 @@ import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Colors } from '../constants';
 
-const TabSelector = ({ activeTab, setActiveTab }) => {
-  // Animation ref to track position
-  const [indicatorLeft, setIndicatorLeft] = useState(activeTab === "login" ? "0%" : "50%");
-
+const TabSelector = ({ activeTab, setActiveTab, tabs }) => {
+  // If no tabs are provided, use default login/signup tabs
+  const tabItems = tabs || [
+    { id: 'login', label: 'Login' },
+    { id: 'signup', label: 'Sign up' }
+  ];
+  
+  // Calculate the indicator position based on active tab
+  const tabWidth = 100 / tabItems.length;
+  const activeIndex = tabItems.findIndex(tab => tab.id === activeTab) || 0;
+  const [indicatorLeft, setIndicatorLeft] = useState(`${activeIndex * tabWidth}%`);
+  
   // Update indicator position with animation effect
   useEffect(() => {
-    setIndicatorLeft(activeTab === "login" ? "0%" : "50%");
-  }, [activeTab]);
+    const index = tabItems.findIndex(tab => tab.id === activeTab);
+    setIndicatorLeft(`${index * tabWidth}%`);
+  }, [activeTab, tabItems, tabWidth]);
 
   return (
     <View style={styles.tabContainer}>
-      <TouchableOpacity
-        style={styles.tabButton}
-        onPress={() => setActiveTab("login")}
-      >
-        <Text
-          style={[
-            styles.tabButtonText,
-            activeTab === "login" ? styles.activeTabText : styles.inactiveTabText,
-          ]}
+      {tabItems.map(tab => (
+        <TouchableOpacity
+          key={tab.id}
+          style={styles.tabButton}
+          onPress={() => setActiveTab(tab.id)}
         >
-          Login
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.tabButton}
-        onPress={() => setActiveTab("signup")}
-      >
-        <Text
-          style={[
-            styles.tabButtonText,
-            activeTab === "signup" ? styles.activeTabText : styles.inactiveTabText,
-          ]}
-        >
-          Sign up
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={[
+              styles.tabButtonText,
+              activeTab === tab.id ? styles.activeTabText : styles.inactiveTabText,
+            ]}
+          >
+            {tab.label}
+          </Text>
+        </TouchableOpacity>
+      ))}
 
       {/* Sliding indicator */}
       <View 
         style={[
           styles.tabIndicator, 
-          { left: indicatorLeft, transition: "all 0.3s ease-in-out" }
+          { 
+            left: indicatorLeft, 
+            width: `${tabWidth}%`,
+            transition: "all 0.3s ease-in-out" 
+          }
         ]} 
       />
     </View>
@@ -81,7 +83,6 @@ const styles = StyleSheet.create({
   tabIndicator: {
     position: "absolute",
     bottom: -1,
-    width: "50%",
     height: 2,
     backgroundColor: Colors.NAVY_BLUE,
   },

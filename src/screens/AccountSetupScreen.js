@@ -135,35 +135,29 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
     }
   };
 
-  // Tab component for switching between sections
-  const TabSelector = () => (
+  // Define tab configuration
+  const accountSetupTabs = [
+    { id: 'personal', label: 'Personal' },
+    { id: 'bank', label: 'Bank' },
+    { id: 'insurance', label: 'Insurance' },
+    { id: 'sameday', label: 'Same Day' }
+  ];
+
+  // Reusable TabSelector component
+  const TabSelector = ({ tabs, activeTab, setActiveTab }) => (
     <View style={styles.tabContainer}>
-      <TouchableOpacity 
-        style={[styles.tab, activeTab === "personal" && styles.activeTab]}
-        onPress={() => setActiveTab("personal")}
-      >
-        <Text style={[styles.tabText, activeTab === "personal" && styles.activeTabText]}>1. Personal</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={[styles.tab, activeTab === "bank" && styles.activeTab]}
-        onPress={() => setActiveTab("bank")}
-      >
-        <Text style={[styles.tabText, activeTab === "bank" && styles.activeTabText]}>2. Bank</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={[styles.tab, activeTab === "insurance" && styles.activeTab]}
-        onPress={() => setActiveTab("insurance")}
-      >
-        <Text style={[styles.tabText, activeTab === "insurance" && styles.activeTabText]}>3. Insurance</Text>
-      </TouchableOpacity>
-      <TouchableOpacity 
-        style={[styles.tab, activeTab === "sameday" && styles.activeTab]}
-        onPress={() => setActiveTab("sameday")}
-      >
-        <Text style={[styles.tabText, activeTab === "sameday" && styles.activeTabText]}>4. Same Day</Text>
-      </TouchableOpacity>
+      {tabs.map((tab) => (
+        <TouchableOpacity
+          key={tab.id}
+          style={[styles.tab, activeTab === tab.id && styles.activeTab]}
+          onPress={() => setActiveTab(tab.id)}
+        >
+          <Text style={[styles.tabText, activeTab === tab.id && styles.activeTabText]}>{tab.label}</Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
+
 
   // Insurance provider selector component
   const InsuranceProviderSelector = () => (
@@ -188,33 +182,33 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
 
   return (
     <ScreenTemplate title="Account Setup" navigateTo={navigateTo}>
-      <TabSelector />
+      <TabSelector tabs={accountSetupTabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <ScrollView style={styles.scrollView}>
         {activeTab === "personal" && (
           <>
             <SectionHeader title="Personal Information" />
-            <FormField 
-              label="First Name" 
-              value={personalData.firstName} 
+            <FormField
+              label="First Name"
+              value={personalData.firstName}
               onChangeText={(value) => handlePersonalChange('firstName', value)}
               placeholder="Your first name"
             />
-            <FormField 
-              label="Last Name" 
-              value={personalData.lastName} 
+            <FormField
+              label="Last Name"
+              value={personalData.lastName}
               onChangeText={(value) => handlePersonalChange('lastName', value)}
               placeholder="Your last name"
             />
-            <FormField 
-              label="Email" 
-              value={personalData.email} 
+            <FormField
+              label="Email"
+              value={personalData.email}
               onChangeText={(value) => handlePersonalChange('email', value)}
               placeholder="Your email address"
             />
-            <FormField 
-              label="Preferred Name" 
-              value={personalData.preferredName} 
+            <FormField
+              label="Preferred Name"
+              value={personalData.preferredName}
               onChangeText={(value) => handlePersonalChange('preferredName', value)}
               placeholder="Your preferred name"
             />
@@ -224,21 +218,21 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
         {activeTab === "bank" && (
           <>
             <SectionHeader title="Banking Information" />
-            <FormField 
-              label="Bank Name" 
-              value={bankData.bankName} 
+            <FormField
+              label="Bank Name"
+              value={bankData.bankName}
               onChangeText={(value) => handleBankChange('bankName', value)}
               placeholder="Your bank name"
             />
-            <FormField 
-              label="Routing Number" 
-              value={bankData.routingNumber} 
+            <FormField
+              label="Routing Number"
+              value={bankData.routingNumber}
               onChangeText={(value) => handleBankChange('routingNumber', value)}
               placeholder="Your routing number"
             />
-            <FormField 
-              label="Account Number" 
-              value={bankData.accountNumber} 
+            <FormField
+              label="Account Number"
+              value={bankData.accountNumber}
               onChangeText={(value) => handleBankChange('accountNumber', value)}
               placeholder="Your account number"
             />
@@ -249,15 +243,15 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
           <>
             <SectionHeader title="Insurance Information" />
             <InsuranceProviderSelector />
-            <FormField 
-              label="Policy Number" 
-              value={insuranceData.policyNumber} 
+            <FormField
+              label="Policy Number"
+              value={insuranceData.policyNumber}
               onChangeText={(value) => handleInsuranceChange('policyNumber', value)}
               placeholder="Your policy number"
             />
-            <FormField 
-              label="Group Number" 
-              value={insuranceData.groupNumber} 
+            <FormField
+              label="Group Number"
+              value={insuranceData.groupNumber}
               onChangeText={(value) => handleInsuranceChange('groupNumber', value)}
               placeholder="Your group number"
             />
@@ -267,15 +261,15 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
         {activeTab === "sameday" && (
           <>
             <SectionHeader title="Same Day Co-Pay Information" />
-            <FormField 
-              label="Payment Method" 
-              value={sameDayData.paymentMethod} 
+            <FormField
+              label="Payment Method"
+              value={sameDayData.paymentMethod}
               onChangeText={(value) => handleSameDayChange('paymentMethod', value)}
               placeholder="Your preferred payment method"
             />
-            <FormField 
-              label="Preferred Bank" 
-              value={sameDayData.preferredBank} 
+            <FormField
+              label="Preferred Bank"
+              value={sameDayData.preferredBank}
               onChangeText={(value) => handleSameDayChange('preferredBank', value)}
               placeholder="Your preferred bank for same-day payments"
             />
