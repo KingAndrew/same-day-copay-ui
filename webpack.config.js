@@ -11,14 +11,15 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_modules\/(?!(react-native|@react-native|expo-camera|expo-modules-core)\/).*/,
+        exclude: /node_modules\/(?!(react-native|@react-native|expo-camera|expo-modules-core|@expo)\/).*/,
         use: {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react", "@babel/preset-flow", "@babel/preset-typescript"],
             plugins: [
               "@babel/plugin-proposal-export-namespace-from",
-              "@babel/plugin-transform-runtime"
+              "@babel/plugin-transform-runtime",
+              "@babel/plugin-transform-typescript"
             ],
           },
         },

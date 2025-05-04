@@ -26,4 +26,10 @@ Camera.Constants = {
   },
 };
 
+// Mock camera permission request
+Camera.requestCameraPermissionsAsync = async () => {
+  console.log('Mock camera permissions requested');
+  return { status: 'granted' };
+};
+
 export { Camera };
