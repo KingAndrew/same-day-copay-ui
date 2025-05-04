@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { Colors } from "../constants";
+import renderScreen from "./utils/screenRenderer";
 import {
   HomeScreen,
   LoginScreen,
@@ -47,9 +48,6 @@ function App() {
 
     setCurrentScreen(screen);
   };
-
-  // Import the screen renderer
-  import renderScreen from "./utils/screenRenderer";
   
   // Use the imported function to render the screen
   const renderCurrentScreen = () => {
