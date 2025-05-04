@@ -9,8 +9,12 @@ import {
   TextInput,
   Animated,
   Image,
+  Platform,
+  PermissionsAndroid,
 } from "react-native";
 import { URLs, Colors } from "./constants";
+import { Camera } from 'expo-camera';
+
 
 // Reusable UI components
 const AppButton = ({ onPress, text, style, textStyle, disabled }) => {
@@ -67,20 +71,20 @@ function App() {
         // We're capturing back
       }
     }
-    
+
     // Handle returning from snap-receipt with captured image
     if (currentScreen === "snap-receipt" && screen === "new-purchase") {
       // Simulate capturing an image when returning
       const now = new Date();
       const mockImageUri = `${URLs.IMAGES}/snap-receipt.png?t=${now.getTime()}`;
-      
+
       if (!frontReceiptImage) {
         setFrontReceiptImage(mockImageUri);
       } else if (!backReceiptImage) {
         setBackReceiptImage(mockImageUri);
       }
     }
-    
+
     setCurrentScreen(screen);
   };
 
@@ -173,7 +177,7 @@ const FormInput = ({
 const TabSelector = ({ activeTab, setActiveTab }) => {
   // Animation ref to track position
   const [indicatorLeft, setIndicatorLeft] = useState(activeTab === "login" ? "0%" : "50%");
-  
+
   // Update indicator position with animation effect
   useEffect(() => {
     setIndicatorLeft(activeTab === "login" ? "0%" : "50%");
@@ -208,7 +212,7 @@ const TabSelector = ({ activeTab, setActiveTab }) => {
           Sign up
         </Text>
       </TouchableOpacity>
-      
+
       {/* Sliding indicator */}
       <View 
         style={[
@@ -535,30 +539,26 @@ const AboutScreen = ({ navigateTo }) => (
   />
 );
 
-const NewPurchaseScreen = ({ navigateTo }) => {
+const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [frontReceiptImage, setFrontReceiptImage] = useState(null);
-  const [backReceiptImage, setBackReceiptImage] = useState(null);
-  const [isFormComplete, setIsFormComplete] = useState(false);
-  
+
   // Pass receipt state to other screens and retrieve on return
   useEffect(() => {
     // When front and back images are captured, we can progress to step 3
     if (frontReceiptImage && backReceiptImage) {
       setCurrentStep(3);
-      setIsFormComplete(true);
     } else if (frontReceiptImage) {
       setCurrentStep(2);
     }
   }, [frontReceiptImage, backReceiptImage]);
-  
+
   const handleContinue = () => {
     if (currentStep === 3) {
       // Submit the form
       navigateTo("main-menu");
     }
   };
-  
+
   return (
     <View style={styles.screen}>
       <View style={styles.box}>
@@ -570,7 +570,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
           />
           <Text style={styles.title}>New Purchase</Text>
         </View>
-        
+
         {/* Steps as Blue Menu Items */}
         <View style={styles.stepsMenuContainer}>
           {/* Step 1 */}
@@ -585,7 +585,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
               <Text style={styles.stepMenuText}>Front Receipt Capture</Text>
               <Text style={styles.stepChevron}>›</Text>
             </View>
-            
+
             {frontReceiptImage && (
               <View style={styles.receiptThumbnailsContainer}>
                 <Image 
@@ -596,7 +596,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
               </View>
             )}
           </TouchableOpacity>
-          
+
           {/* Step 2 */}
           <TouchableOpacity 
             style={[styles.stepMenuItem, currentStep === 2 && styles.activeStepMenu]} 
@@ -610,7 +610,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
               <Text style={styles.stepMenuText}>Back Receipt Capture</Text>
               <Text style={styles.stepChevron}>›</Text>
             </View>
-            
+
             {backReceiptImage && (
               <View style={styles.receiptThumbnailsContainer}>
                 <Image 
@@ -621,7 +621,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
               </View>
             )}
           </TouchableOpacity>
-          
+
           {/* Step 3 */}
           <TouchableOpacity 
             style={[styles.stepMenuItem, currentStep === 3 && styles.activeStepMenu]} 
@@ -637,7 +637,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
             </View>
           </TouchableOpacity>
         </View>
-        
+
         {/* Step Content Area */}
         <View style={styles.stepContentArea}>
           {currentStep === 1 && (
@@ -648,7 +648,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
                   onPress={() => navigateTo("snap-receipt")} 
                 />
               )}
-              
+
               {frontReceiptImage && backReceiptImage && (
                 <Text style={styles.receiptCapturedText}>
                   Receipt captured successfully! Proceed to verify details.
@@ -656,7 +656,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
               )}
             </View>
           )}
-          
+
           {currentStep === 2 && (
             <View>
               <Text style={styles.detailsText}>
@@ -665,7 +665,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
               {/* Here would go the form fields for receipt details */}
             </View>
           )}
-          
+
           {currentStep === 3 && (
             <View>
               <Text style={styles.detailsText}>
@@ -675,7 +675,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
             </View>
           )}
         </View>
-        
+
         <View style={styles.buttonsRow}>
           <AppButton
             text="Cancel" 
@@ -683,7 +683,7 @@ const NewPurchaseScreen = ({ navigateTo }) => {
             style={styles.cancelButton}
             textStyle={styles.cancelButtonText}
           />
-          
+
           <AppButton 
             text={currentStep === 3 ? "Submit" : "Continue"} 
             onPress={currentStep === 3 ? () => navigateTo("main-menu") : handleContinue} 
@@ -709,11 +709,11 @@ const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) 
         />
         <Text style={styles.screenHeaderTitle}>{title}</Text>
       </View>
-      
+
       <View style={styles.screenContent}>
         {children}
       </View>
-      
+
       {showBackButton && (
         <View style={styles.backButtonContainer}>
           <AppButton
@@ -728,127 +728,76 @@ const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) 
   </View>
 );
 
-const SnapReceiptScreen = ({ navigateTo }) => {
+const SnapReceiptScreen = ({ navigateTo, setFrontReceiptImage, setBackReceiptImage, isFrontSide }) => {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
   const [photoTaken, setPhotoTaken] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-  const [currentTimestamp, setCurrentTimestamp] = useState('');
-  const [isFrontSide, setIsFrontSide] = useState(true);
-  const [capturedPhotoUri, setCapturedPhotoUri] = useState(null);
-  
-  // Check which side we need to capture based on NewPurchaseScreen state
+  const [capturedImage, setCapturedImage] = useState(null);
+  const cameraRef = useRef(null);
+
   useEffect(() => {
-    // In a real app, we would get this from navigation params
-    // Here we simulate by checking global App state
-    // For simplicity, we assume front side needs to be captured if we're in this screen
-    
-    // Request camera permission would happen here in a real app
-    console.log("Requesting camera access...");
-    
-    // Cleanup function
-    return () => {
-      // Release camera would happen here
-      console.log("Releasing camera...");
-    };
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
   }, []);
-  
-  const handleTakePhoto = () => {
-    // Simulate taking a photo
-    setPhotoTaken(true);
-    setShowConfirmation(true);
-    
-    // Create timestamp for the image
-    const now = new Date();
-    const timestamp = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-    setCurrentTimestamp(timestamp);
-    
-    // Mock captured photo URI with timestamp to make it unique
-    setCapturedPhotoUri(`${URLs.IMAGES}/snap-receipt.png?t=${now.getTime()}`);
+
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      try {
+        let photo = await cameraRef.current.takePictureAsync();
+        setCapturedImage(photo.uri);
+        setPhotoTaken(true);
+      } catch (error) {
+        console.error("Error taking picture:", error);
+      }
+    }
   };
-  
+
   const handleConfirmPhoto = () => {
-    // Save the captured photo to appropriate state in NewPurchaseScreen
-    // In a real app, we would actually save the photo to storage
-    
-    // Here we'll navigate back to new-purchase with the captured image info
-    setPhotoTaken(false);
-    setShowConfirmation(false);
-    
-    // Return to the main purchase screen with the captured image
+    if (isFrontSide) {
+      setFrontReceiptImage(capturedImage);
+    } else {
+      setBackReceiptImage(capturedImage);
+    }
     navigateTo("new-purchase");
   };
-  
-  const handleRetakePhoto = () => {
-    setPhotoTaken(false);
-    setShowConfirmation(false);
-    setCapturedPhotoUri(null);
-  };
-  
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
   return (
     <View style={styles.screen}>
       <View style={styles.boxFull}>
         <Text style={styles.title}>
-          Front Receipt Capture
+          {isFrontSide ? 'Front' : 'Back'} Receipt Capture
         </Text>
-        
         <View style={styles.cameraPreviewContainer}>
-          {showConfirmation ? (
+          {photoTaken ? (
             <View style={styles.confirmationContainer}>
-              <Image 
-                source={{ uri: capturedPhotoUri || `${URLs.IMAGES}/snap-receipt.png` }} 
-                style={styles.cameraPreview} 
-                alt="Captured image"
-              />
-              <Text style={styles.timestampText}>Captured: {currentTimestamp}</Text>
-              <Text style={styles.confirmationQuestion}>
-                Is this image clear? You can retake it if needed.
-              </Text>
-              
+              <Image source={{ uri: capturedImage }} style={styles.cameraPreview} />
               <View style={styles.confirmationButtonsRow}>
-                <AppButton 
-                  text="Retake" 
-                  onPress={handleRetakePhoto}
-                  style={styles.secondaryButton}
-                  textStyle={styles.secondaryButtonText}
-                />
-                <AppButton 
-                  text="Continue" 
-                  onPress={handleConfirmPhoto}
-                />
+                <AppButton text="Retake" onPress={() => {setPhotoTaken(false); setCapturedImage(null);}} style={styles.secondaryButton} textStyle={styles.secondaryButtonText} />
+                <AppButton text="Confirm" onPress={handleConfirmPhoto} />
               </View>
             </View>
           ) : (
-            <>
-              <Image 
-                source={{ uri: `${URLs.IMAGES}/snap-receipt.png` }} 
-                style={styles.cameraPreview} 
-                alt="Camera preview"
-              />
-              <Text style={styles.cameraInstructions}>
-                Position the receipt within the frame
-              </Text>
-            </>
+            <Camera style={styles.cameraPreview} type={type} ref={cameraRef}>
+              <View style={styles.cameraControlsContainer}>
+                <AppButton text="Take Photo" onPress={takePicture} />
+                <AppButton text="Cancel" onPress={() => navigateTo("new-purchase")} style={styles.secondaryButton} textStyle={styles.secondaryButtonText} />
+              </View>
+            </Camera>
           )}
         </View>
-        
-        {!showConfirmation && (
-          <View style={styles.cameraControlsContainer}>
-            <AppButton 
-              text="Take Photo" 
-              onPress={handleTakePhoto} 
-            />
-            
-            <AppButton
-              text="Cancel" 
-              onPress={() => navigateTo("new-purchase")} 
-              style={styles.secondaryButton}
-              textStyle={styles.secondaryButtonText}
-            />
-          </View>
-        )}
       </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -954,11 +903,16 @@ const styles = StyleSheet.create({
   cameraPreview: {
     width: "100%",
     height: "100%",
-    resizeMode: "contain",
+    resizeMode: "cover",
   },
   cameraControlsContainer: {
     width: "100%",
-    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: 20,
+    left: 0,
+    right: 0,
   },
   historyImage: {
     width: "100%",
@@ -1101,8 +1055,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginBottom: 8,
     color: Colors.NAVY_BLUE,
-    fontFamily: "Montserrat, sans-serif",
-    fontWeight: "700",
+    fontFamily: "Montserrat, sans-serif",fontWeight: "700",
   },
   input: {
     borderWidth: 1,
