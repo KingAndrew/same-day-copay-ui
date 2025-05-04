@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { Colors, URLs } from '../constants';
@@ -16,11 +15,11 @@ const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) 
         />
         <Text style={styles.screenHeaderTitle}>{title}</Text>
       </View>
-      
+
       <View style={styles.screenContent}>
         {children}
       </View>
-      
+
       {showBackButton && (
         <View style={styles.backButtonContainer}>
           <AppButton
@@ -96,9 +95,8 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     color: Colors.DARK_GRAY,
     fontSize: 16,
-    fontWeight: "600",
-    fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
+    fontFamily: "Montserrat, sans-serif",
   },
 });
 

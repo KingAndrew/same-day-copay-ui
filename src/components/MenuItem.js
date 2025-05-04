@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
 import { Colors, URLs } from '../constants';
@@ -42,10 +41,9 @@ const styles = StyleSheet.create({
   menuItemText: {
     fontSize: 16,
     color: Colors.WHITE,
-    fontWeight: "500",
+    fontWeight: "700",
     flex: 1,
     fontFamily: "Montserrat, sans-serif",
-    fontWeight: "700",
   },
   menuIconContainer: {
     marginRight: 15,

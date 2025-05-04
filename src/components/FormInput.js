@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { Colors } from '../constants';
@@ -37,11 +36,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "700",
     marginBottom: 8,
     color: Colors.NAVY_BLUE,
     fontFamily: "Montserrat, sans-serif",
-    fontWeight: "700",
   },
   input: {
     borderWidth: 1,

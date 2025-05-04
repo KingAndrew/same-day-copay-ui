@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
-import { Colors } from "./constants";
+import { Colors } from "../constants";
 import {
   HomeScreen,
   LoginScreen,
@@ -52,14 +52,14 @@ function App() {
     switch (currentScreen) {
       case "main-menu":
         return (
-          <MainMenuScreen 
+          <MainMenuScreen
             navigateTo={handleNavigate}
             userData={userData}
           />
         );
       case "login":
         return (
-          <LoginScreen 
+          <LoginScreen
             navigateTo={handleNavigate}
             setUserData={setUserData}
           />
@@ -73,11 +73,23 @@ function App() {
           />
         );
       case "account-setup":
-        return <AccountSetupScreen navigateTo={handleNavigate} />;
+        return (
+          <AccountSetupScreen 
+            navigateTo={handleNavigate} 
+          />
+        );
       case "account-history":
-        return <AccountHistoryScreen navigateTo={handleNavigate} />;
+        return (
+          <AccountHistoryScreen 
+            navigateTo={handleNavigate} 
+          />
+        );
       case "about":
-        return <AboutScreen navigateTo={handleNavigate} />;
+        return (
+          <AboutScreen 
+            navigateTo={handleNavigate} 
+          />
+        );
       case "snap-receipt":
         return (
           <SnapReceiptScreen
@@ -88,7 +100,11 @@ function App() {
           />
         );
       default:
-        return <HomeScreen navigateTo={handleNavigate} />;
+        return (
+          <HomeScreen 
+            navigateTo={handleNavigate} 
+          />
+        );
     }
   };
 

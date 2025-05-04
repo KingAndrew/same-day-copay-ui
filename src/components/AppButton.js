@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Colors } from '../constants';
@@ -34,9 +33,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.WHITE,
     fontSize: 16,
-    fontWeight: "600",
-    fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
+    fontFamily: "Montserrat, sans-serif",
   },
   disabledButton: {
     backgroundColor: Colors.FOREST_GREEN,
