@@ -8,6 +8,9 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}===== Running Mock Data Retrieval Test =====${NC}"
 
+# Make sure the directory exists
+mkdir -p src/utils/__tests__
+
 # Make the script executable
 chmod +x src/utils/__tests__/mockDataTest.js
 
@@ -18,7 +21,7 @@ node src/utils/__tests__/mockDataTest.js
 TEST_RESULT=$?
 
 if [ $TEST_RESULT -eq 0 ]; then
-  echo -e "${GREEN}===== Test Completed! =====${NC}"
+  echo -e "${GREEN}===== Test Passed! =====${NC}"
 else
   echo -e "${RED}===== Test Failed! =====${NC}"
 fi
