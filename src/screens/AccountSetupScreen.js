@@ -47,6 +47,8 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
   useEffect(() => {
     const loadData = async () => {
       try {
+        console.log('Loading data for user:', email);
+        
         // Load insurance providers (global data)
         const providers = await dataAPI.getData('accountSetup.insuranceProviders');
         if (providers) {
@@ -55,6 +57,7 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
 
         // Load user specific data if available
         const personalInfo = await dataAPI.getUserData(email, 'accountSetup.personal');
+        console.log('Loaded personal data:', personalInfo);
         if (personalInfo) {
           setPersonalData(personalInfo);
         }

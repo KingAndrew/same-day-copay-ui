@@ -22,9 +22,9 @@ class MockDataSource {
 
   async saveData(key, value) {
     return new Promise((resolve) => {
-      // In a real implementation, we would save to the mockData
-      // For now, just log and return success
-      console.log(`[MockDataSource] Saving data for key: ${key}`, value);
+      // Actually save the data to mockData
+      mockData[key] = value;
+      console.log(`[MockDataSource] Saved data for key: ${key}`, value);
       resolve(true);
     });
   }
