@@ -99,48 +99,10 @@ const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) 
               <View style={[styles.stepCircle, currentStep >= 3 && styles.activeStep]}>
                 <Text style={styles.stepNumber}>3</Text>
               </View>
-              <Text style={styles.stepMenuText}>Request Refund</Text>
+              <Text style={styles.stepMenuText}>Verify Data</Text>
               <Text style={styles.stepChevron}>›</Text>
             </View>
           </TouchableOpacity>
-        </View>
-
-        {/* Step Content Area */}
-        <View style={styles.stepContentArea}>
-          {currentStep === 1 && (
-            <View style={styles.snapReceiptContainer}>
-              {(!frontReceiptImage || !backReceiptImage) && (
-                <AppButton 
-                  text={!frontReceiptImage ? "Snap Front of Receipt" : "Snap Back of Receipt"} 
-                  onPress={() => navigateTo("snap-receipt")} 
-                />
-              )}
-
-              {frontReceiptImage && backReceiptImage && (
-                <Text style={styles.receiptCapturedText}>
-                  Receipt captured successfully! Proceed to verify details.
-                </Text>
-              )}
-            </View>
-          )}
-
-          {currentStep === 2 && (
-            <View>
-              <Text style={styles.detailsText}>
-                Please verify the receipt details are correct
-              </Text>
-              {/* Here would go the form fields for receipt details */}
-            </View>
-          )}
-
-          {currentStep === 3 && (
-            <View>
-              <Text style={styles.detailsText}>
-                Submit your refund request
-              </Text>
-              {/* Here would go final confirmation details */}
-            </View>
-          )}
         </View>
 
         <View style={styles.buttonsRow}>
@@ -201,14 +163,14 @@ const styles = StyleSheet.create({
   },
   stepsMenuContainer: {
     width: "100%",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   stepMenuItem: {
     flexDirection: "column",
     backgroundColor: Colors.NAVY_BLUE,
     padding: 16,
     borderRadius: 6,
-    marginBottom: 12,
+    marginBottom: 2,
     width: "100%",
   },
   activeStepMenu: {

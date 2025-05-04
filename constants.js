@@ -35,6 +35,6 @@ export const Colors = {
   // Status colors
   SUCCESS: '#4caf50',
   ERROR: '#f44336',
-  WARNING: '#ff9800',
+  WARNING: '#EBE600',
   INFO: '#2196f3',
 };

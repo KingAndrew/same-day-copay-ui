@@ -1,8 +1,7 @@
-
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Animated, StyleSheet } from 'react-native';
-import { Colors, URLs } from '../constants';
-import { AppLogo, MenuItem, SubMenuItem } from '../components';
+import React, { useState, useRef, useEffect } from "react";
+import { View, Text, Animated, StyleSheet } from "react-native";
+import { Colors, URLs } from "../constants";
+import { AppLogo, MenuItem, SubMenuItem } from "../components";
 
 // Function to animate counting
 const useAmountCounter = (amount) => {
@@ -14,10 +13,10 @@ const useAmountCounter = (amount) => {
   useEffect(() => {
     // Initialize audio and prepare it before starting animation
     audioRef.current = new Audio(`${URLs.AUDIO}/banknote-counter-106014.mp3`);
-    
+
     // Preload the audio to ensure it's ready to play instantly
     audioRef.current.load();
-    
+
     const totalAmount = amount || 1024.56;
     const duration = 1500; // 1.5 seconds
 
@@ -47,7 +46,7 @@ const useAmountCounter = (amount) => {
     const startSync = () => {
       // Play audio and immediately start animation
       const playPromise = audioRef.current.play();
-      
+
       // Handle both success and failure of audio playback
       if (playPromise !== undefined) {
         playPromise
@@ -56,7 +55,7 @@ const useAmountCounter = (amount) => {
             animation.start();
             updateCounter();
           })
-          .catch(error => {
+          .catch((error) => {
             // Audio failed to play (perhaps due to browser restrictions)
             console.log("Audio play error:", error);
             // Still start the animation even if audio fails
@@ -121,14 +120,14 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
           {accountExpanded && (
             <>
               <SubMenuItem
+                icon="settings_icon.png"
                 text="Account Setup"
                 onPress={() => navigateTo("account-setup")}
-                icon="settings_icon.png"
               />
               <SubMenuItem
+                icon="history.png"
                 text="Account History"
                 onPress={() => navigateTo("account-history")}
-                icon="history.png"
               />
             </>
           )}
@@ -150,7 +149,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: 10,
   },
   boxFull: {
     padding: 20,
@@ -164,7 +163,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   welcomeText: {
-    fontSize: 28,
+    fontSize: 24,
     color: Colors.NAVY_BLUE,
     textAlign: "center",
     marginBottom: 8,
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   totalRefundedLabel: {
-    fontSize: 18,
+    fontSize: 28,
     color: Colors.FOREST_GREEN,
     textAlign: "center",
     fontFamily: "Montserrat, sans-serif",
