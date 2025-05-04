@@ -1,53 +1,60 @@
 
-import React, { forwardRef } from 'react';
-import { View, Text } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-// This is a mock implementation of the Camera component for web
-const Camera = forwardRef(({ style, type, children, onCameraReady, onMountError }, ref) => {
-  // Call onCameraReady when component mounts
-  React.useEffect(() => {
-    if (onCameraReady) {
-      setTimeout(() => {
-        onCameraReady();
-      }, 500);
-    }
-  }, [onCameraReady]);
-  
-  return (
-    <View 
-      ref={ref}
-      style={[style, { backgroundColor: '#000', justifyContent: 'center', alignItems: 'center' }]}
-    >
-      <Text style={{ color: '#fff', marginBottom: 20 }}>Camera Preview (Mock)</Text>
-      {children}
-    </View>
-  );
+// Mock Camera implementation for web
+export class Camera extends React.Component {
+  static Constants = {
+    Type: {
+      front: 'front',
+      back: 'back',
+    },
+    FlashMode: {
+      on: 'on',
+      off: 'off',
+      auto: 'auto',
+      torch: 'torch',
+    },
+  };
+
+  static requestCameraPermissionsAsync = async () => {
+    return { status: 'granted' };
+  };
+
+  takePictureAsync = async (options = {}) => {
+    console.log('Mock camera: taking picture');
+    // Return a mock image URI
+    return { uri: 'https://example.com/mock-image.jpg' };
+  };
+
+  render() {
+    return (
+      <View style={[styles.camera, this.props.style]}>
+        <Text style={styles.text}>Camera Preview</Text>
+        <Text style={styles.subtext}>(Mock camera for web)</Text>
+        {this.props.children}
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  camera: {
+    backgroundColor: '#222',
+    height: 300,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  text: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  subtext: {
+    color: '#ccc',
+    fontSize: 14,
+    marginTop: 8,
+  },
 });
-
-// Mock the Camera.Constants
-Camera.Constants = {
-  Type: {
-    front: 'front',
-    back: 'back',
-  },
-  FlashMode: {
-    on: 'on',
-    off: 'off',
-    auto: 'auto',
-    torch: 'torch',
-  },
-};
-
-// Mock camera permission request
-Camera.requestCameraPermissionsAsync = async () => {
-  console.log('Mock camera permissions requested');
-  return { status: 'granted' };
-};
-
-// Mock takePictureAsync method
-Camera.prototype.takePictureAsync = async (options) => {
-  console.log('Mock picture taken', options);
-  return { uri: 'https://via.placeholder.com/300x200.png?text=Mock+Camera+Image' };
-};
-
-export { Camera };

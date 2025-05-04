@@ -3,13 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { Colors } from '../constants';
 import { AppButton } from '../components';
-// Import Camera conditionally based on platform
-import { Platform } from 'react-native';
-import { Camera as ExpoCamera } from 'expo-camera';
-import { Camera as WebCamera } from '../components/CameraMock';
-
-// Use the appropriate Camera implementation based on platform
-const Camera = Platform.OS === 'web' ? WebCamera : ExpoCamera;
+// Import only the mock camera for web
+import { Camera } from '../components/CameraMock';
 
 const SnapReceiptScreen = ({ navigateTo, setFrontReceiptImage, setBackReceiptImage, isFrontSide }) => {
   const [hasPermission, setHasPermission] = useState(null);

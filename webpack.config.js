@@ -59,8 +59,15 @@ module.exports = {
       'react-native/Libraries/Image/': 'react-native-web/dist/exports/Image/',
       'react-native/Libraries/Text/': 'react-native-web/dist/exports/Text/',
       'react-native/Libraries/Utilities/': 'react-native-web/dist/modules/',
+      // Disable Expo dependencies causing problems
+      'expo-camera': path.resolve(__dirname, 'src/components/CameraMock.js'),
+      'expo-modules-core': path.resolve(__dirname, 'src/components/CameraMock.js'),
     },
     extensions: ['.web.js', '.js', '.jsx', '.ts', '.tsx', '.json'],
+    fallback: {
+      'path': false,
+      'fs': false,
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
