@@ -1,29 +1,24 @@
 
 #!/bin/bash
 
+# Colors for better visibility
 GREEN='\033[0;32m'
-RED='\033[0;31m'
 YELLOW='\033[0;33m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}===== Running Mock Data Retrieval Test =====${NC}"
+echo -e "${YELLOW}===== Running Mock Data Retrieval Test ===== ${NC}"
 
-# Make sure the directory exists
-mkdir -p src/utils/__tests__
-
-# Make the script executable
-chmod +x src/utils/__tests__/mockDataTest.js
-
-# Run the test file
+# Run the test
 node src/utils/__tests__/mockDataTest.js
 
-# Capture the exit code
-TEST_RESULT=$?
+# Capture exit code
+EXIT_CODE=$?
 
-if [ $TEST_RESULT -eq 0 ]; then
+if [ $EXIT_CODE -eq 0 ]; then
   echo -e "${GREEN}===== Test Passed! =====${NC}"
 else
   echo -e "${RED}===== Test Failed! =====${NC}"
 fi
 
-exit $TEST_RESULT
+exit $EXIT_CODE

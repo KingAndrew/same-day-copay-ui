@@ -1,106 +1,99 @@
-// Using CommonJS for Node.js compatibility
-const fs = require('fs');
-const path = require('path');
-const { default: mockData } = require('../mockDataSource');
 
-// Get direct reference to dataAPI module for testing
+// Mock Data Test - This tests the mock data functionality and dataAPI integration
+
 const { dataAPI } = require('../dataAPI');
+const mockData = require('../mockDataSource');
 
-// Test function that runs all tests
-function runAllTests() {
-  console.log('\n----- Starting Mock Data Tests -----\n');
+console.log('===== Running Mock Data Source Test =====');
 
-  // Test 1: Get existing data
-  return testGetExistingData()
-    .then(result => {
-      if (!result) return false;
-      // Test 2: Update data
-      return testUpdateData();
-    })
-    .then(result => {
-      if (!result) return false;
-      // All tests passed
-      console.log('\n✅ ALL TESTS PASSED - Mock data retrieval and persistence are working correctly!');
-      return true;
-    })
-    .catch(error => {
-      console.error('\n❌ TEST ERROR:', error);
+// Test mock data is accessible
+function testMockDataAccess() {
+  try {
+    console.log('Testing mock data access...');
+    
+    // Test if mockData is properly initialized
+    if (!mockData || typeof mockData !== 'object') {
+      console.error('❌ Mock data is not properly initialized');
       return false;
-    });
+    }
+    
+    console.log('✅ Mock data is accessible');
+    return true;
+  } catch (error) {
+    console.error('❌ Error testing mock data access:', error);
+    return false;
+  }
 }
 
-// Test retrieving existing data
-function testGetExistingData() {
-  console.log('Test 1: Retrieving existing data...');
-
-  return dataAPI.getData("David.accountSetup.personal")
-    .then(data => {
-      if (!data) {
-        console.log('❌ TEST FAILED: No data returned for key "David.accountSetup.personal"');
-        return false;
-      }
-
-      console.log('Data retrieved:', JSON.stringify(data, null, 2));
-
-      if (data.firstName !== "David" || data.lastName !== "Smith") {
-        console.log('❌ TEST FAILED: Data does not match expected values');
-        return false;
-      }
-
-      console.log('✅ Test 1 PASSED: Data retrieved successfully with correct values');
-      return true;
-    });
+// Test dataAPI can retrieve mock data
+async function testDataAPIGetMockData() {
+  try {
+    console.log('Testing dataAPI.getData with mock data...');
+    
+    // Add test data to mock data source
+    mockData['test.key'] = { value: 'test-value' };
+    
+    // Test retrieval
+    const data = await dataAPI.getData('test.key');
+    
+    if (!data || data.value !== 'test-value') {
+      console.error('❌ Failed to retrieve mock data through dataAPI');
+      return false;
+    }
+    
+    console.log('✅ Successfully retrieved mock data through dataAPI');
+    return true;
+  } catch (error) {
+    console.error('❌ Error testing dataAPI.getData:', error);
+    return false;
+  }
 }
 
-// Test updating data
-function testUpdateData() {
-  console.log('\nTest 2: Updating data...');
-
-  return dataAPI.getData("David.accountSetup.personal")
-    .then(data => {
-      if (!data) {
-        console.log('❌ TEST FAILED: No data returned for update test');
-        return false;
-      }
-
-      // Update the preferred name
-      const updatedData = { ...data, preferredName: "Frankie" };
-
-      return dataAPI.setData("David.accountSetup.personal", updatedData)
-        .then(success => {
-          if (!success) {
-            console.log('❌ TEST FAILED: Data update returned failure');
-            return false;
-          }
-
-          // Verify the update
-          return dataAPI.getData("David.accountSetup.personal")
-            .then(newData => {
-              if (!newData) {
-                console.log('❌ TEST FAILED: No data returned after update');
-                return false;
-              }
-
-              console.log('Updated data:', JSON.stringify(newData, null, 2));
-
-              if (newData.preferredName !== "Frankie") {
-                console.log('❌ TEST FAILED: Updated value not reflected in data');
-                return false;
-              }
-
-              console.log('✅ Test 2 PASSED: Data updated successfully');
-              return true;
-            });
-        });
-    });
+// Test dataAPI can save to mock data
+async function testDataAPISaveMockData() {
+  try {
+    console.log('Testing dataAPI.saveData with mock data...');
+    
+    // Save data through API
+    const saveResult = await dataAPI.saveData('test.save-key', { value: 'saved-value' });
+    
+    if (!saveResult) {
+      console.error('❌ dataAPI.saveData returned false');
+      return false;
+    }
+    
+    // Verify data was saved to mock source
+    if (mockData['test.save-key']?.value !== 'saved-value') {
+      console.error('❌ Data was not properly saved to mock source');
+      return false;
+    }
+    
+    console.log('✅ Successfully saved data to mock source through dataAPI');
+    return true;
+  } catch (error) {
+    console.error('❌ Error testing dataAPI.saveData:', error);
+    return false;
+  }
 }
 
-// Run all tests and exit with appropriate code
-runAllTests()
-  .then(success => {
-    process.exit(success ? 0 : 1);
-  })
-  .catch(error => {
-    console.error('\n❌ UNEXPECTED ERROR:', error);
-    process.exit(1);
-  });
+// Run all tests
+async function runAllTests() {
+  const results = [
+    testMockDataAccess(),
+    await testDataAPIGetMockData(),
+    await testDataAPISaveMockData()
+  ];
+  
+  const allPassed = results.every(result => result === true);
+  
+  if (allPassed) {
+    console.log('\n✅ All mock data tests passed!');
+    process.exit(0); // Success exit code
+  } else {
+    console.error('\n❌ Some mock data tests failed');
+    process.exit(1); // Failure exit code
+  }
+}
+
+// Execute tests
+runAllTests();

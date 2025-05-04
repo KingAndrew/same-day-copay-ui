@@ -67,4 +67,5 @@ const mockData = {
   }
 };
 
+// Make sure mockData is mutable so we can update it
 module.exports = mockData;
