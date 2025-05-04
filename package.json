@@ -30,6 +30,7 @@
     "@react-native/metro-config": "^0.72.11",
     "@tsconfig/react-native": "^3.0.0",
     "@types/react": "^18.0.24",
+    "@types/react-native-web": "^0.19.1",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.2.1",
     "babel-loader": "^10.0.0",
@@ -40,7 +41,8 @@
     "metro-react-native-babel-preset": "0.76.8",
     "preset-react": "^1.0.0",
     "react-test-renderer": "18.2.0",
-    "typescript": "4.8.4",
+    "ts-loader": "^9.5.2",
+    "typescript": "^4.8.4",
     "webpack": "^5.99.7",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"

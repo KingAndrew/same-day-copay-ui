@@ -10,8 +10,8 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules\/(?!(react-native|@react-native)\/).*/,
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /node_modules\/(?!(react-native|@react-native|expo-camera|expo-modules-core)\/).*/,
         use: {
           loader: "babel-loader",
           options: {
@@ -45,7 +45,7 @@ module.exports = {
       'react-native/Libraries/Text/': 'react-native-web/dist/exports/Text/',
       'react-native/Libraries/Utilities/': 'react-native-web/dist/modules/',
     },
-    extensions: ['.web.js', '.js'],
+    extensions: ['.web.js', '.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   plugins: [
     new HtmlWebpackPlugin({
