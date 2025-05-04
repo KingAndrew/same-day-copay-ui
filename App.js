@@ -307,9 +307,18 @@ const MenuItem = ({ icon, text, onPress, chevronText = "›" }) => (
 );
 
 // Reusable sub-menu item component
-const SubMenuItem = ({ text, onPress }) => (
+const SubMenuItem = ({ text, onPress, icon }) => (
   <TouchableOpacity style={styles.subMenuItemContainer} onPress={onPress}>
     <View style={styles.subMenuItem}>
+      {icon && (
+        <View style={styles.subMenuIconContainer}>
+          <Image
+            source={{ uri: `${URLs.IMAGES}/${icon}` }}
+            style={styles.subMenuIcon}
+            alt={text}
+          />
+        </View>
+      )}
       <Text style={styles.subMenuItemText}>{text}</Text>
       <Text style={styles.chevron}>›</Text>
     </View>
@@ -406,10 +415,12 @@ const MainMenuScreen = ({ navigateTo, userData }) => {
               <SubMenuItem
                 text="Account Setup"
                 onPress={() => navigateTo("account-setup")}
+                icon="settings_icon.png"
               />
               <SubMenuItem
                 text="Account History"
                 onPress={() => navigateTo("account-history")}
+                icon="history.png"
               />
             </>
           )}
@@ -935,6 +946,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: "Montserrat, sans-serif",
     fontWeight: "700",
+  },
+  subMenuIconContainer: {
+    marginRight: 10,
+  },
+  subMenuIcon: {
+    width: 24,
+    height: 24,
+    tintColor: Colors.WHITE,
   },
 });
 
