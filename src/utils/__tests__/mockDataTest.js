@@ -50,7 +50,13 @@ testMockDataRetrieval()
   .then(success => {
     if (success) {
       console.log('\n✅ ALL TESTS PASSED - Mock data retrieval is working correctly!');
+      process.exit(0);
     } else {
       console.log('\n❌ TESTS FAILED - Mock data retrieval is not working correctly!');
+      process.exit(1);
     }
+  })
+  .catch(error => {
+    console.error('\n❌ TEST ERROR:', error);
+    process.exit(1);
   });

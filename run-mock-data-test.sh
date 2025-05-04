@@ -9,7 +9,7 @@ NC='\033[0m' # No Color
 echo -e "${YELLOW}===== Running Mock Data Retrieval Test =====${NC}"
 
 # Make the script executable
-chmod +x run-mock-data-test.sh
+chmod +x src/utils/__tests__/mockDataTest.js
 
 # Run the test file
 node src/utils/__tests__/mockDataTest.js
