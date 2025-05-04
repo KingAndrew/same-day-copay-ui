@@ -5,7 +5,7 @@ channel = "stable-24_05"
 packages = ["unixtools.netstat"]
 
 [workflows]
-runButton = "Run Web"
+runButton = "Run All Tests"
 
 [[workflows.workflow]]
 name = "Run"
@@ -24,6 +24,58 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "bash ./pre_stop.sh && npm run web"
+
+[[workflows.workflow]]
+name = "Run All Tests"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x run-all-tests.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run-all-tests.sh"
+
+[[workflows.workflow]]
+name = "Run Mock Data Test"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x run-mock-data-test.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run-mock-data-test.sh"
+
+[[workflows.workflow]]
+name = "Run DataAPI Test"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x run-dataapi-test.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run-dataapi-test.sh"
+
+[[workflows.workflow]]
+name = "Run Account Setup Test"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x run-account-setup-test.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run-account-setup-test.sh"
 
 [[ports]]
 localPort = 3000
