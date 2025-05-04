@@ -9,40 +9,69 @@ const useAmountCounter = (amount) => {
   const amountAnim = useRef(new Animated.Value(0)).current;
   const [displayedAmount, setDisplayedAmount] = useState("0.00");
   const audioRef = useRef(null);
+  const isReadyRef = useRef(false);
 
   useEffect(() => {
-    // Initialize audio
+    // Initialize audio and prepare it before starting animation
     audioRef.current = new Audio(`${URLs.AUDIO}/banknote-counter-106014.mp3`);
-
-    // Animate the counting effect
+    
+    // Preload the audio to ensure it's ready to play instantly
+    audioRef.current.load();
+    
     const totalAmount = amount || 1024.56;
     const duration = 1500; // 1.5 seconds
 
-    // Play the sound
-    audioRef.current.play().catch((e) => console.log("Audio play error:", e));
-
-    Animated.timing(amountAnim, {
+    // Create the animation but don't start it yet
+    const animation = Animated.timing(amountAnim, {
       toValue: totalAmount * 100, // Convert to cents for smoother animation
       duration: duration,
       useNativeDriver: false,
-    }).start();
+    });
 
-    // Update displayed value during animation
+    // Setup counter update mechanism
     const updateCounter = () => {
-      const interval = setInterval(() => {
-        amountAnim.addListener(({ value }) => {
-          setDisplayedAmount((value / 100).toFixed(2));
-        });
-      }, 16); // ~60fps
+      const listenerCallback = ({ value }) => {
+        setDisplayedAmount((value / 100).toFixed(2));
+      };
 
-      // Clean up
+      amountAnim.addListener(listenerCallback);
+
+      // Set final value when animation completes
       setTimeout(() => {
-        clearInterval(interval);
         setDisplayedAmount(totalAmount.toFixed(2));
+        amountAnim.removeListener(listenerCallback);
       }, duration);
     };
 
-    updateCounter();
+    // Start both audio and animation together
+    const startSync = () => {
+      // Play audio and immediately start animation
+      const playPromise = audioRef.current.play();
+      
+      // Handle both success and failure of audio playback
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            // Audio started successfully
+            animation.start();
+            updateCounter();
+          })
+          .catch(error => {
+            // Audio failed to play (perhaps due to browser restrictions)
+            console.log("Audio play error:", error);
+            // Still start the animation even if audio fails
+            animation.start();
+            updateCounter();
+          });
+      } else {
+        // Fallback for browsers that don't return a promise from play()
+        animation.start();
+        updateCounter();
+      }
+    };
+
+    // Start everything together
+    startSync();
 
     return () => {
       amountAnim.removeAllListeners();
