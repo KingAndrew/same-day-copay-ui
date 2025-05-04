@@ -11,7 +11,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_modules\/(?!(react-native|@react-native|expo-camera|expo-modules-core|@expo)\/).*/,
+        exclude: /node_modules\/(?!(react-native|@react-native|expo-camera|expo-modules-core|@expo|expo)\/).*/,
         use: {
           loader: "babel-loader",
           options: {
@@ -19,7 +19,8 @@ module.exports = {
             plugins: [
               "@babel/plugin-proposal-export-namespace-from",
               "@babel/plugin-transform-runtime",
-              "@babel/plugin-transform-typescript"
+              "@babel/plugin-transform-typescript",
+              ["@babel/plugin-transform-react-jsx", { "runtime": "automatic" }]
             ],
           },
         },
@@ -35,6 +36,11 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /\.ts$/,
+        exclude: /node_modules\/(?!(expo-modules-core|expo-camera|@expo)\/).*/,
+        use: 'ts-loader',
       },
     ],
   },
