@@ -52,6 +52,13 @@ const styles = StyleSheet.create({
     height: 24,
     tintColor: Colors.WHITE,
   },
+  subMenuIconContainer: {
+    marginRight: 10,
+    width: 24,
+    height: 24,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   chevron: {
     color: Colors.WHITE,
     fontSize: 24,
