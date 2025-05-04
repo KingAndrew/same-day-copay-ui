@@ -46,6 +46,7 @@ const renderScreen = (
     return (
       <AccountSetupScreen 
         navigateTo={handleNavigate} 
+        userData={userData.userData}
       />
     );
   } else if (currentScreen === "account-history") {

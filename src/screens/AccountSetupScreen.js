@@ -1,8 +1,9 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { Colors } from '../constants';
 import { ScreenTemplate, AppButton } from '../components';
+import dataAPI from '../dataAPI'; // Import the dataAPI
+
 
 const SectionHeader = ({ title }) => (
   <View style={styles.sectionHeader}>
@@ -23,139 +24,266 @@ const FormField = ({ label, value, onChangeText, placeholder, secureTextEntry = 
   </View>
 );
 
-const AccountSetupScreen = ({ navigateTo }) => {
-  // Customer Information
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [preferredName, setPreferredName] = useState('');
-  
-  // Bank Information
-  const [bankName, setBankName] = useState('');
-  const [routingNumber, setRoutingNumber] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  
-  // Selected Insurance Provider
-  const [selectedProvider, setSelectedProvider] = useState(null);
-  
-  // List of insurance providers
-  const insuranceProviders = [
-    "Aetna", "Anthem", "Blue Cross Blue Shield", "Cigna", "Humana", 
-    "Kaiser Permanente", "UnitedHealthcare", "Medicare", "Medicaid",
-    "Molina Healthcare", "Centene", "HealthNet", "Carefirst", "Highmark",
-    "Wellcare", "Oscar Health", "AmeriHealth", "Harvard Pilgrim",
-    "Tufts Health Plan", "Priority Health", "UPMC Health Plan",
-    "Independence Blue Cross", "Emblem Health", "Health Alliance",
-    "Premera Blue Cross", "Providence Health Plan", "Geisinger",
-    "Dean Health Plan", "Community Health Choice", "Neighborhood Health Plan",
-    "Security Health Plan", "HealthPartners", "Quartz"
-  ];
-  
-  const handleSave = () => {
-    // Save logic would go here
-    alert('Account information saved successfully!');
-    navigateTo('main-menu');
+const AccountSetupScreen = ({ navigateTo, userData }) => {
+  const [activeTab, setActiveTab] = useState("personal");
+  const [insuranceProviders, setInsuranceProviders] = useState([]);
+  const email = userData?.username || "David"; // Use logged in user or default to David
+
+  // Form state with separate objects for each section
+  const [personalData, setPersonalData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    preferredName: '',
+  });
+
+  const [bankData, setBankData] = useState({
+    bankName: '',
+    routingNumber: '',
+    accountNumber: '',
+  });
+
+  const [insuranceData, setInsuranceData] = useState({
+    provider: '',
+    policyNumber: '',
+    groupNumber: '',
+  });
+
+  const [sameDayData, setSameDayData] = useState({
+    paymentMethod: '',
+    preferredBank: '',
+  });
+
+  // Load data when component mounts
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        // Load insurance providers (global data)
+        const providers = await dataAPI.getData('accountSetup.insuranceProviders');
+        if (providers) {
+          setInsuranceProviders(providers);
+        }
+
+        // Load user specific data if available
+        const personalInfo = await dataAPI.getUserData(email, 'accountSetup.personal');
+        if (personalInfo) {
+          setPersonalData(personalInfo);
+        }
+
+        const bankInfo = await dataAPI.getUserData(email, 'accountSetup.bank');
+        if (bankInfo) {
+          setBankData(bankInfo);
+        }
+
+        const insuranceInfo = await dataAPI.getUserData(email, 'accountSetup.insurance');
+        if (insuranceInfo) {
+          setInsuranceData(insuranceInfo);
+        }
+
+        const sameDayInfo = await dataAPI.getUserData(email, 'accountSetup.sameDay');
+        if (sameDayInfo) {
+          setSameDayData(sameDayInfo);
+        }
+      } catch (error) {
+        console.error('Error loading account setup data:', error);
+      }
+    };
+
+    loadData();
+  }, [email]);
+
+  const handlePersonalChange = (field, value) => {
+    setPersonalData({
+      ...personalData,
+      [field]: value,
+    });
   };
-  
+
+  const handleBankChange = (field, value) => {
+    setBankData({
+      ...bankData,
+      [field]: value,
+    });
+  };
+
+  const handleInsuranceChange = (field, value) => {
+    setInsuranceData({
+      ...insuranceData,
+      [field]: value,
+    });
+  };
+
+  const handleSameDayChange = (field, value) => {
+    setSameDayData({
+      ...sameDayData,
+      [field]: value,
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      // Save all sections of data
+      await dataAPI.saveUserData(email, 'accountSetup.personal', personalData);
+      await dataAPI.saveUserData(email, 'accountSetup.bank', bankData);
+      await dataAPI.saveUserData(email, 'accountSetup.insurance', insuranceData);
+      await dataAPI.saveUserData(email, 'accountSetup.sameDay', sameDayData);
+
+      console.log('Account setup data saved successfully');
+      navigateTo('main-menu');
+    } catch (error) {
+      console.error('Error saving account setup data:', error);
+    }
+  };
+
+  // Tab component for switching between sections
+  const TabSelector = () => (
+    <View style={styles.tabContainer}>
+      <TouchableOpacity 
+        style={[styles.tab, activeTab === "personal" && styles.activeTab]}
+        onPress={() => setActiveTab("personal")}
+      >
+        <Text style={[styles.tabText, activeTab === "personal" && styles.activeTabText]}>1. Personal</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={[styles.tab, activeTab === "bank" && styles.activeTab]}
+        onPress={() => setActiveTab("bank")}
+      >
+        <Text style={[styles.tabText, activeTab === "bank" && styles.activeTabText]}>2. Bank</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={[styles.tab, activeTab === "insurance" && styles.activeTab]}
+        onPress={() => setActiveTab("insurance")}
+      >
+        <Text style={[styles.tabText, activeTab === "insurance" && styles.activeTabText]}>3. Insurance</Text>
+      </TouchableOpacity>
+      <TouchableOpacity 
+        style={[styles.tab, activeTab === "sameday" && styles.activeTab]}
+        onPress={() => setActiveTab("sameday")}
+      >
+        <Text style={[styles.tabText, activeTab === "sameday" && styles.activeTabText]}>4. Same Day</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  // Insurance provider selector component
+  const InsuranceProviderSelector = () => (
+    <View style={styles.formField}>
+      <Text style={styles.fieldLabel}>Insurance Provider</Text>
+      <View style={styles.selectContainer}>
+        <select
+          style={styles.select}
+          value={insuranceData.provider}
+          onChange={(e) => handleInsuranceChange('provider', e.target.value)}
+        >
+          <option value="">Select your insurance provider</option>
+          {insuranceProviders.map((provider, index) => (
+            <option key={index} value={provider}>
+              {provider}
+            </option>
+          ))}
+        </select>
+      </View>
+    </View>
+  );
+
   return (
     <ScreenTemplate title="Account Setup" navigateTo={navigateTo}>
-      <ScrollView style={styles.container}>
-        <SectionHeader title="Customer Information" />
-        <View style={styles.formSection}>
-          <FormField 
-            label="First Name" 
-            value={firstName}
-            onChangeText={setFirstName}
-            placeholder="Enter your first name"
-          />
-          <FormField 
-            label="Last Name" 
-            value={lastName}
-            onChangeText={setLastName}
-            placeholder="Enter your last name"
-          />
-          <FormField 
-            label="Email" 
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Enter your email address"
-          />
-          <FormField 
-            label="Preferred Name" 
-            value={preferredName}
-            onChangeText={setPreferredName}
-            placeholder="Enter your preferred name"
-          />
-        </View>
-        
-        <SectionHeader title="Customer Bank Information" />
-        <View style={styles.formSection}>
-          <FormField 
-            label="Bank Name" 
-            value={bankName}
-            onChangeText={setBankName}
-            placeholder="Enter your bank name"
-          />
-          <FormField 
-            label="Routing Number" 
-            value={routingNumber}
-            onChangeText={setRoutingNumber}
-            placeholder="Enter routing number"
-          />
-          <FormField 
-            label="Account Number" 
-            value={accountNumber}
-            onChangeText={setAccountNumber}
-            placeholder="Enter account number"
-          />
-        </View>
-        
-        <SectionHeader title="Customer Insurance Provider" />
-        <View style={styles.formSection}>
-          <Text style={styles.fieldLabel}>Select Insurance Provider</Text>
-          <View style={styles.providerGrid}>
-            {insuranceProviders.map((provider, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.providerItem,
-                  selectedProvider === provider && styles.selectedProvider
-                ]}
-                onPress={() => setSelectedProvider(provider)}
-              >
-                <Text 
-                  style={[
-                    styles.providerText,
-                    selectedProvider === provider && styles.selectedProviderText
-                  ]}
-                >
-                  {provider}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-        
-        <SectionHeader title="Same Day Co-Pay Bank Information" />
-        <View style={styles.formSection}>
-          <Text style={styles.infoText}>
-            Same Day Co-Pay uses Stripe for secure payment processing. Your refunds will be processed through our financial partner.
-          </Text>
-          <Text style={styles.infoText}>
-            Bank: First National Bank
-          </Text>
-          <Text style={styles.infoText}>
-            Refund Processing Time: 1-2 business days
-          </Text>
-        </View>
-        
+      <TabSelector />
+
+      <ScrollView style={styles.scrollView}>
+        {activeTab === "personal" && (
+          <>
+            <SectionHeader title="Personal Information" />
+            <FormField 
+              label="First Name" 
+              value={personalData.firstName} 
+              onChangeText={(value) => handlePersonalChange('firstName', value)}
+              placeholder="Your first name"
+            />
+            <FormField 
+              label="Last Name" 
+              value={personalData.lastName} 
+              onChangeText={(value) => handlePersonalChange('lastName', value)}
+              placeholder="Your last name"
+            />
+            <FormField 
+              label="Email" 
+              value={personalData.email} 
+              onChangeText={(value) => handlePersonalChange('email', value)}
+              placeholder="Your email address"
+            />
+            <FormField 
+              label="Preferred Name" 
+              value={personalData.preferredName} 
+              onChangeText={(value) => handlePersonalChange('preferredName', value)}
+              placeholder="Your preferred name"
+            />
+          </>
+        )}
+
+        {activeTab === "bank" && (
+          <>
+            <SectionHeader title="Banking Information" />
+            <FormField 
+              label="Bank Name" 
+              value={bankData.bankName} 
+              onChangeText={(value) => handleBankChange('bankName', value)}
+              placeholder="Your bank name"
+            />
+            <FormField 
+              label="Routing Number" 
+              value={bankData.routingNumber} 
+              onChangeText={(value) => handleBankChange('routingNumber', value)}
+              placeholder="Your routing number"
+            />
+            <FormField 
+              label="Account Number" 
+              value={bankData.accountNumber} 
+              onChangeText={(value) => handleBankChange('accountNumber', value)}
+              placeholder="Your account number"
+            />
+          </>
+        )}
+
+        {activeTab === "insurance" && (
+          <>
+            <SectionHeader title="Insurance Information" />
+            <InsuranceProviderSelector />
+            <FormField 
+              label="Policy Number" 
+              value={insuranceData.policyNumber} 
+              onChangeText={(value) => handleInsuranceChange('policyNumber', value)}
+              placeholder="Your policy number"
+            />
+            <FormField 
+              label="Group Number" 
+              value={insuranceData.groupNumber} 
+              onChangeText={(value) => handleInsuranceChange('groupNumber', value)}
+              placeholder="Your group number"
+            />
+          </>
+        )}
+
+        {activeTab === "sameday" && (
+          <>
+            <SectionHeader title="Same Day Co-Pay Information" />
+            <FormField 
+              label="Payment Method" 
+              value={sameDayData.paymentMethod} 
+              onChangeText={(value) => handleSameDayChange('paymentMethod', value)}
+              placeholder="Your preferred payment method"
+            />
+            <FormField 
+              label="Preferred Bank" 
+              value={sameDayData.preferredBank} 
+              onChangeText={(value) => handleSameDayChange('preferredBank', value)}
+              placeholder="Your preferred bank for same-day payments"
+            />
+          </>
+        )}
+
         <View style={styles.buttonContainer}>
-          <AppButton 
-            title="Save Information" 
-            onPress={handleSave} 
-            style={styles.saveButton}
-            textStyle={styles.saveButtonText}
-          />
+          <AppButton text="Save" onPress={handleSave} />
         </View>
       </ScrollView>
     </ScreenTemplate>
@@ -163,95 +291,87 @@ const AccountSetupScreen = ({ navigateTo }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
-    padding: 15,
-    backgroundColor: Colors.WHITE,
+    width: '100%',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.LIGHT_GRAY,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.FOREST_GREEN,
+  },
+  tabText: {
+    fontSize: 14,
+    color: Colors.DARK_GRAY,
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: '600',
+  },
+  activeTabText: {
+    color: Colors.FOREST_GREEN,
+    fontWeight: '700',
   },
   sectionHeader: {
-    backgroundColor: Colors.FOREST_GREEN,
-    padding: 12,
-    borderRadius: 6,
-    marginVertical: 10,
+    backgroundColor: Colors.NAVY_BLUE,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginTop: 10,
+    marginBottom: 15,
+    borderRadius: 5,
   },
   sectionHeaderText: {
-    fontSize: 18,
     color: Colors.WHITE,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: 'bold',
     fontFamily: "Montserrat, sans-serif",
-  },
-  formSection: {
-    backgroundColor: Colors.LIGHT_GRAY,
-    borderRadius: 6,
-    padding: 15,
-    marginBottom: 10,
   },
   formField: {
     marginBottom: 15,
   },
   fieldLabel: {
-    fontSize: 16,
+    fontSize: 14,
+    marginBottom: 5,
     color: Colors.NAVY_BLUE,
-    marginBottom: 8,
+    fontWeight: '600',
     fontFamily: "Montserrat, sans-serif",
-    fontWeight: "500",
   },
   textInput: {
-    backgroundColor: Colors.WHITE,
+    height: 40,
     borderWidth: 1,
     borderColor: Colors.MEDIUM_GRAY,
-    borderRadius: 4,
-    padding: 10,
-    fontSize: 16,
-    color: Colors.NAVY_BLUE,
-    fontFamily: "Montserrat, sans-serif",
-  },
-  providerGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  providerItem: {
-    width: "48%",
-    backgroundColor: Colors.WHITE,
-    borderWidth: 1,
-    borderColor: Colors.MEDIUM_GRAY,
-    borderRadius: 4,
-    padding: 10,
-    marginBottom: 10,
-  },
-  selectedProvider: {
-    backgroundColor: Colors.NAVY_BLUE,
-    borderColor: Colors.NAVY_BLUE,
-  },
-  providerText: {
+    borderRadius: 5,
+    paddingHorizontal: 10,
     fontSize: 14,
-    color: Colors.NAVY_BLUE,
-    textAlign: "center",
     fontFamily: "Montserrat, sans-serif",
   },
-  selectedProviderText: {
-    color: Colors.WHITE,
-    fontWeight: "700",
+  selectContainer: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: Colors.MEDIUM_GRAY,
+    borderRadius: 5,
+    overflow: 'hidden',
   },
-  infoText: {
-    fontSize: 16,
-    color: Colors.NAVY_BLUE,
-    marginBottom: 10,
+  select: {
+    height: '100%',
+    width: '100%',
+    paddingHorizontal: 10,
+    fontSize: 14,
     fontFamily: "Montserrat, sans-serif",
-    lineHeight: 24,
+    border: 'none',
+    outline: 'none',
   },
   buttonContainer: {
-    marginVertical: 20,
-  },
-  saveButton: {
-    backgroundColor: Colors.FOREST_GREEN,
-    padding: 15,
-  },
-  saveButtonText: {
-    color: Colors.WHITE,
-    fontSize: 18,
-    fontWeight: "700",
+    marginTop: 20,
+    marginBottom: 40,
   }
 });
 

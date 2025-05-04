@@ -12,6 +12,11 @@ export const URLs = {
   IMAGES: '/images',
   AUDIO: '/audio',
   
+  // Data source - can be switched between mock and remote API
+  // For mock data use: 'file:///mockData'
+  // For production use: 'https://api.samedaycopay.com'
+  DATA_SOURCE: 'file:///mockData',
+  
   // API endpoints
   API: {
     // Authentication
