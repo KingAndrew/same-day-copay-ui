@@ -6,11 +6,11 @@
  * with the ability to switch between different storage backends.
  */
 
-const mockData = require("./mockDataSource");
+import mockData from "./mockDataSource.js";
 
 // In a real app, this would be more sophisticated with actual backend API calls
 // or local storage interactions
-const dataAPI = {
+export const dataAPI = {
   /**
    * Get data by key
    * @param {string} key - Dot notation path to the data (e.g., "user.preferences.theme")
@@ -201,5 +201,4 @@ const dataAPI = {
   }
 };
 
-// Export the dataAPI object
-module.exports = { dataAPI };
+export default dataAPI;

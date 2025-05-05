@@ -38,6 +38,19 @@ args = "chmod +x run-all-tests.sh"
 task = "shell.exec"
 args = "./run-all-tests.sh"
 
+[[workflows.workflow]]
+name = "Run Test Coverage"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x run-test-coverage.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run-test-coverage.sh"
+
 [[ports]]
 localPort = 3000
 externalPort = 3000

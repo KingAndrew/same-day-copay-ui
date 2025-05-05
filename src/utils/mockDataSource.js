@@ -82,8 +82,11 @@ const mockData = {
       "Losartan (Cozaar)",
       "Albuterol (Ventolin, Proventil)"
     ]
-  }
+  },
+  
+  // Add the test.key for compatibility with existing tests
+  "test.key": { value: "test-value" }
 };
 
-// Make sure mockData is mutable so we can update it
-module.exports = mockData;
+// Make sure mockData is mutable and export it as the default export
+export default mockData;

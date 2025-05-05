@@ -1,131 +1,61 @@
-
-// Mock Data Test - This tests the mock data functionality and dataAPI integration
-
-const { dataAPI } = require('../dataAPI');
-const mockData = require('../mockDataSource');
+import mockData from '../mockDataSource.js';
+import { dataAPI } from '../dataAPI.js';
 
 console.log('===== Running Mock Data Source Test =====');
+console.log('Testing mock data access...');
 
-// Test mock data is accessible
-function testMockDataAccess() {
-  try {
-    console.log('Testing mock data access...');
-    
-    // Test if mockData is properly initialized
-    if (!mockData || typeof mockData !== 'object') {
-      console.error('❌ Mock data is not properly initialized');
-      return false;
-    }
-    
-    console.log('✅ Mock data is accessible');
-    return true;
-  } catch (error) {
-    console.error('❌ Error testing mock data access:', error);
-    return false;
-  }
+// Test if we can access the mock data directly
+if (mockData.David && mockData.system) {
+  console.log('✅ Mock data is accessible');
+} else {
+  console.error('❌ Mock data is not accessible');
+  process.exit(1);
 }
 
-// Test dataAPI can retrieve mock data
-async function testDataAPIGetMockData() {
-  try {
-    console.log('Testing dataAPI.getData with mock data...');
-    
-    // Add test data to mock data source
-    mockData['test.key'] = { value: 'test-value' };
-    
-    // Test retrieval
-    const data = await dataAPI.getData('test.key');
-    
-    if (!data || data.value !== 'test-value') {
-      console.error('❌ Failed to retrieve mock data through dataAPI');
-      console.error('Expected: { value: "test-value" }, Got:', data);
-      return false;
-    }
-    
-    console.log('✅ Successfully retrieved mock data through dataAPI');
-    return true;
-  } catch (error) {
-    console.error('❌ Error testing dataAPI.getData:', error);
-    return false;
-  }
+// Test if we can get data through the dataAPI
+console.log('Testing dataAPI.getData with mock data...');
+const testValue = await dataAPI.getData('test.key');
+
+if (testValue && testValue.value === 'test-value') {
+  console.log('✅ Successfully retrieved mock data through dataAPI');
+} else {
+  console.error('❌ Failed to retrieve mock data through dataAPI');
+  process.exit(1);
 }
 
-// Test dataAPI can save to mock data
-async function testDataAPISaveMockData() {
-  try {
-    console.log('\n===== Testing dataAPI.saveData with mock data... =====');
-    
-    // Save data through API
-    const testKey = 'test.save-key';
-    const testValue = { value: 'saved-value' };
-    
-    // Show initial state
-    console.log('\nBefore save:');
-    console.log(`mockData['${testKey}'] =`, mockData[testKey]);
-    console.log('Initial mockData keys:', Object.keys(mockData));
-    
-    // Clear any existing data with this key to ensure clean test
-    delete mockData[testKey];
-    console.log(`Deleted test key '${testKey}' for clean test`);
-    
-    console.log('\nCalling dataAPI.saveData...');
-    const saveResult = await dataAPI.saveData(testKey, testValue);
-    
-    // Show result of save operation
-    console.log('Save operation result:', saveResult);
-    
-    // Show the mockData state after saving
-    console.log('\nAfter save:');
-    console.log(`mockData['${testKey}'] =`, mockData[testKey]);
-    console.log('Full mockData keys:', Object.keys(mockData));
-    
-    if (!saveResult) {
-      console.error('❌ dataAPI.saveData returned false');
-      return false;
-    }
-    
-    // Verify data was saved to mock source
-    if (!mockData[testKey]) {
-      console.error('❌ Data was not found in mock source');
-      console.error('Expected mockData to have key:', testKey);
-      console.error('Available keys:', Object.keys(mockData));
-      return false;
-    }
-    
-    if (mockData[testKey].value !== 'saved-value') {
-      console.error('❌ Data value is incorrect in mock source');
-      console.error('Expected value:', 'saved-value');
-      console.error('Actual value:', mockData[testKey].value);
-      return false;
-    }
-    
-    console.log('✅ Successfully saved data to mock source through dataAPI');
-    return true;
-  } catch (error) {
-    console.error('❌ Error testing dataAPI.saveData:', error);
-    console.error(error.stack);
-    return false;
-  }
+// Test if we can save data through dataAPI
+console.log('\n===== Testing dataAPI.saveData with mock data... =====\n');
+
+console.log('Before save:');
+console.log(`mockData['test.save-key'] = ${mockData['test.save-key']}`);
+
+// Get initial keys to verify the save operation adds a new key
+const initialKeys = Object.keys(mockData);
+console.log('Initial mockData keys:', initialKeys);
+
+// Delete test key if it exists, to ensure clean test
+if ('test.save-key' in mockData) {
+  delete mockData['test.save-key'];
+  console.log('Deleted test key \'test.save-key\' for clean test');
 }
 
-// Run all tests
-async function runAllTests() {
-  const results = [
-    testMockDataAccess(),
-    await testDataAPIGetMockData(),
-    await testDataAPISaveMockData()
-  ];
-  
-  const allPassed = results.every(result => result === true);
-  
-  if (allPassed) {
-    console.log('\n✅ All mock data tests passed!');
-    process.exit(0); // Success exit code
-  } else {
-    console.error('\n❌ Some mock data tests failed');
-    process.exit(1); // Failure exit code
-  }
+console.log('\nCalling dataAPI.saveData...');
+const saveResult = await dataAPI.saveData('test.save-key', { value: 'saved-value' });
+console.log(`Save operation result: ${saveResult}\n`);
+
+console.log('After save:');
+console.log(`mockData['test.save-key'] = ${JSON.stringify(mockData['test.save-key'])}`);
+
+// Get all keys after save
+const afterSaveKeys = Object.keys(mockData);
+console.log('Full mockData keys:', afterSaveKeys);
+
+// Verify the save operation added the key successfully
+if (mockData['test.save-key'] && mockData['test.save-key'].value === 'saved-value') {
+  console.log('✅ Successfully saved data to mock source through dataAPI');
+} else {
+  console.error('❌ Failed to save data to mock source through dataAPI');
+  process.exit(1);
 }
 
-// Execute tests
-runAllTests();
+console.log('\n✅ All mock data tests passed!');

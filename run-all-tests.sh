@@ -41,5 +41,6 @@ run_test() {
 run_test "./run-dataapi-test.sh" "DataAPI"
 run_test "./run-mock-data-test.sh" "Mock Data"
 run_test "./run-account-setup-test.sh" "Account Setup"
+run_test "./run-test-coverage.sh" "Test Coverage"
 
 echo -e "\n${YELLOW}===== All Tests Completed =====${NC}"
