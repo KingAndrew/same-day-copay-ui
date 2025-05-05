@@ -78,7 +78,17 @@ for file in $JS_FILES; do
   FILE_HAS_ISSUES=0
   
   for pattern in "${COMMON_ISSUES[@]}"; do
+    # Check if the pattern exists but ignore instances within string literals and comments
     if grep -q "$pattern" "$file"; then
+      # For test files, check if the pattern only appears in console.log statements or string literals
+      if [[ "$file" == *"__tests__"* ]] && [[ "$pattern" == "exports." ]]; then
+        # Check if all occurrences are within console.log or string literals
+        NON_STRING_MATCHES=$(grep -n "$pattern" "$file" | grep -v "console.log" | grep -v "\"$pattern" | grep -v "'$pattern")
+        if [[ -z "$NON_STRING_MATCHES" ]]; then
+          continue  # Skip reporting this issue if it's only in string literals
+        fi
+      fi
+      
       if [[ $FILE_HAS_ISSUES -eq 0 ]]; then
         echo -e "\n${RED}Issues found in: $file${NC}"
         FILE_HAS_ISSUES=1
@@ -89,7 +99,13 @@ for file in $JS_FILES; do
       echo "$MATCHES" | while read -r match; do
         LINE_NUM=$(echo "$match" | cut -d':' -f1)
         LINE_CONTENT=$(echo "$match" | cut -d':' -f2-)
-        echo -e "    Line $LINE_NUM: $LINE_CONTENT"
+        
+        # Add note if it appears to be in a string literal or console.log
+        if [[ "$LINE_CONTENT" == *"console.log"* ]] || [[ "$LINE_CONTENT" == *\"*\"* ]] || [[ "$LINE_CONTENT" == *\'*\'* ]]; then
+          echo -e "    Line $LINE_NUM: $LINE_CONTENT ${YELLOW}(Note: Inside string or console.log - may be a false positive)${NC}"
+        else
+          echo -e "    Line $LINE_NUM: $LINE_CONTENT"
+        fi
       done
     fi
   done

@@ -71,21 +71,27 @@ fix_commonjs_to_esm() {
     if [ $COMMONJS_COUNT -gt 0 ]; then
         # Only convert if issues are found
         find ./src -type f -name "*.js" -o -name "*.jsx" | grep -v "node_modules" | while read -r file; do
-            # Check if file has CommonJS syntax
-            if grep -q -E "module\.exports|require\(|exports\." "$file"; then
+            # Ignore __tests__ directories for CommonJS patterns in string literals
+            if [[ "$file" == *"__tests__"* ]] && grep -q "console.log.*exports\." "$file"; then
+                echo -e "${YELLOW}Skipping test file with console.log statements containing 'exports.': $file${NC}"
+                continue
+            fi
+            
+            # Analyze if the file has actual CommonJS syntax (not in strings/comments)
+            if grep -q -E "^[^/\"']*module\.exports|^[^/\"']*require\(|^[^/\"']*exports\." "$file"; then
                 echo -e "${YELLOW}Found CommonJS syntax in $file - converting to ES modules${NC}"
                 
                 # Convert module.exports = to export default
-                perl -i -pe 's/module\.exports\s*=\s*/export default /g' "$file"
+                perl -i -pe 's/^([^\/\"\']*)module\.exports\s*=\s*/\1export default /g' "$file"
                 
                 # Convert exports.name = to export const name =
-                perl -i -pe 's/exports\.(\w+)\s*=\s*/export const \1 = /g' "$file"
+                perl -i -pe 's/^([^\/\"\']*)exports\.(\w+)\s*=\s*/\1export const \2 = /g' "$file"
                 
                 # Convert require() to import
-                perl -i -pe 's/const\s+(\w+)\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/import \1 from "\2"/g' "$file"
+                perl -i -pe 's/^([^\/\"\']*)const\s+(\w+)\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/\1import \2 from "\3"/g' "$file"
                 
                 # Convert destructured require
-                perl -i -pe 's/const\s+\{\s*([^}]+)\s*\}\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/import { \1 } from "\2"/g' "$file"
+                perl -i -pe 's/^([^\/\"\']*)const\s+\{\s*([^}]+)\s*\}\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/\1import { \2 } from "\3"/g' "$file"
                 
                 FIXES_APPLIED=1
             fi
