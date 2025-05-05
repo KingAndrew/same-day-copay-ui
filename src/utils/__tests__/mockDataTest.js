@@ -53,22 +53,30 @@ async function testDataAPIGetMockData() {
 // Test dataAPI can save to mock data
 async function testDataAPISaveMockData() {
   try {
-    console.log('Testing dataAPI.saveData with mock data...');
+    console.log('\n===== Testing dataAPI.saveData with mock data... =====');
     
     // Save data through API
     const testKey = 'test.save-key';
     const testValue = { value: 'saved-value' };
     
     // Show initial state
-    console.log('Before save, mockData[testKey] =', mockData[testKey]);
+    console.log('\nBefore save:');
+    console.log(`mockData['${testKey}'] =`, mockData[testKey]);
+    console.log('Initial mockData keys:', Object.keys(mockData));
     
+    // Clear any existing data with this key to ensure clean test
+    delete mockData[testKey];
+    console.log(`Deleted test key '${testKey}' for clean test`);
+    
+    console.log('\nCalling dataAPI.saveData...');
     const saveResult = await dataAPI.saveData(testKey, testValue);
     
     // Show result of save operation
     console.log('Save operation result:', saveResult);
     
     // Show the mockData state after saving
-    console.log('After save, mockData[testKey] =', mockData[testKey]);
+    console.log('\nAfter save:');
+    console.log(`mockData['${testKey}'] =`, mockData[testKey]);
     console.log('Full mockData keys:', Object.keys(mockData));
     
     if (!saveResult) {
