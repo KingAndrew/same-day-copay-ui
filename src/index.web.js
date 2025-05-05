@@ -1,4 +1,3 @@
-
 // Entry point for the web version of the app
 import { AppRegistry } from 'react-native';
 import App from './App.jsx';

@@ -1,11 +1,12 @@
-import AppButton from './AppButton';
-import AppLogo from './AppLogo';
-import FormInput from './FormInput';
-import MenuItem from './MenuItem';
-import ScreenTemplate from './ScreenTemplate';
-import SubMenuItem from './SubMenuItem';
-import TabSelector from './TabSelector';
-import { Camera } from './CameraMock';
+
+import AppButton from './AppButton.js';
+import AppLogo from './AppLogo.js';
+import FormInput from './FormInput.js';
+import MenuItem from './MenuItem.js';
+import ScreenTemplate from './ScreenTemplate.js';
+import SubMenuItem from './SubMenuItem.js';
+import TabSelector from './TabSelector.js';
+import { Camera } from './CameraMock.js';
 
 export {
   AppButton,

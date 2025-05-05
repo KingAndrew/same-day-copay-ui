@@ -1,4 +1,4 @@
 
-import { URLs, Colors } from '../../constants';
+import Colors from '../../constants.js';
 
-export { URLs, Colors };
+export { Colors };
