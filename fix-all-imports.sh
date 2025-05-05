@@ -93,30 +93,56 @@ if [ -f "src/App.jsx" ]; then
   echo -e "${GREEN}Fixed screen imports in src/App.jsx${NC}"
 fi
 
-# Fix files with duplicate extensions
+# Fix files with duplicate extensions - comprehensive approach
 fix_duplicate_extensions() {
     local file=$1
     if [ -f "$file" ]; then
-      # Replace multiple extensions like .js.js.js with single extension
-      perl -i -pe "s/from ['\"]([^'\"]+)(\.jsx|\.js)(\.\2)+['\"](?!\.)/from '\1\2'/g" "$file"
+      # More aggressive approach to fix multiple extensions
+      # First fix the App.jsx with multiple extensions (most common issue)
+      perl -i -pe "s/from ['\"](\.\/)App\.jsx(\.js)+['\"](?!\.)/from '\1App.jsx'/g" "$file"
+      # Fix imports with .jsx.js.js.js patterns
+      perl -i -pe "s/from ['\"]([^'\"]+)(\.jsx)(\.js)+['\"](?!\.)/from '\1\2'/g" "$file"
+      # Fix imports with .js.js.js patterns
+      perl -i -pe "s/from ['\"]([^'\"]+)(\.js)(\.js)+['\"](?!\.)/from '\1\2'/g" "$file"
+      # Fix imports with .jsx.jsx patterns
+      perl -i -pe "s/from ['\"]([^'\"]+)(\.jsx)(\.jsx)+['\"](?!\.)/from '\1\2'/g" "$file"
       # Fix app.json with multiple extensions
-      perl -i -pe "s/from ['\"]([^'\"]+)(\.json)(\.\2)+['\"](?!\.)/from '\1\2'/g" "$file"
+      perl -i -pe "s/from ['\"]([^'\"]+)(\.json)(\.json|\\.js)+['\"](?!\.)/from '\1\2'/g" "$file"
+      
+      # Special fixes for index.web.js which has been problematic
+      if [[ "$file" == "src/index.web.js" ]]; then
+        # Force App import to be correct in index.web.js
+        perl -i -pe 's/import App from .+;/import App from '\''\.\/App\.jsx'\'';/g' "$file"
+        # Force app.json import to be correct
+        perl -i -pe 's/import appInfo from .+;/import appInfo from '\''\.\.\/app\.json'\'';/g' "$file"
+      fi
+      
       echo -e "${GREEN}Fixed duplicate extensions in $file${NC}"
     fi
-  }
+}
 
-# Fix index.web.js to import App correctly and fix duplicate extensions
+# Fix index.web.js first and properly - special handling
 if [ -f "src/index.web.js" ]; then
-  perl -i -pe "s/from ['\"](\.\/App)['\"](?!\.jsx)/from '\1.jsx'/g" "src/index.web.js"
-  fix_duplicate_extensions "src/index.web.js"
+  # Completely rewrite the import lines to ensure correctness
+  perl -i -pe 's/import App from .+;/import App from '\''\.\/App\.jsx'\'';/g' "src/index.web.js"
+  perl -i -pe 's/import appInfo from .+;/import appInfo from '\''\.\.\/app\.json'\'';/g' "src/index.web.js"
   echo -e "${GREEN}Fixed App import in src/index.web.js${NC}"
 fi
 
-# Check and fix all js and jsx files for duplicate extensions
+# Also fix App.jsx if it has multiple extensions in its imports
+if [ -f "src/App.jsx" ]; then
+  # Fix HomeScreen import 
+  perl -i -pe 's/import HomeScreen from .+;/import HomeScreen from '\''\.\/screens\/HomeScreen\.js'\'';/g' "src/App.jsx"
+  # Fix screens/index.js import if needed
+  perl -i -pe 's/from '\''\.\/screens\/index\.js(\.js)+['"]/from '\''\.\/screens\/index\.js'\''/g' "src/App.jsx"
+  echo -e "${GREEN}Fixed imports in src/App.jsx${NC}"
+fi
+
+# Check and fix ALL js and jsx files for duplicate extensions
+echo -e "${YELLOW}Scanning all JS/JSX files for duplicate extensions...${NC}"
 find "${INCLUDE_DIRS[@]}" -type f \( -name "*.js" -o -name "*.jsx" \) | while read -r file; do
-  if grep -q "\.js\.js" "$file" || grep -q "\.jsx\.jsx" "$file" || grep -q "\.jsx\.js" "$file" || grep -q "\.json\.json" "$file"; then
-    fix_duplicate_extensions "$file"
-  fi
+  # Always run the fix on every file to be thorough
+  fix_duplicate_extensions "$file"
 done
 
 echo -e "\n${YELLOW}===== ES Module Import Fix Summary =====${NC}"
