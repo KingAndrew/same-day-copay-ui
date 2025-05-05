@@ -5,7 +5,7 @@ channel = "stable-24_05"
 packages = ["unixtools.netstat", "killall"]
 
 [workflows]
-runButton = "Debug Mock Test"
+runButton = "Run All Tests"
 
 [[workflows.workflow]]
 name = "Run"
