@@ -1,4 +1,4 @@
-const { dataAPI } = require('../dataAPI');
+import { dataAPI  } from '../dataAPI.js';
 
 /**
  * Test dataAPI's ability to save and retrieve user data

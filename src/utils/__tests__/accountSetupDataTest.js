@@ -5,7 +5,7 @@
  * This test verifies that the data persistence functionality for account setup works correctly.
  */
 
-const { dataAPI } = require('../dataAPI');
+import { dataAPI  } from '../dataAPI.js';
 
 /**
  * Test the account setup data persistence

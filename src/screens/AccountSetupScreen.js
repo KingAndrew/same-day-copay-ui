@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "Montserrat, sans-serif",
     border: 'none',
-    outline: 'none',
+    outlineStyle: "none",
   },
   buttonContainer: {
     marginTop: 20,
