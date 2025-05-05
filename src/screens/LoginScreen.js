@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Tooltip } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { FormInput, AppButton, AppLogo, TabSelector } from '../components/index.js';
 import { Colors } from '../constants/index.js';
-import { AppLogo, AppButton, FormInput, TabSelector } from '../components/index.js';
 
 const LoginScreen = ({ 
   navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`),
@@ -11,14 +11,28 @@ const LoginScreen = ({
   const [activeTab, setActiveTab] = useState("signup"); // Default to signup screen
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  
+  // Signup form state
+  const [signupFirstName, setSignupFirstName] = useState("");
+  const [signupLastName, setSignupLastName] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
-  const [signupConfirmPassword, setSignupConfirmPassword] = useState(""); 
-  const [signupName, setSignupName] = useState("");
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+  
+  // Form focus state
   const [focusedInput, setFocusedInput] = useState(null);
+  
+  // Validation states
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showPasswordTooltip, setShowPasswordTooltip] = useState(false);
+  
+  // Password validation criteria states
+  const [hasMinLength, setHasMinLength] = useState(false);
+  const [hasUppercase, setHasUppercase] = useState(false);
+  const [hasLowercase, setHasLowercase] = useState(false);
+  const [hasNumber, setHasNumber] = useState(false);
+  const [hasSpecial, setHasSpecial] = useState(false);
 
   // Email validation
   const validateEmail = (email) => {
@@ -29,10 +43,23 @@ const LoginScreen = ({
   // Password validation
   const validatePassword = (password) => {
     // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return re.test(password);
+    const minLength = password.length >= 8;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNum = /\d/.test(password);
+    const hasSpec = /[@$!%*?&]/.test(password);
+    
+    // Update validation states
+    setHasMinLength(minLength);
+    setHasUppercase(hasUpper);
+    setHasLowercase(hasLower);
+    setHasNumber(hasNum);
+    setHasSpecial(hasSpec);
+    
+    return minLength && hasUpper && hasLower && hasNum && hasSpec;
   };
 
+  // Check if emails are valid on change
   useEffect(() => {
     if (signupEmail) {
       if (!validateEmail(signupEmail)) {
@@ -45,6 +72,7 @@ const LoginScreen = ({
     }
   }, [signupEmail]);
 
+  // Check if passwords meet requirements on change
   useEffect(() => {
     if (signupPassword) {
       if (!validatePassword(signupPassword)) {
@@ -54,6 +82,12 @@ const LoginScreen = ({
       }
     } else {
       setPasswordError("");
+      // Reset validation states when password is empty
+      setHasMinLength(false);
+      setHasUppercase(false);
+      setHasLowercase(false);
+      setHasNumber(false);
+      setHasSpecial(false);
     }
   }, [signupPassword]);
 
@@ -62,18 +96,22 @@ const LoginScreen = ({
   
   // Check if signup form is valid
   const isSignupFormValid =
+    signupFirstName.trim() !== "" && 
+    signupLastName.trim() !== "" && 
     signupEmail.trim() !== "" && 
     validateEmail(signupEmail) &&
     signupPassword.trim() !== "" && 
     validatePassword(signupPassword) &&
-    signupConfirmPassword === signupPassword &&
-    signupName.trim() !== "";
+    signupConfirmPassword === signupPassword;
 
   const handleLogin = () => {
     // Mock authentication
     if (username === "David" && password === "Smith") {
       setUserData({
         username: "David Smith",
+        email: "david.smith@example.com",
+        firstName: "David",
+        lastName: "Smith",
         totalRefunded: 1024.56,
       });
       navigateTo("main-menu");
@@ -86,7 +124,9 @@ const LoginScreen = ({
     if (isSignupFormValid) {
       // Save the new user data
       setUserData({
-        username: signupName,
+        username: `${signupFirstName} ${signupLastName}`,
+        firstName: signupFirstName,
+        lastName: signupLastName,
         email: signupEmail,
         totalRefunded: 0,
       });
@@ -94,6 +134,18 @@ const LoginScreen = ({
       navigateTo("main-menu");
     }
   };
+
+  // Password tooltip component
+  const PasswordRequirementItem = ({ met, text }) => (
+    <View style={styles.requirementRow}>
+      <Text style={[styles.checkmark, met ? styles.validRequirement : {}]}>
+        {met ? '✓' : '○'}
+      </Text>
+      <Text style={[styles.requirementText, met ? styles.validRequirement : {}]}>
+        {text}
+      </Text>
+    </View>
+  );
 
   return (
     <View style={styles.screen}>
@@ -137,11 +189,21 @@ const LoginScreen = ({
         ) : (
           <>
             <FormInput
-              label="Full Name"
-              value={signupName}
-              onChangeText={setSignupName}
-              placeholder="Enter your full name"
-              inputId="fullname"
+              label="First Name"
+              value={signupFirstName}
+              onChangeText={setSignupFirstName}
+              placeholder="Enter your first name"
+              inputId="firstName"
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+            />
+
+            <FormInput
+              label="Last Name"
+              value={signupLastName}
+              onChangeText={setSignupLastName}
+              placeholder="Enter your last name"
+              inputId="lastName"
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
             />
@@ -158,32 +220,45 @@ const LoginScreen = ({
               error={emailError}
             />
 
-            <View>
-              <FormInput
-                label="Password"
-                value={signupPassword}
-                onChangeText={setSignupPassword}
-                placeholder="Create a password"
-                secureTextEntry={true}
-                inputId="newpassword"
-                focusedInput={focusedInput}
-                setFocusedInput={setFocusedInput}
-                error={passwordError}
-                onFocus={() => setShowPasswordTooltip(true)}
-                onBlur={() => setShowPasswordTooltip(false)}
-              />
-              
-              {showPasswordTooltip && (
-                <View style={styles.tooltipContainer}>
-                  <Text style={styles.tooltipTitle}>Password must contain:</Text>
-                  <Text style={styles.tooltipText}>• At least 8 characters</Text>
-                  <Text style={styles.tooltipText}>• At least 1 uppercase letter</Text>
-                  <Text style={styles.tooltipText}>• At least 1 lowercase letter</Text>
-                  <Text style={styles.tooltipText}>• At least 1 number</Text>
-                  <Text style={styles.tooltipText}>• At least 1 special character (@$!%*?&)</Text>
-                </View>
-              )}
-            </View>
+            <FormInput
+              label="Password"
+              value={signupPassword}
+              onChangeText={setSignupPassword}
+              placeholder="Create a password"
+              secureTextEntry={true}
+              inputId="password"
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+              error={passwordError}
+              onFocus={() => setShowPasswordTooltip(true)}
+              onBlur={() => setShowPasswordTooltip(false)}
+            />
+
+            {showPasswordTooltip && (
+              <View style={styles.passwordTooltip}>
+                <Text style={styles.tooltipTitle}>Password must have:</Text>
+                <PasswordRequirementItem 
+                  met={hasMinLength} 
+                  text="At least 8 characters" 
+                />
+                <PasswordRequirementItem 
+                  met={hasUppercase} 
+                  text="At least 1 uppercase letter" 
+                />
+                <PasswordRequirementItem 
+                  met={hasLowercase} 
+                  text="At least 1 lowercase letter" 
+                />
+                <PasswordRequirementItem 
+                  met={hasNumber} 
+                  text="At least 1 number" 
+                />
+                <PasswordRequirementItem 
+                  met={hasSpecial} 
+                  text="At least 1 special character (@$!%*?&)" 
+                />
+              </View>
+            )}
 
             <FormInput
               label="Confirm Password"
@@ -230,42 +305,56 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   forgotPasswordContainer: {
-    alignSelf: "center",
-    marginTop: 12,
+    marginTop: 10,
+    alignItems: "center",
   },
   forgotPassword: {
     color: Colors.NAVY_BLUE,
-    fontSize: 14,
     textDecorationLine: "underline",
     fontFamily: "Montserrat, sans-serif",
-    fontWeight: "700",
-  },
-  tooltipContainer: {
-    backgroundColor: Colors.NAVY_BLUE,
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 5,
-    marginBottom: 15,
-  },
-  tooltipTitle: {
-    color: Colors.WHITE,
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontFamily: "Montserrat, sans-serif",
-  },
-  tooltipText: {
-    color: Colors.WHITE,
-    fontSize: 12,
-    marginBottom: 3,
-    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "500",
   },
   termsText: {
-    fontSize: 12,
-    color: Colors.NAVY_BLUE,
+    marginTop: 10,
     textAlign: "center",
-    marginTop: 15,
+    fontSize: 12,
+    color: Colors.TEXT_SECONDARY,
+    fontFamily: "Montserrat, sans-serif",
+    fontWeight: "400",
+  },
+  passwordTooltip: {
+    backgroundColor: Colors.LIGHT_GRAY,
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  tooltipTitle: {
+    fontWeight: "600",
+    fontSize: 14,
+    marginBottom: 5,
+    color: Colors.TEXT_PRIMARY,
     fontFamily: "Montserrat, sans-serif",
   },
+  requirementRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 2,
+  },
+  checkmark: {
+    marginRight: 6,
+    fontSize: 14,
+    color: Colors.TEXT_PRIMARY,
+    fontWeight: 'bold',
+  },
+  requirementText: {
+    fontSize: 12,
+    color: Colors.TEXT_PRIMARY,
+    fontFamily: "Montserrat, sans-serif",
+  },
+  validRequirement: {
+    color: Colors.FOREST_GREEN,
+    fontWeight: '600',
+  }
 });
 
 export default LoginScreen;
