@@ -21,12 +21,23 @@ FIXES_APPLIED=0
 fix_import_paths() {
     echo -e "${YELLOW}\n===== Fixing Import Paths =====${NC}"
     
-    # Check for files with import issues before fixing
-    IMPORT_ISSUES_COUNT=$(find ./src -type f \( -name "*.js" -o -name "*.jsx" \) -exec grep -l "from '[^']*'" {} \; | wc -l)
+    # Store current state of all files to temporary location
+    mkdir -p ./tmp
+    find ./src -type f \( -name "*.js" -o -name "*.jsx" \) -exec md5sum {} \; > ./tmp/files_before_fix.md5
     
-    if [ $IMPORT_ISSUES_COUNT -gt 0 ]; then
-        # Only run the fix script if there are issues
-        ./fix-all-imports.sh
+    # Run the fix script
+    FIXED_COUNT=0
+    ./fix-all-imports.sh > ./tmp/import_fix.log
+    FIXED_COUNT=$(grep -c "Fixed imports in" ./tmp/import_fix.log)
+    
+    # Check if any files actually changed by comparing checksums
+    find ./src -type f \( -name "*.js" -o -name "*.jsx" \) -exec md5sum {} \; > ./tmp/files_after_fix.md5
+    
+    # Compare files before and after
+    DIFF_COUNT=$(diff ./tmp/files_before_fix.md5 ./tmp/files_after_fix.md5 | wc -l)
+    
+    if [ $DIFF_COUNT -gt 0 ]; then
+        echo -e "${GREEN}✅ Fixed imports in $FIXED_COUNT files${NC}"
         FIXES_APPLIED=1
     else
         echo -e "${GREEN}✅ No import issues found, skipping fix${NC}"

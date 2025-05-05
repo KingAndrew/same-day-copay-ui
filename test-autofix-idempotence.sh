@@ -25,8 +25,12 @@ count_fixes() {
     MODULE_FIXES=$(grep -c "Found CommonJS syntax in" "$log_file")
     DUPLICATE_FIXES=$(grep -c "Fixing duplicate extensions in" "$log_file")
     
-    # Calculate total fixes
-    TOTAL_FIXES=$((IMPORT_FIXES + POINTER_FIXES + OUTLINE_FIXES + MODULE_FIXES + DUPLICATE_FIXES))
+    # Filter out false positives (like "No files needed fixing")
+    FALSE_POSITIVES=$(grep -c "No files needed fixing" "$log_file")
+    SKIPPED=$(grep -c "skipping fix" "$log_file")
+    
+    # Calculate total fixes, but only count actual changes
+    TOTAL_FIXES=$((IMPORT_FIXES + POINTER_FIXES + OUTLINE_FIXES + MODULE_FIXES + DUPLICATE_FIXES - FALSE_POSITIVES))
     
     echo "$TOTAL_FIXES"
 }

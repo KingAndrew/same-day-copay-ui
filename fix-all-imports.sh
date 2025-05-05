@@ -176,6 +176,9 @@ find "${INCLUDE_DIRS[@]}" -type f \( -name "*.js" -o -name "*.jsx" \) | while re
   perl -i -pe 's/(\.js|\.jsx)(\.js|\.jsx)+/\1/g' "$file"
 done
 
+# Force write any pending changes to disk
+sync
+
 echo -e "\n${YELLOW}===== ES Module Import Fix Summary =====${NC}"
 echo -e "Files fixed: $FILES_FIXED"
 
