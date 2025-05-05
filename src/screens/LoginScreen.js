@@ -4,7 +4,10 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Colors } from '../constants/index.js';
 import { AppLogo, AppButton, FormInput, TabSelector } from '../components/index.js';
 
-const LoginScreen = ({ navigateTo, setUserData }) => {
+const LoginScreen = ({ 
+  navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`),
+  setUserData = (data) => console.warn("setUserData attempted but no function provided", data)
+}) => {
   const [activeTab, setActiveTab] = useState("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { Colors } from '../constants/index.js';
@@ -6,7 +5,12 @@ import { AppButton, ScreenTemplate } from '../components/index.js';
 // Import only the mock camera for web
 import { Camera } from '../components/CameraMock';
 
-const SnapReceiptScreen = ({ navigateTo, setFrontReceiptImage, setBackReceiptImage, isFrontSide }) => {
+const SnapReceiptScreen = ({ 
+  navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`), 
+  isFrontSide = true, 
+  setFrontReceiptImage = (img) => console.warn("setFrontReceiptImage attempted but no function provided", img), 
+  setBackReceiptImage = (img) => console.warn("setBackReceiptImage attempted but no function provided", img) 
+}) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [photoTaken, setPhotoTaken] = useState(false);
@@ -48,7 +52,7 @@ const SnapReceiptScreen = ({ navigateTo, setFrontReceiptImage, setBackReceiptIma
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  
+
   return (
     <ScreenTemplate 
       title={`${isFrontSide ? 'Front' : 'Back'} Receipt Capture`}

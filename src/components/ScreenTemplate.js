@@ -4,7 +4,12 @@ import { Colors, URLs } from '../constants/index.js';
 import AppButton from './AppButton.js';
 
 // Reusable screen template component that follows the standard layout
-const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) => (
+const ScreenTemplate = ({ 
+  title, 
+  children, 
+  navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`), 
+  showBackButton = true 
+}) => (
   <View style={styles.screen}>
     <View style={styles.blueBackground}>
       <View style={styles.whiteContentBox}>

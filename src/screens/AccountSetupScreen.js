@@ -13,7 +13,10 @@ const SectionHeader = ({ title }) => (
 
 // We'll use the FormInput component directly instead of this custom FormField
 
-const AccountSetupScreen = ({ navigateTo, userData }) => {
+const AccountSetupScreen = ({ 
+  navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`), 
+  userData = { username: "Guest" } 
+}) => {
   const [activeTab, setActiveTab] = useState("personal");
   const [insuranceProviders, setInsuranceProviders] = useState([]);
   const email = userData?.username || "David"; // Use logged in user or default to David

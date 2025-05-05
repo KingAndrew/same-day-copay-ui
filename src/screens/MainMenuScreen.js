@@ -84,7 +84,10 @@ const useAmountCounter = (amount) => {
   return displayedAmount;
 };
 
-const MainMenuScreen = ({ navigateTo, userData }) => {
+const MainMenuScreen = ({ 
+  navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`), 
+  userData = { username: "Guest User", totalRefunded: 0 } 
+}) => {
   const [accountExpanded, setAccountExpanded] = useState(false);
   const displayedAmount = useAmountCounter(userData?.totalRefunded);
 
