@@ -1,6 +1,6 @@
 
 #!/bin/bash
-set -x
+
 # Colors for better visibility
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -10,14 +10,13 @@ NC='\033[0m' # No Color
 echo -e "${YELLOW}===== Running All Tests =====${NC}"
 
 # Make this script executable
-chmod +x run-all-tests.sh
-echo -e "${YELLOW}===== Made Executable =====${NC}"
+#chmod +x run-all-tests.sh
 
 # Make all test scripts executable
-chmod +x run-dataapi-test.sh
-chmod +x run-account-setup-test.sh
-chmod +x run-mock-data-test.sh
-echo -e "${YELLOW}===== Made Executable =====${NC}"
+# chmod +x run-dataapi-test.sh
+# chmod +x run-account-setup-test.sh
+# chmod +x run-mock-data-test.sh
+# echo -e "${YELLOW}===== Made Executable =====${NC}"
 
 # Function to run a test script
 run_test() {
@@ -44,7 +43,3 @@ run_test "./run-mock-data-test.sh" "Mock Data"
 run_test "./run-account-setup-test.sh" "Account Setup"
 
 echo -e "\n${YELLOW}===== All Tests Completed =====${NC}"
-
-# Open a bash shell for the user to run commands
-echo -e "\n${GREEN}Starting an interactive shell. Type 'exit' when done${NC}"
-exec bash

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+
 # Colors for better visibility
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -15,9 +15,9 @@ node src/utils/__tests__/dataAPITest.js
 TEST_RESULT=$?
 
 if [ $TEST_RESULT -eq 0 ]; then
-  echo -e "${GREEN}===== Test Passed! DataAPI is working correctly =====${NC}"
+  echo -e "${GREEN}===== DataAPI Test Passed! is working correctly =====${NC}"
 else
-  echo -e "${RED}===== Test Failed! DataAPI is NOT working correctly =====${NC}"
+  echo -e "${RED}===== DataAPI Test Failed! DataAPI is NOT working correctly =====${NC}"
 fi
 
 exit $TEST_RESULT

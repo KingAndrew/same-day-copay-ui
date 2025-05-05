@@ -16,9 +16,9 @@ node src/utils/__tests__/mockDataTest.js
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -eq 0 ]; then
-  echo -e "${GREEN}===== Test Passed! =====${NC}"
+  echo -e "${GREEN}===== Mock Data Retrieval Test Passed! =====${NC}"
 else
-  echo -e "${RED}===== Test Failed! =====${NC}"
+  echo -e "${RED}===== Mock Data Retrieval Test Failed! =====${NC}"
 fi
 
 exit $EXIT_CODE
