@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { URLs } from '../constants/index.js.js.js';
+import { URLs } from '../constants/index.js.js.js.js.js';
 
 const AppLogo = ({ size = "large" }) => {
   const logoStyle = size === "large" ? styles.logo : styles.loginLogo;

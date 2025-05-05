@@ -1,5 +1,5 @@
 // Data API module for handling account setup and other data operations
-import { mockData as mockDataSource } from './mockDataSource.js.js.js';
+import { mockData as mockDataSource } from './mockDataSource.js.js.js.js.js';
 
 // Main data API object with methods for data operations
 export const dataAPI = {

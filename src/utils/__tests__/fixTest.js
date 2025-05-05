@@ -109,11 +109,11 @@ function verifyAccountSetupScreenImport() {
     const content = fs.readFileSync(accountSetupPath, 'utf8');
     
     // Check if the current import statement is correct
-    const hasCorrectImport = content.includes("import { dataAPI } from '../utils/dataAPI.js.js'");
-    const hasIncorrectImport = content.includes("import dataAPI from '../dataAPI.js.js'");
+    const hasCorrectImport = content.includes("import { dataAPI } from '../utils/dataAPI.js.js.js.js'");
+    const hasIncorrectImport = content.includes("import dataAPI from '../dataAPI.js.js.js.js'");
     
     console.log(`Current import statement is incorrect: \x1b[33m${hasIncorrectImport}\x1b[0m`);
-    console.log(`The correct import should be: import { dataAPI } from '../utils/dataAPI.js.js'`);
+    console.log(`The correct import should be: import { dataAPI } from '../utils/dataAPI.js.js.js.js'`);
     
     return !hasIncorrectImport;
   } catch (error) {

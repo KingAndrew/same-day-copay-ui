@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, Image, StyleSheet, View } from 'react-native';
-import { Colors, URLs } from '../constants/index.js.js.js';
+import { Colors, URLs } from '../constants/index.js.js.js.js.js';
 
 const MenuItem = ({ icon, text, onPress, chevronText = "›" }) => (
   <TouchableOpacity style={styles.menuItemContainer} onPress={onPress}>

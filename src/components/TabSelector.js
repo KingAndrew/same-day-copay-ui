@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/index.js.js.js';
+import { Colors } from '../constants/index.js.js.js.js.js';
 
 const TabSelector = ({ activeTab, setActiveTab, tabs }) => {
   // If no tabs are provided, use default login/signup tabs
