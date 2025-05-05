@@ -14,73 +14,161 @@ chmod +x fix-all-imports.sh
 chmod +x fix-pointer-events.sh
 chmod +x check-es-modules.sh
 
-# First run the ES module syntax check
-echo -e "${YELLOW}\n===== Checking ES Module Syntax =====${NC}"
-./check-es-modules.sh
-CHECK_RESULT=$?
+# Track if any fixes were applied
+FIXES_APPLIED=0
 
-# Fix import paths
-echo -e "${YELLOW}\n===== Fixing Import Paths =====${NC}"
-./fix-all-imports.sh
+# Function to fix import paths with idempotence check
+fix_import_paths() {
+    echo -e "${YELLOW}\n===== Fixing Import Paths =====${NC}"
+    
+    # Check for files with import issues before fixing
+    IMPORT_ISSUES_COUNT=$(find ./src -type f \( -name "*.js" -o -name "*.jsx" \) -exec grep -l "from '[^']*'" {} \; | wc -l)
+    
+    if [ $IMPORT_ISSUES_COUNT -gt 0 ]; then
+        # Only run the fix script if there are issues
+        ./fix-all-imports.sh
+        FIXES_APPLIED=1
+    else
+        echo -e "${GREEN}✅ No import issues found, skipping fix${NC}"
+    fi
+}
 
-# Fix deprecated pointerEvents props
-echo -e "${YELLOW}\n===== Fixing Deprecated pointerEvents =====${NC}"
-./fix-pointer-events.sh
+# Function to fix deprecated pointerEvents props
+fix_pointer_events() {
+    echo -e "${YELLOW}\n===== Fixing Deprecated pointerEvents =====${NC}"
+    
+    # Check for files with pointerEvents issues before fixing
+    POINTER_EVENTS_COUNT=$(find ./src -type f \( -name "*.js" -o -name "*.jsx" \) -exec grep -l "pointerEvents=" {} \; | wc -l)
+    
+    if [ $POINTER_EVENTS_COUNT -gt 0 ]; then
+        # Only run the fix script if there are issues
+        ./fix-pointer-events.sh
+        FIXES_APPLIED=1
+    else
+        echo -e "${GREEN}✅ No pointerEvents issues found, skipping fix${NC}"
+    fi
+}
 
 # Function to fix CommonJS to ESM syntax issues
 fix_commonjs_to_esm() {
     echo -e "${YELLOW}\n===== Converting CommonJS to ES Module Syntax =====${NC}"
     
-    find ./src -type f -name "*.js" -o -name "*.jsx" | grep -v "node_modules" | while read -r file; do
-        # Convert module.exports = to export default
-        perl -i -pe 's/module\.exports\s*=\s*/export default /g' "$file"
-        
-        # Convert exports.name = to export const name =
-        perl -i -pe 's/exports\.(\w+)\s*=\s*/export const \1 = /g' "$file"
-        
-        # Convert require() to import
-        grep -q "require(" "$file" && echo -e "${YELLOW}Found require() in $file - converting to import${NC}"
-        perl -i -pe 's/const\s+(\w+)\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/import \1 from "\2"/g' "$file"
-        
-        # Convert destructured require
-        perl -i -pe 's/const\s+\{\s*([^}]+)\s*\}\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/import { \1 } from "\2"/g' "$file"
-    done
+    # Check for CommonJS patterns before fixing
+    COMMONJS_COUNT=$(find ./src -type f \( -name "*.js" -o -name "*.jsx" \) \
+        \( -exec grep -l "module\.exports" {} \; -o -exec grep -l "require(" {} \; -o -exec grep -l "exports\." {} \; \) | wc -l)
     
-    echo -e "${GREEN}✅ Finished converting CommonJS syntax to ES modules${NC}"
+    if [ $COMMONJS_COUNT -gt 0 ]; then
+        # Only convert if issues are found
+        find ./src -type f -name "*.js" -o -name "*.jsx" | grep -v "node_modules" | while read -r file; do
+            # Check if file has CommonJS syntax
+            if grep -q -E "module\.exports|require\(|exports\." "$file"; then
+                echo -e "${YELLOW}Found CommonJS syntax in $file - converting to ES modules${NC}"
+                
+                # Convert module.exports = to export default
+                perl -i -pe 's/module\.exports\s*=\s*/export default /g' "$file"
+                
+                # Convert exports.name = to export const name =
+                perl -i -pe 's/exports\.(\w+)\s*=\s*/export const \1 = /g' "$file"
+                
+                # Convert require() to import
+                perl -i -pe 's/const\s+(\w+)\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/import \1 from "\2"/g' "$file"
+                
+                # Convert destructured require
+                perl -i -pe 's/const\s+\{\s*([^}]+)\s*\}\s*=\s*require\(['"'"'"]([^'"'"'"]+)['"'"'"]\)/import { \1 } from "\2"/g' "$file"
+                
+                FIXES_APPLIED=1
+            fi
+        done
+        
+        echo -e "${GREEN}✅ Finished converting CommonJS syntax to ES modules${NC}"
+    else
+        echo -e "${GREEN}✅ No CommonJS syntax issues found, skipping fix${NC}"
+    fi
 }
 
 # Function to fix outline CSS property issues in React Native StyleSheet
 fix_outline_properties() {
     echo -e "${YELLOW}\n===== Fixing Invalid outline Style Properties =====${NC}"
     
-    find ./src -type f -name "*.js" -o -name "*.jsx" | grep -v "node_modules" | xargs grep -l "outline:" | while read -r file; do
-        echo -e "${YELLOW}Fixing outline property in $file${NC}"
-        
-        # Replace outline: 'none' with outlineStyle: 'none' in StyleSheet objects
-        perl -i -pe 's/(\s*)(outline:\s*["'"'"']none["'"'"'],?)/\1outlineStyle: "none",/g' "$file"
-        perl -i -pe 's/(\s*)(outline:\s*["'"'"']solid["'"'"'],?)/\1outlineStyle: "solid",/g' "$file"
-        
-        # Handle outline with size and color (more complex cases)
-        perl -i -pe 's/(\s*)(outline:\s*["'"'"']([0-9]+)(px|rem|em)\s+([a-zA-Z]+)\s+([a-zA-Z#0-9]+)["'"'"'],?)/\1outlineWidth: "\3\4", outlineStyle: "\5", outlineColor: "\6",/g' "$file"
-        
-        echo -e "${GREEN}Fixed outline property in $file${NC}"
-    done
+    # Check for outline properties before fixing
+    OUTLINE_COUNT=$(find ./src -type f \( -name "*.js" -o -name "*.jsx" \) -exec grep -l "outline:" {} \; | wc -l)
     
-    echo -e "${GREEN}✅ Finished fixing outline style properties${NC}"
+    if [ $OUTLINE_COUNT -gt 0 ]; then
+        find ./src -type f -name "*.js" -o -name "*.jsx" | grep -v "node_modules" | xargs grep -l "outline:" | while read -r file; do
+            echo -e "${YELLOW}Fixing outline property in $file${NC}"
+            
+            # Replace outline: 'none' with outlineStyle: 'none' in StyleSheet objects
+            perl -i -pe 's/(\s*)(outline:\s*["'"'"']none["'"'"'],?)/\1outlineStyle: "none",/g' "$file"
+            perl -i -pe 's/(\s*)(outline:\s*["'"'"']solid["'"'"'],?)/\1outlineStyle: "solid",/g' "$file"
+            
+            # Handle outline with size and color (more complex cases)
+            perl -i -pe 's/(\s*)(outline:\s*["'"'"']([0-9]+)(px|rem|em)\s+([a-zA-Z]+)\s+([a-zA-Z#0-9]+)["'"'"'],?)/\1outlineWidth: "\3\4", outlineStyle: "\5", outlineColor: "\6",/g' "$file"
+            
+            echo -e "${GREEN}Fixed outline property in $file${NC}"
+            FIXES_APPLIED=1
+        done
+        
+        echo -e "${GREEN}✅ Finished fixing outline style properties${NC}"
+    else
+        echo -e "${GREEN}✅ No outline style issues found, skipping fix${NC}"
+    fi
 }
 
-# Run CommonJS to ESM fix if the check failed
-if [[ $CHECK_RESULT -ne 0 ]]; then
-    fix_commonjs_to_esm
-fi
+# Function to fix duplicate extensions in import paths
+fix_duplicate_extensions() {
+    echo -e "${YELLOW}\n===== Fixing Duplicate Extensions in Import Paths =====${NC}"
+    
+    # Check for duplicate extensions before fixing
+    DUPLICATE_EXT_COUNT=$(find ./src -type f \( -name "*.js" -o -name "*.jsx" \) \
+        \( -exec grep -l "\.js\.js" {} \; -o -exec grep -l "\.jsx\.js" {} \; \) | wc -l)
+    
+    if [ $DUPLICATE_EXT_COUNT -gt 0 ]; then
+        find ./src -type f \( -name "*.js" -o -name "*.jsx" \) | while read -r file; do
+            if grep -q -E "\.js\.js|\.jsx\.js" "$file"; then
+                echo -e "${YELLOW}Fixing duplicate extensions in $file${NC}"
+                
+                # Fix .js.js -> .js
+                perl -i -pe 's/(\.js)(\.js)+/\1/g' "$file"
+                
+                # Fix .jsx.js -> .jsx
+                perl -i -pe 's/(\.jsx)(\.js)+/\1/g' "$file"
+                
+                # Fix import paths in specific files that have been problematic
+                if [[ "$file" == "src/index.web.js" ]]; then
+                    perl -i -pe 's/import App from .+;/import App from '\''\.\/App\.jsx'\'';/g' "$file"
+                fi
+                
+                FIXES_APPLIED=1
+            fi
+        done
+        
+        echo -e "${GREEN}✅ Finished fixing duplicate extensions${NC}"
+    else
+        echo -e "${GREEN}✅ No duplicate extensions found, skipping fix${NC}"
+    fi
+}
 
-# Fix outline properties
+# First run the ES module syntax check
+echo -e "${YELLOW}\n===== Checking ES Module Syntax =====${NC}"
+./check-es-modules.sh
+CHECK_RESULT=$?
+
+# Run all fixes
+fix_import_paths
+fix_pointer_events
+fix_commonjs_to_esm
 fix_outline_properties
+fix_duplicate_extensions
 
 echo -e "\n${GREEN}===== Auto-Fix Complete =====${NC}"
-echo -e "${YELLOW}The following fixes were applied:${NC}"
-echo -e "  - Fixed import paths (extensions and duplicate extensions)"
-echo -e "  - Fixed deprecated pointerEvents props"
-echo -e "  - Converted CommonJS syntax to ES modules (if needed)"
-echo -e "  - Fixed invalid outline style properties"
+if [ $FIXES_APPLIED -eq 1 ]; then
+    echo -e "${YELLOW}The following fixes were applied:${NC}"
+    echo -e "  - Fixed import paths (extensions and duplicate extensions)"
+    echo -e "  - Fixed deprecated pointerEvents props"
+    echo -e "  - Converted CommonJS syntax to ES modules (if needed)"
+    echo -e "  - Fixed invalid outline style properties"
+else
+    echo -e "${GREEN}✅ No issues found - all files are already fixed!${NC}"
+fi
+
 echo -e "\n${YELLOW}You may now run your application or tests.${NC}"

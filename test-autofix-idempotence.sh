@@ -22,10 +22,11 @@ count_fixes() {
     IMPORT_FIXES=$(grep -c "Fixed imports in" "$log_file")
     POINTER_FIXES=$(grep -c "Fixed deprecated pointerEvents in" "$log_file")
     OUTLINE_FIXES=$(grep -c "Fixed outline property in" "$log_file")
-    MODULE_FIXES=$(grep -c "Found require()" "$log_file")
+    MODULE_FIXES=$(grep -c "Found CommonJS syntax in" "$log_file")
+    DUPLICATE_FIXES=$(grep -c "Fixing duplicate extensions in" "$log_file")
     
     # Calculate total fixes
-    TOTAL_FIXES=$((IMPORT_FIXES + POINTER_FIXES + OUTLINE_FIXES + MODULE_FIXES))
+    TOTAL_FIXES=$((IMPORT_FIXES + POINTER_FIXES + OUTLINE_FIXES + MODULE_FIXES + DUPLICATE_FIXES))
     
     echo "$TOTAL_FIXES"
 }
@@ -57,7 +58,14 @@ else
     echo -e "\n${RED}❌ TEST FAILED: auto-fix.sh is NOT idempotent!${NC}"
     echo "Running auto-fix.sh a second time found and fixed $SECOND_RUN_FIXES additional issues."
     
-    # Check where the script is still finding issues
+    # Extract information about what was fixed in the second run
+    IMPORT_FIXES=$(grep -c "Fixed imports in" "$SECOND_RUN_LOG")
+    POINTER_FIXES=$(grep -c "Fixed deprecated pointerEvents in" "$SECOND_RUN_LOG")
+    OUTLINE_FIXES=$(grep -c "Fixed outline property in" "$SECOND_RUN_LOG")
+    MODULE_FIXES=$(grep -c "Found CommonJS syntax in" "$SECOND_RUN_LOG")
+    DUPLICATE_FIXES=$(grep -c "Fixing duplicate extensions in" "$SECOND_RUN_LOG")
+    
+    # Show counts for different types of fixes
     if [ "$IMPORT_FIXES" -gt 0 ]; then
         echo -e "- Found ${RED}$IMPORT_FIXES${NC} additional import fixes in second run"
     fi
@@ -70,10 +78,13 @@ else
     if [ "$MODULE_FIXES" -gt 0 ]; then
         echo -e "- Found ${RED}$MODULE_FIXES${NC} additional module export/require fixes in second run"
     fi
+    if [ "$DUPLICATE_FIXES" -gt 0 ]; then
+        echo -e "- Found ${RED}$DUPLICATE_FIXES${NC} additional duplicate extension fixes in second run"
+    fi
     
     # Show detailed diff of what was fixed in the second run
     echo -e "\n${YELLOW}Details of issues fixed in second run:${NC}"
-    grep "Fixed " "$SECOND_RUN_LOG" | grep -v "Finished fixing"
+    grep -E "Fixed|Fixing" "$SECOND_RUN_LOG" | grep -v "Finished fixing" | grep -v "No issues found"
 fi
 
 # Compare file changes between runs to see what might be causing non-idempotence
