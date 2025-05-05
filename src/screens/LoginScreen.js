@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/index.js.js.js.js.js.js';
-import { AppLogo, AppButton, FormInput, TabSelector } from '../components/index.js.js.js.js.js.js';
+import { Colors } from '../constants/index.js';
+import { AppLogo, AppButton, FormInput, TabSelector } from '../components/index.js';
 
 const LoginScreen = ({ 
   navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`),

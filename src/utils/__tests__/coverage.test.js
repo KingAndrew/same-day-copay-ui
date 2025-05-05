@@ -1,5 +1,5 @@
-import { dataAPI } from '../dataAPI.js.js.js.js.js.js';
-import mockData from '../mockDataSource.js.js.js.js.js.js';
+import { dataAPI } from '../dataAPI.js';
+import mockData from '../mockDataSource.js';
 
 // Mock the console methods to avoid cluttering test output
 global.console = {
@@ -361,8 +361,8 @@ describe('Integration Tests', () => {
   });
 });
 
-import { dataAPI } from '../dataAPI.js.js.js.js.js';
-import { mockData } from '../mockDataSource.js.js.js.js.js';
+import { dataAPI } from '../dataAPI.js';
+import { mockData } from '../mockDataSource.js';
 
 describe('Data API Coverage Tests', () => {
   beforeEach(() => {

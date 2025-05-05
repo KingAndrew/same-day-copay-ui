@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
-import { Colors, URLs } from '../constants/index.js.js.js.js.js.js';
+import { Colors, URLs } from '../constants/index.js';
 
 const SubMenuItem = ({ icon, text, onPress }) => (
   <TouchableOpacity style={styles.subMenuItemContainer} onPress={onPress}>

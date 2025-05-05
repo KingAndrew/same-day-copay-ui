@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
-import { Colors, URLs } from '../constants/index.js.js.js.js.js.js';
-import AppButton from './AppButton.js.js.js.js.js.js';
+import { Colors, URLs } from '../constants/index.js';
+import AppButton from './AppButton.js';
 
 // Reusable screen template component that follows the standard layout
 const ScreenTemplate = ({ 

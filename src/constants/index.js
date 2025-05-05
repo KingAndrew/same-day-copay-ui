@@ -1,7 +1,7 @@
 
 import { Colors,
-          URLs } from '../../constants.js';
+            URLs } from '../../constants.js';
 
 export {
-          Colors,
-          URLs };
+            Colors,
+            URLs };

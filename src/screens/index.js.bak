@@ -1,12 +1,12 @@
 
-import AboutScreen from './AboutScreen.js';
-import AccountHistoryScreen from './AccountHistoryScreen.js';
-import AccountSetupScreen from './AccountSetupScreen.js';
-import HomeScreen from './HomeScreen.js';
-import LoginScreen from './LoginScreen.js';
-import MainMenuScreen from './MainMenuScreen.js';
-import NewPurchaseScreen from './NewPurchaseScreen.js';
-import SnapReceiptScreen from './SnapReceiptScreen.js';
+import AboutScreen from './AboutScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
+import AccountHistoryScreen from './AccountHistoryScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
+import AccountSetupScreen from './AccountSetupScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
+import HomeScreen from './HomeScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
+import LoginScreen from './LoginScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
+import MainMenuScreen from './MainMenuScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
+import NewPurchaseScreen from './NewPurchaseScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
+import SnapReceiptScreen from './SnapReceiptScreen.js.js.js.js.js.js.js.js.js.js.js.js.js';
 
 // Safe navigation function to use as default
 const safeNavigate = (screen) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants/index.js.js.js.js.js.js';
-import { ScreenTemplate } from '../components/index.js.js.js.js.js.js';
+import { Colors } from '../constants/index.js';
+import { ScreenTemplate } from '../components/index.js';
 
 const AccountHistoryScreen = ({ navigateTo }) => (
   <ScreenTemplate title="Account History" navigateTo={navigateTo}>
