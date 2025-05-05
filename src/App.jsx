@@ -12,7 +12,7 @@ import {
 } from './screens/index.js';
 
 const App = () => {
-  const [currentScreen, setCurrentScreen] = useState('home');
+  const [currentScreen, setCurrentScreen] = useState('login');
   const [userData, setUserData] = useState(null);
   const [frontReceiptImage, setFrontReceiptImage] = useState(null);
   const [backReceiptImage, setBackReceiptImage] = useState(null);
