@@ -1,8 +1,7 @@
-
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
-import { Colors, URLs } from '../constants';
-import AppButton from './AppButton';
+import { StyleSheet, View, Text, Image } from 'react-native';
+import { Colors, URLs } from '../constants/index.js';
+import AppButton from './AppButton.js';
 
 // Reusable screen template component that follows the standard layout
 const ScreenTemplate = ({ title, children, navigateTo, showBackButton = true }) => (

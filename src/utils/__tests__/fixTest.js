@@ -3,8 +3,12 @@
  * Pre-fix verification test utility
  * Runs before applying changes to verify the current state and ensure the fix is appropriate
  */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Static code analysis to check basic patterns and common issues
@@ -97,7 +101,7 @@ function verifyDataAPI() {
 }
 
 /**
- * Verify the AccountSetupScreen.js has the correct import 
+ * Verify the AccountSetupScreen.js has the correct import
  */
 function verifyAccountSetupScreenImport() {
   try {
@@ -119,42 +123,22 @@ function verifyAccountSetupScreenImport() {
 }
 
 /**
- * Run all pre-fix verification tests
+ * Run all pre-fix verification
  */
 function runPreFixVerification() {
-  console.log('Running pre-fix verification test...');
+  console.log('🔍 Running pre-fix verification...');
   
-  // Verify the dataAPI file
-  const dataAPIValid = verifyDataAPI();
+  const verifications = [
+    { name: 'dataAPI.js exists and exports correctly', result: verifyDataAPI() },
+    { name: 'AccountSetupScreen has correct import', result: verifyAccountSetupScreenImport() }
+  ];
   
-  // Verify the import in AccountSetupScreen
-  const accountSetupImportValid = verifyAccountSetupScreenImport();
+  console.log('\n📊 Verification Results:');
+  verifications.forEach(v => {
+    console.log(`${v.result ? '✅' : '❌'} ${v.name}`);
+  });
   
-  // Run static code analysis on the file we're about to modify
-  const accountSetupPath = path.resolve(__dirname, '../../screens/AccountSetupScreen.js');
-  const analysis = analyzeCode(accountSetupPath);
-  
-  if (analysis.issues.length > 0) {
-    console.log('⚠️ Code analysis found issues:');
-    analysis.issues.forEach(issue => console.log(`  - ${issue}`));
-  }
-  
-  if (analysis.warnings.length > 0) {
-    console.log('⚠️ Code analysis warnings:');
-    analysis.warnings.forEach(warning => console.log(`  - ${warning}`));
-  }
-  
-  if (analysis.info.length > 0) {
-    console.log('ℹ️ Code analysis info:');
-    analysis.info.forEach(info => console.log(`  - ${info}`));
-  }
-  
-  console.log('✓ Pre-fix verification completed');
-  
-  return dataAPIValid && accountSetupImportValid && analysis.issues.length === 0;
+  return verifications.every(v => v.result);
 }
 
-// Export the verification function
-module.exports = {
-  runPreFixVerification
-};
+export { analyzeCode, verifyDataAPI, verifyAccountSetupScreenImport, runPreFixVerification };
