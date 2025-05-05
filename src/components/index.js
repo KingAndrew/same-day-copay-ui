@@ -8,13 +8,4 @@ import SubMenuItem from './SubMenuItem.js';
 import TabSelector from './TabSelector.js';
 import { Camera } from './CameraMock.js';
 
-export {
-  AppButton,
-  AppLogo,
-  FormInput,
-  MenuItem,
-  ScreenTemplate,
-  SubMenuItem,
-  TabSelector,
-  Camera,
-};
+export { AppButton, AppLogo, FormInput, MenuItem, ScreenTemplate, SubMenuItem, TabSelector, Camera };

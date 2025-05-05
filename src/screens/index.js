@@ -1,3 +1,4 @@
+
 import AboutScreen from './AboutScreen.js';
 import AccountHistoryScreen from './AccountHistoryScreen.js';
 import AccountSetupScreen from './AccountSetupScreen.js';
@@ -15,5 +16,5 @@ export {
   LoginScreen,
   MainMenuScreen,
   NewPurchaseScreen,
-  SnapReceiptScreen,
+  SnapReceiptScreen
 };

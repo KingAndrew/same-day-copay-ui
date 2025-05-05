@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, Image, StyleSheet, View } from 'react-native';
 import { Colors, URLs } from '../constants/index.js';
 
 const MenuItem = ({ icon, text, onPress, chevronText = "›" }) => (
