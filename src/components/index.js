@@ -9,11 +9,11 @@ import TabSelector from './TabSelector.js';
 import { Camera } from './CameraMock.js';
 
 export {
-                AppButton,
-                AppLogo,
-                FormInput,
-                MenuItem,
-                ScreenTemplate,
-                SubMenuItem,
-                TabSelector,
-                Camera };
+                            AppButton,
+                            AppLogo,
+                            FormInput,
+                            MenuItem,
+                            ScreenTemplate,
+                            SubMenuItem,
+                            TabSelector,
+                            Camera };
