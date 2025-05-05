@@ -77,6 +77,19 @@ args = "chmod +x run-all-tests-with-coverage.sh"
 task = "shell.exec"
 args = "./run-all-tests-with-coverage.sh"
 
+[[workflows.workflow]]
+name = "Auto Fix Errors"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x auto-fix.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./auto-fix.sh"
+
 [[ports]]
 localPort = 3000
 externalPort = 3000
