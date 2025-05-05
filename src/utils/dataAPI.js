@@ -1,134 +1,131 @@
-
 /**
- * Data API Utility
- * Provides a unified interface for data access that can switch between
- * mock data and the middle tier API seamlessly
+ * Data Access API
+ *
+ * This module provides a consistent interface for data storage and retrieval,
+ * with the ability to switch between different storage backends.
  */
 
-const { URLs } = require('../../constants');
-const mockData = require('./mockDataSource');
+const mockData = require("./mockDataSource");
 
-// DataSource implementation for mock data (file)
-class MockDataSource {
-  async getData(key) {
-    return new Promise((resolve) => {
-      // Simulate network delay
-      setTimeout(() => {
-        const data = mockData[key] || null;
-        resolve(data);
-      }, 100);
-    });
-  }
-
-  async saveData(key, value) {
-    return new Promise((resolve) => {
-      // Actually save the data to mockData
-      mockData[key] = value;
-      console.log(`[MockDataSource] Saved data for key: ${key}`, value);
-      resolve(true);
-    });
-  }
-}
-
-// DataSource implementation for remote API
-class RemoteDataSource {
-  constructor(baseUrl) {
-    this.baseUrl = baseUrl;
-  }
-
-  async getData(key) {
-    try {
-      const response = await fetch(`${this.baseUrl}/data/${encodeURIComponent(key)}`);
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
-      return await response.json();
-    } catch (error) {
-      console.error(`[RemoteDataSource] Error fetching data for key: ${key}`, error);
-      return null;
-    }
-  }
-
-  async saveData(key, value) {
-    try {
-      const response = await fetch(`${this.baseUrl}/data/${encodeURIComponent(key)}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(value),
-      });
-      
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
-      
-      return true;
-    } catch (error) {
-      console.error(`[RemoteDataSource] Error saving data for key: ${key}`, error);
-      return false;
-    }
-  }
-}
-
-// Determine which data source to use based on URLs.DATA_SOURCE
-let dataSourceInstance;
-
-if (URLs.DATA_SOURCE.startsWith('file://')) {
-  // Using mock data
-  dataSourceInstance = new MockDataSource();
-} else {
-  // Using remote API
-  dataSourceInstance = new RemoteDataSource(URLs.DATA_SOURCE);
-}
-
-// Public API for data access
+// In a real app, this would be more sophisticated with actual backend API calls
+// or local storage interactions
 const dataAPI = {
   /**
    * Get data by key
-   * @param {string} key - The data key in format: [email.]screenName.dataName
-   * @returns {Promise<any>} - The data object or null if not found
+   * @param {string} key - Dot notation path to the data (e.g., "user.preferences.theme")
+   * @returns {Promise<any>} - The data at the specified path
    */
-  async getData(key) {
-    return await dataSourceInstance.getData(key);
-  },
-  
-  /**
-   * Get data by key with user context
-   * @param {string} email - User email for context
-   * @param {string} key - The data key in format: screenName.dataName
-   * @returns {Promise<any>} - The data object or null if not found
-   */
-  async getUserData(email, key) {
-    if (!email) {
+  getData: async function (key) {
+    try {
+      // Split the key on dots to traverse nested objects
+      const parts = key.split(".");
+      let current = mockData;
+
+      // Traverse the object following the key path
+      for (const part of parts) {
+        if (current && typeof current === "object" && part in current) {
+          current = current[part];
+        } else {
+          return null; // Path doesn't exist
+        }
+      }
+
+      return current;
+    } catch (error) {
+      console.error("Error retrieving data:", error);
       return null;
     }
-    return await dataSourceInstance.getData(`${email}.${key}`);
   },
-  
+
   /**
    * Save data by key
-   * @param {string} key - The data key in format: [email.]screenName.dataName
-   * @param {any} value - The data to save
-   * @returns {Promise<boolean>} - Success status
+   * @param {string} key - Dot notation path to save the data at
+   * @param {any} data - The data to save
+   * @returns {Promise<boolean>} - Success indicator
    */
-  async saveData(key, value) {
-    return await dataSourceInstance.saveData(key, value);
-  },
-  
-  /**
-   * Save data by key with user context
-   * @param {string} email - User email for context
-   * @param {string} key - The data key in format: screenName.dataName
-   * @param {any} value - The data to save
-   * @returns {Promise<boolean>} - Success status
-   */
-  async saveUserData(email, key, value) {
-    if (!email) {
+  saveData: async function (key, data) {
+    try {
+      // Split the key on dots to traverse nested objects
+      const parts = key.split(".");
+
+      // If it's a simple key, just set it directly in mockData
+      if (parts.length === 1) {
+        mockData[key] = data;
+        return true;
+      }
+
+      // For nested keys, traverse and create objects as needed
+      let current = mockData;
+
+      // Navigate to the parent object where we'll set the final property
+      for (let i = 0; i < parts.length - 1; i++) {
+        const part = parts[i];
+
+        // Create path if it doesn't exist
+        if (!(part in current)) {
+          current[part] = {};
+        }
+
+        current = current[part];
+      }
+
+      // Set the value on the final object
+      const finalKey = parts[parts.length - 1];
+      current[finalKey] = data;
+
+      return true;
+    } catch (error) {
+      console.error("Error saving data:", error);
       return false;
     }
-    return await dataSourceInstance.saveData(`${email}.${key}`, value);
-  }
+  },
+
+  /**
+   * Delete data by key
+   * @param {string} key - Dot notation path to delete
+   * @returns {Promise<boolean>} - Success indicator
+   */
+  deleteData: async function (key) {
+    try {
+      const parts = key.split(".");
+
+      // If it's a simple key, just delete it directly from mockData
+      if (parts.length === 1) {
+        if (key in mockData) {
+          delete mockData[key];
+          return true;
+        }
+        return false; // Key doesn't exist
+      }
+
+      // For nested keys, find the parent object
+      let current = mockData;
+
+      // Navigate to the parent object containing the property to delete
+      for (let i = 0; i < parts.length - 1; i++) {
+        const part = parts[i];
+
+        if (current && typeof current === "object" && part in current) {
+          current = current[part];
+        } else {
+          return false; // Path doesn't exist
+        }
+      }
+
+      // Delete the property from the parent object
+      const finalKey = parts[parts.length - 1];
+      if (finalKey in current) {
+        delete current[finalKey];
+        return true;
+      }
+
+      return false; // Final key doesn't exist
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      return false;
+    }
+  },
 };
 
+// Export the dataAPI object
 module.exports = { dataAPI };

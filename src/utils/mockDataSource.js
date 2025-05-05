@@ -1,69 +1,87 @@
+
 /**
- * Mock Data Source File
- * This file contains mock data that simulates API responses
+ * Mock Data Source
+ * 
+ * This module provides mock data for development and testing.
+ * In a production environment, this would be replaced with actual API calls.
  */
 
+// Mock data store - simulating a database
 const mockData = {
-  // Insurance providers list for everyone
-  "accountSetup.insuranceProviders": [
-    "Anthem Blue Cross and Blue Shield",
-    "Blue Cross and Blue Shield of Alabama",
-    "Blue Cross and Blue Shield of Alaska",
-    "Blue Cross and Blue Shield of Arizona",
-    "Arkansas Blue Cross and Blue Shield",
-    "Blue Cross and Blue Shield of California",
-    "Anthem Blue Cross and Blue Shield (Colorado)",
-    "Blue Cross and Blue Shield of Connecticut",
-    "Highmark Blue Cross Blue Shield Delaware",
-    "Florida Blue",
-    "Blue Cross and Blue Shield of Georgia",
-    "Blue Cross Blue Shield Association - Hawaii Medical Service Association",
-    "Blue Cross of Idaho",
-    "Blue Cross and Blue Shield of Illinois",
-    "Anthem Blue Cross and Blue Shield (Indiana)",
-    "Wellmark Blue Cross and Blue Shield of Iowa",
-    "Blue Cross and Blue Shield of Kansas",
-    "Anthem Blue Cross and Blue Shield (Kentucky)",
-    "Blue Cross and Blue Shield of Louisiana",
-    "Anthem Blue Cross and Blue Shield (Maine)",
-    "Blue Cross and Blue Shield of Massachusetts",
-    "Blue Cross Blue Shield of Michigan",
-    "Blue Cross and Blue Shield of Minnesota",
-    "Blue Cross and Blue Shield of Mississippi",
-    "Anthem Blue Cross and Blue Shield (Missouri)",
-    "Blue Cross and Blue Shield of Montana",
-    "Blue Cross and Blue Shield of Nebraska",
-    "Anthem Blue Cross and Blue Shield (Nevada)",
-    "Anthem Blue Cross and Blue Shield (New Hampshire)",
-    "Horizon Blue Cross Blue Shield of New Jersey",
-    "Blue Cross and Blue Shield of New Mexico",
-    "Blue Cross Blue Shield of North Carolina",
-    "Blue Cross Blue Shield of North Dakota"
-  ],
-
-  // Example of user-specific data (keyed by email)
-  "David.accountSetup.personal": {
-    firstName: "David",
-    lastName: "Smith",
-    email: "David",
-    preferredName: "David Smith"
+  // Demo user account data
+  David: {
+    accountSetup: {
+      personal: {
+        firstName: "David",
+        lastName: "Smith",
+        preferredName: "Dave",
+        email: "david.smith@example.com",
+        phoneNumber: "555-123-4567"
+      },
+      insurance: {
+        provider: "Anthem Blue Cross and Blue Shield",
+        memberId: "ANT123456789",
+        groupNumber: "GRPX987654",
+        planType: "PPO",
+        deductible: 1500,
+        copay: 30
+      },
+      payment: {
+        cardType: "Visa",
+        lastFourDigits: "4242",
+        expiryDate: "04/25",
+        billingZip: "90210"
+      }
+    },
+    purchases: [
+      {
+        id: "P001",
+        date: "2023-09-15",
+        provider: "City Pharmacy",
+        medication: "Amoxicillin",
+        totalCost: 45.99,
+        insurancePaid: 35.99,
+        outOfPocket: 10.00,
+        receiptImage: "receipt_p001.jpg"
+      },
+      {
+        id: "P002",
+        date: "2023-10-02",
+        provider: "MedPlus",
+        medication: "Lisinopril",
+        totalCost: 55.50,
+        insurancePaid: 40.50,
+        outOfPocket: 15.00,
+        receiptImage: "receipt_p002.jpg"
+      }
+    ]
   },
-
-  "David.accountSetup.bank": {
-    bankName: "First National Bank",
-    routingNumber: "123456789",
-    accountNumber: "987654321"
-  },
-
-  "David.accountSetup.insurance": {
-    provider: "Blue Cross and Blue Shield of Arizona",
-    policyNumber: "BC12345678",
-    groupNumber: "AZ987654"
-  },
-
-  "David.accountSetup.sameDay": {
-    paymentMethod: "Direct Deposit",
-    preferredBank: "First National Bank"
+  
+  // System data
+  system: {
+    insuranceProviders: [
+      "Aetna",
+      "Anthem Blue Cross and Blue Shield",
+      "Blue Cross and Blue Shield of Alabama",
+      "Cigna",
+      "Humana",
+      "Kaiser Permanente",
+      "Medicare",
+      "Medicaid",
+      "UnitedHealthcare"
+    ],
+    commonMedications: [
+      "Atorvastatin (Lipitor)",
+      "Levothyroxine (Synthroid)",
+      "Lisinopril (Prinivil, Zestril)",
+      "Metformin (Glucophage)",
+      "Amlodipine (Norvasc)",
+      "Metoprolol (Lopressor, Toprol XL)",
+      "Omeprazole (Prilosec)",
+      "Simvastatin (Zocor)",
+      "Losartan (Cozaar)",
+      "Albuterol (Ventolin, Proventil)"
+    ]
   }
 };
 
