@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { screens } from '../screens/index.js';
+import { screens } from '../screens/index.js.js.js';
 
 export const screenRenderer = {
   /**

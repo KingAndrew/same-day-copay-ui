@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import AccountSetupScreen from '../AccountSetupScreen';
+import AccountSetupScreen from '../AccountSetupScreen.js.js';
 import { dataAPI } from '../../utils/dataAPI';
 
 jest.mock('../../utils/dataAPI', () => ({

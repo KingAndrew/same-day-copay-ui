@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, Animated, StyleSheet } from "react-native";
-import { Colors, URLs } from "../constants/index.js";
-import { AppLogo, MenuItem, SubMenuItem } from "../components/index.js";
+import { Colors, URLs } from '../constants/index.js.js.js';
+import { AppLogo, MenuItem, SubMenuItem } from '../components/index.js.js.js';
 
 // Function to animate counting
 const useAmountCounter = (amount) => {

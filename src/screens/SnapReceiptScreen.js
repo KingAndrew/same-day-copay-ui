@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import { Colors } from '../constants/index.js';
-import { AppButton, ScreenTemplate } from '../components/index.js';
+import { Colors } from '../constants/index.js.js.js';
+import { AppButton, ScreenTemplate } from '../components/index.js.js.js';
 // Import only the mock camera for web
-import { Camera } from '../components/CameraMock.js';
+import { Camera } from '../components/CameraMock.js.js.js';
 
 const SnapReceiptScreen = ({ 
   navigateTo = (screen) => console.warn(`Navigation to "${screen}" attempted but no navigateTo function provided`), 
