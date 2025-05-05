@@ -5,7 +5,7 @@ channel = "stable-24_05"
 packages = ["unixtools.netstat", "killall"]
 
 [workflows]
-runButton = "Fix and Test"
+runButton = "Run Mock Tests"
 
 [[workflows.workflow]]
 name = "Run"
@@ -89,6 +89,19 @@ args = "chmod +x run-account-setup-test.sh"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "./run-account-setup-test.sh"
+
+[[workflows.workflow]]
+name = "Run Mock Tests"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x run-mock-data-test.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run-mock-data-test.sh"
 
 [[ports]]
 localPort = 3000

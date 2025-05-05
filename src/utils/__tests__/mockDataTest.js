@@ -38,6 +38,7 @@ async function testDataAPIGetMockData() {
     
     if (!data || data.value !== 'test-value') {
       console.error('❌ Failed to retrieve mock data through dataAPI');
+      console.error('Expected: { value: "test-value" }, Got:', data);
       return false;
     }
     
@@ -55,7 +56,9 @@ async function testDataAPISaveMockData() {
     console.log('Testing dataAPI.saveData with mock data...');
     
     // Save data through API
-    const saveResult = await dataAPI.saveData('test.save-key', { value: 'saved-value' });
+    const testKey = 'test.save-key';
+    const testValue = { value: 'saved-value' };
+    const saveResult = await dataAPI.saveData(testKey, testValue);
     
     if (!saveResult) {
       console.error('❌ dataAPI.saveData returned false');
@@ -63,8 +66,10 @@ async function testDataAPISaveMockData() {
     }
     
     // Verify data was saved to mock source
-    if (mockData['test.save-key']?.value !== 'saved-value') {
+    if (!mockData[testKey] || mockData[testKey].value !== 'saved-value') {
       console.error('❌ Data was not properly saved to mock source');
+      console.error('Expected mockData[test.save-key] to be:', testValue);
+      console.error('Actual value:', mockData[testKey]);
       return false;
     }
     
