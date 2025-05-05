@@ -58,7 +58,18 @@ async function testDataAPISaveMockData() {
     // Save data through API
     const testKey = 'test.save-key';
     const testValue = { value: 'saved-value' };
+    
+    // Show initial state
+    console.log('Before save, mockData[testKey] =', mockData[testKey]);
+    
     const saveResult = await dataAPI.saveData(testKey, testValue);
+    
+    // Show result of save operation
+    console.log('Save operation result:', saveResult);
+    
+    // Show the mockData state after saving
+    console.log('After save, mockData[testKey] =', mockData[testKey]);
+    console.log('Full mockData keys:', Object.keys(mockData));
     
     if (!saveResult) {
       console.error('❌ dataAPI.saveData returned false');
@@ -66,10 +77,17 @@ async function testDataAPISaveMockData() {
     }
     
     // Verify data was saved to mock source
-    if (!mockData[testKey] || mockData[testKey].value !== 'saved-value') {
-      console.error('❌ Data was not properly saved to mock source');
-      console.error('Expected mockData[test.save-key] to be:', testValue);
-      console.error('Actual value:', mockData[testKey]);
+    if (!mockData[testKey]) {
+      console.error('❌ Data was not found in mock source');
+      console.error('Expected mockData to have key:', testKey);
+      console.error('Available keys:', Object.keys(mockData));
+      return false;
+    }
+    
+    if (mockData[testKey].value !== 'saved-value') {
+      console.error('❌ Data value is incorrect in mock source');
+      console.error('Expected value:', 'saved-value');
+      console.error('Actual value:', mockData[testKey].value);
       return false;
     }
     
@@ -77,6 +95,7 @@ async function testDataAPISaveMockData() {
     return true;
   } catch (error) {
     console.error('❌ Error testing dataAPI.saveData:', error);
+    console.error(error.stack);
     return false;
   }
 }
