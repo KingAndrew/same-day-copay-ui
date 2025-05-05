@@ -1,0 +1,35 @@
+ERROR in ./src/screens/MainMenuScreen.js 9:0-44
+Module not found: Error: Can't resolve '../constants' in '/home/runner/workspace/src/screens'
+Did you mean 'index.js'?
+BREAKING CHANGE: The request '../constants' failed to resolve only because it was resolved as fully specified
+(probably because the origin is strict EcmaScript Module, e. g. a module with javascript mimetype, a '*.mjs' file, or a '*.js' file where the package.json contains '"type": "module"').
+The extension in the request is mandatory for it to be fully specified.
+Add the extension to the request.
+ERROR in ./src/screens/MainMenuScreen.js 10:0-63
+Module not found: Error: Can't resolve '../components' in '/home/runner/workspace/src/screens'
+Did you mean 'index.js'?
+BREAKING CHANGE: The request '../components' failed to resolve only because it was resolved as fully specified
+(probably because the origin is strict EcmaScript Module, e. g. a module with javascript mimetype, a '*.mjs' file, or a '*.js' file where the package.json contains '"type": "module"').
+The extension in the request is mandatory for it to be fully specified.
+Add the extension to the request.
+ERROR in ./src/screens/SnapReceiptScreen.js 19:0-50
+Module not found: Error: Can't resolve '../components/CameraMock' in '/home/runner/workspace/src/screens'
+Did you mean 'CameraMock.js'?
+BREAKING CHANGE: The request '../components/CameraMock' failed to resolve only because it was resolved as fully specified
+(probably because the origin is strict EcmaScript Module, e. g. a module with javascript mimetype, a '*.mjs' file, or a '*.js' file where the package.json contains '"type": "module"').
+The extension in the request is mandatory for it to be fully specified.
+Add the extension to the request.
+ERROR in ./src/utils/dataAPI.js 17:45-68
+export 'mockDataSource' (imported as 'mockDataSource') was not found in './mockDataSource.js' (possible exports: mockData)
+ERROR in ./src/utils/dataAPI.js 35:46-68
+export 'mockDataSource' (imported as 'mockDataSource') was not found in './mockDataSource.js' (possible exports: mockData)
+ERROR in ./src/utils/dataAPI.js 54:46-69
+export 'mockDataSource' (imported as 'mockDataSource') was not found in './mockDataSource.js' (possible exports: mockData)
+ERROR in ./src/utils/dataAPI.js 72:46-68
+export 'mockDataSource' (imported as 'mockDataSource') was not found in './mockDataSource.js' (possible exports: mockData)
+ERROR in ./src/utils/dataAPI.js 91:46-69
+export 'mockDataSource' (imported as 'mockDataSource') was not found in './mockDataSource.js' (possible exports: mockData)
+ERROR in ./src/utils/dataAPI.js 109:46-68
+export 'mockDataSource' (imported as 'mockDataSource') was not found in './mockDataSource.js' (possible exports: mockData)
+ERROR in ./src/utils/dataAPI.js 127:46-73
+export 'mockDataSource' (imported as 'mockDataSource') was not found in './mockDataSource.js' (possible exports: mockData)
