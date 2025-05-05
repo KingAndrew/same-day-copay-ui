@@ -40,19 +40,22 @@ JS_FILES=$(eval "$FIND_CMD")
 FILES_FIXED=0
 
 for file in $JS_FILES; do
-  # Fix all import paths in the file
+  # Fix imports in the file
   
-  # Fix relative imports without extensions
-  perl -i -pe 's/from [\'"](\.\.\/)([^\.][^\'"]*)[\'"](?!\.js)/from \'\1\2\.js\'/g' "$file"
-  perl -i -pe 's/from [\'"](\.\/)([^\.][^\'"]*)[\'"](?!\.js)/from \'\1\2\.js\'/g' "$file"
+  # Fix relative imports without extensions (handles both single and double quotes)
+  perl -i -pe "s/from ['\"](\.\.\/)([^\.][^'\"]*)['\"](?!\.js)/from '\1\2.js'/g" "$file"
+  perl -i -pe "s/from ['\"](\.\/)([^\.][^'\"]*)['\"](?!\.js)/from '\1\2.js'/g" "$file"
   
-  # Fix directory imports
-  perl -i -pe 's/from [\'"](\.\.\/)components[\'"](?!\/)/from \'\1components\/index\.js\'/g' "$file"
-  perl -i -pe 's/from [\'"](\.\.\/)constants[\'"](?!\/)/from \'\1constants\/index\.js\'/g' "$file"
-  perl -i -pe 's/from [\'"](\.\.\/)screens[\'"](?!\/)/from \'\1screens\/index\.js\'/g' "$file"
-  perl -i -pe 's/from [\'"](\.\.\/)utils[\'"](?!\/)/from \'\1utils\/index\.js\'/g' "$file"
+  # Fix directory imports to point to index.js files
+  perl -i -pe "s/from ['\"](\.\.\/)components['\"](?!\/)/from '\1components\/index.js'/g" "$file"
+  perl -i -pe "s/from ['\"](\.\.\/)constants['\"](?!\/)/from '\1constants\/index.js'/g" "$file"
+  perl -i -pe "s/from ['\"](\.\.\/)screens['\"](?!\/)/from '\1screens\/index.js'/g" "$file"
+  perl -i -pe "s/from ['\"](\.\.\/)utils['\"](?!\/)/from '\1utils\/index.js'/g" "$file"
   
-  # Now fix all exports to properly use ES Module syntax
+  # Fix component imports to add .js extension
+  perl -i -pe "s/from ['\"](\.\.\/)components\/([^'\"\.]+)['\"](?!\.js)/from '\1components\/\2.js'/g" "$file"
+  
+  # Convert CommonJS to ES modules
   perl -i -pe 's/module\.exports\s*=\s*/export default /g' "$file"
   perl -i -pe 's/exports\.(\w+)\s*=\s*/export const \1 = /g' "$file"
   
@@ -64,7 +67,10 @@ done
 for dir in src/components src/constants src/screens src/utils; do
   if [ -f "$dir/index.js" ]; then
     # Fix imports in index files
-    perl -i -pe 's/from [\'"]\.\/([^\.][^\'"]*)[\'"](?!\.js)/from \'.\/\1\.js\'/g' "$dir/index.js"
+    perl -i -pe "s/from ['\"]\.\/([^\.][^'\"]*)['\"](?!\.js)/from '.\/\1.js'/g" "$dir/index.js"
+    # Fix exports in index.js
+    perl -i -pe 's/export\s*{\s*/export {\n  /g' "$dir/index.js"
+    perl -i -pe 's/,\s*/,\n  /g' "$dir/index.js"
     echo -e "${GREEN}Fixed imports in $dir/index.js${NC}"
     FILES_FIXED=$((FILES_FIXED + 1))
   fi
@@ -79,6 +85,18 @@ fi
 if [ -f "src/utils/dataAPI.js" ]; then
   perl -i -pe 's/import\s*{\s*mockDataSource\s*}\s*from/import { mockData as mockDataSource } from/g' "src/utils/dataAPI.js"
   echo -e "${GREEN}Fixed mockDataSource import in src/utils/dataAPI.js${NC}"
+fi
+
+# Fix App.jsx to import screens correctly
+if [ -f "src/App.jsx" ]; then
+  perl -i -pe "s/from ['\"](\.\/screens)\/([^'\"\.]+)['\"](?!\.js)/from '\1\/\2.js'/g" "src/App.jsx"
+  echo -e "${GREEN}Fixed screen imports in src/App.jsx${NC}"
+fi
+
+# Fix index.web.js to import App correctly
+if [ -f "src/index.web.js" ]; then
+  perl -i -pe "s/from ['\"](\.\/App)['\"](?!\.jsx)/from '\1.jsx'/g" "src/index.web.js"
+  echo -e "${GREEN}Fixed App import in src/index.web.js${NC}"
 fi
 
 echo -e "\n${YELLOW}===== ES Module Import Fix Summary =====${NC}"
