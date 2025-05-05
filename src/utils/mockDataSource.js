@@ -2,28 +2,7 @@
 // Mock data for development and testing
 export const mockData = {
   // Empty template for user data
-  David: {
-    accountSetup: {
-      personal: {},
-      bank: {},
-      insurance: {},
-      sameDay: {}
-    }
-  },
-  
-  userData: {
-    id: "user123",
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "555-123-4567"
-  },
-  
-  accountInfo: {
-    accountId: "ACC98765",
-    createdDate: "2023-05-15",
-    status: "Active"
-  },
+
   
   // Global data (not user-specific)
   accountSetup: {
