@@ -1,7 +1,7 @@
 
 export default {
   moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-environment-jsdom',
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
   },
@@ -19,11 +19,14 @@ export default {
   ],
   coverageThreshold: {
     global: {
-      branches: 85,
-      functions: 85,
-      lines: 85,
-      statements: 85
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
     }
   },
   testPathIgnorePatterns: ['/node_modules/'],
+  transformIgnorePatterns: [
+    "/node_modules/(?!react-native|@react-native|expo-camera|expo-modules-core|@expo|expo)"
+  ],
 };

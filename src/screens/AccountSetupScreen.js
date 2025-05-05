@@ -48,7 +48,7 @@ const AccountSetupScreen = ({ navigateTo, userData }) => {
     const loadData = async () => {
       try {
         console.log('Loading data for user:', email);
-        
+
         // Load insurance providers (global data)
         const providers = await dataAPI.getData('accountSetup.insuranceProviders');
         if (providers) {

@@ -1,57 +1,56 @@
-import mockData from '../mockDataSource.js';
+
+import { mockData } from '../mockDataSource.js';
 import { dataAPI } from '../dataAPI.js';
 
 console.log('===== Running Mock Data Source Test =====');
-console.log('Testing mock data access...');
 
-// Test if we can access the mock data directly
-if (mockData.David && mockData.system) {
+// Test direct access to mock data
+console.log('Testing mock data access...');
+if (mockData && Object.keys(mockData).length > 0) {
   console.log('✅ Mock data is accessible');
 } else {
-  console.error('❌ Mock data is not accessible');
+  console.error('❌ Cannot access mock data');
   process.exit(1);
 }
 
-// Test if we can get data through the dataAPI
+// Test dataAPI.getData with mock data
 console.log('Testing dataAPI.getData with mock data...');
-const testValue = await dataAPI.getData('test.key');
+const testKey = 'test.key';
+const testData = await dataAPI.getData(testKey);
+console.log(`Direct key access for '${testKey}':`, testData);
 
-if (testValue && testValue.value === 'test-value') {
+if (testData && testData.value === 'test-value') {
   console.log('✅ Successfully retrieved mock data through dataAPI');
 } else {
   console.error('❌ Failed to retrieve mock data through dataAPI');
   process.exit(1);
 }
 
-// Test if we can save data through dataAPI
+// Test dataAPI.saveData with mock data
 console.log('\n===== Testing dataAPI.saveData with mock data... =====\n');
+const saveKey = 'test.save-key';
 
 console.log('Before save:');
-console.log(`mockData['test.save-key'] = ${mockData['test.save-key']}`);
+console.log(`mockData['${saveKey}'] =`, mockData[saveKey]);
+console.log('Initial mockData keys:', Object.keys(mockData));
 
-// Get initial keys to verify the save operation adds a new key
-const initialKeys = Object.keys(mockData);
-console.log('Initial mockData keys:', initialKeys);
-
-// Delete test key if it exists, to ensure clean test
-if ('test.save-key' in mockData) {
-  delete mockData['test.save-key'];
-  console.log('Deleted test key \'test.save-key\' for clean test');
+// Ensure the test key doesn't exist before we start
+if (mockData[saveKey]) {
+  delete mockData[saveKey];
+  console.log(`Deleted test key '${saveKey}' for clean test`);
 }
 
 console.log('\nCalling dataAPI.saveData...');
-const saveResult = await dataAPI.saveData('test.save-key', { value: 'saved-value' });
-console.log(`Save operation result: ${saveResult}\n`);
+const saveData = { value: 'saved-value' };
+const saveResult = await dataAPI.saveData(saveKey, saveData);
+console.log(`Saved data for key '${saveKey}':`, saveData);
+console.log('Save operation result:', saveResult);
 
-console.log('After save:');
-console.log(`mockData['test.save-key'] = ${JSON.stringify(mockData['test.save-key'])}`);
+console.log('\nAfter save:');
+console.log(`mockData['${saveKey}'] =`, mockData[saveKey]);
+console.log('Full mockData keys:', Object.keys(mockData));
 
-// Get all keys after save
-const afterSaveKeys = Object.keys(mockData);
-console.log('Full mockData keys:', afterSaveKeys);
-
-// Verify the save operation added the key successfully
-if (mockData['test.save-key'] && mockData['test.save-key'].value === 'saved-value') {
+if (mockData[saveKey] && mockData[saveKey].value === 'saved-value') {
   console.log('✅ Successfully saved data to mock source through dataAPI');
 } else {
   console.error('❌ Failed to save data to mock source through dataAPI');

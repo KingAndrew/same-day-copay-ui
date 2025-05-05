@@ -1,20 +1,9 @@
 
-import HomeScreen from './HomeScreen';
-import LoginScreen from './LoginScreen';
-import MainMenuScreen from './MainMenuScreen';
-import NewPurchaseScreen from './NewPurchaseScreen';
-import AccountSetupScreen from './AccountSetupScreen';
-import AccountHistoryScreen from './AccountHistoryScreen';
-import AboutScreen from './AboutScreen';
-import SnapReceiptScreen from './SnapReceiptScreen';
-
-export {
-  HomeScreen,
-  LoginScreen,
-  MainMenuScreen,
-  NewPurchaseScreen,
-  AccountSetupScreen,
-  AccountHistoryScreen,
-  AboutScreen,
-  SnapReceiptScreen
-};
+export { default as HomeScreen } from './HomeScreen.js';
+export { default as LoginScreen } from './LoginScreen.js';
+export { default as MainMenuScreen } from './MainMenuScreen.js';
+export { default as NewPurchaseScreen } from './NewPurchaseScreen.js';
+export { default as AccountSetupScreen } from './AccountSetupScreen.js';
+export { default as AccountHistoryScreen } from './AccountHistoryScreen.js';
+export { default as AboutScreen } from './AboutScreen.js';
+export { default as SnapReceiptScreen } from './SnapReceiptScreen.js';
