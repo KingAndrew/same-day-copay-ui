@@ -1,5 +1,5 @@
 
-import { dataAPI } from '../dataAPI.js.js.js.js';
+import { dataAPI } from '../dataAPI.js.js.js.js.js';
 
 describe('DataAPI', () => {
   test('dataAPI should be importable', () => {

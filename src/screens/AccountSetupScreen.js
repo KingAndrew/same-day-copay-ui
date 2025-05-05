@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Colors } from '../constants/index.js.js.js.js.js';
-import { ScreenTemplate, AppButton, TabSelector, FormInput } from '../components/index.js.js.js.js.js';
-import { dataAPI } from '../utils/dataAPI.js.js.js.js.js'; // Import the dataAPI from utils directory
+import { Colors } from '../constants/index.js.js.js.js.js.js';
+import { ScreenTemplate, AppButton, TabSelector, FormInput } from '../components/index.js.js.js.js.js.js';
+import { dataAPI } from '../utils/dataAPI.js.js.js.js.js.js'; // Import the dataAPI from utils directory
 
 
 const SectionHeader = ({ title }) => (

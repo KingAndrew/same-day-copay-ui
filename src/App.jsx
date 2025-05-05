@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import HomeScreen from './screens/HomeScreen.js.js.js.js.js';
+import HomeScreen from './screens/HomeScreen.js.js.js.js.js.js';
 import { 
   LoginScreen, 
   MainMenuScreen,
@@ -9,7 +9,7 @@ import {
   AboutScreen,
   NewPurchaseScreen,
   SnapReceiptScreen
-} from './screens/index.js.js.js.js.js';
+} from './screens/index.js.js.js.js.js.js';
 
 const App = () => {
   const [currentScreen, setCurrentScreen] = useState('home');

@@ -1,5 +1,5 @@
-import { dataAPI } from '../dataAPI.js.js.js.js.js';
-import { mockData } from '../mockDataSource.js.js.js.js.js';
+import { dataAPI } from '../dataAPI.js.js.js.js.js.js';
+import { mockData } from '../mockDataSource.js.js.js.js.js.js';
 
 console.log('===== Running DataAPI Test =====');
 

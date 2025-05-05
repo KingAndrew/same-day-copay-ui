@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { Colors } from '../constants/index.js.js.js.js.js';
+import { Colors } from '../constants/index.js.js.js.js.js.js';
 
 const FormInput = ({
   label,
