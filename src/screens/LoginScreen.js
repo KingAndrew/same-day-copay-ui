@@ -40,7 +40,7 @@ const LoginScreen = ({
     return re.test(String(email).toLowerCase());
   };
 
-  // Password validation
+  // Password validation - fixed to return validation results without setting state
   const validatePassword = (password) => {
     // At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
     const minLength = password.length >= 8;
@@ -49,14 +49,14 @@ const LoginScreen = ({
     const hasNum = /\d/.test(password);
     const hasSpec = /[@$!%*?&]/.test(password);
     
-    // Update validation states
-    setHasMinLength(minLength);
-    setHasUppercase(hasUpper);
-    setHasLowercase(hasLower);
-    setHasNumber(hasNum);
-    setHasSpecial(hasSpec);
-    
-    return minLength && hasUpper && hasLower && hasNum && hasSpec;
+    return {
+      isValid: minLength && hasUpper && hasLower && hasNum && hasSpec,
+      minLength,
+      hasUpper,
+      hasLower, 
+      hasNum,
+      hasSpec
+    };
   };
 
   // Check if emails are valid on change
@@ -75,7 +75,16 @@ const LoginScreen = ({
   // Check if passwords meet requirements on change
   useEffect(() => {
     if (signupPassword) {
-      if (!validatePassword(signupPassword)) {
+      const validationResult = validatePassword(signupPassword);
+      
+      // Update all password validation states
+      setHasMinLength(validationResult.minLength);
+      setHasUppercase(validationResult.hasUpper);
+      setHasLowercase(validationResult.hasLower);
+      setHasNumber(validationResult.hasNum);
+      setHasSpecial(validationResult.hasSpec);
+      
+      if (!validationResult.isValid) {
         setPasswordError("Password does not meet requirements");
       } else {
         setPasswordError("");
@@ -101,7 +110,7 @@ const LoginScreen = ({
     signupEmail.trim() !== "" && 
     validateEmail(signupEmail) &&
     signupPassword.trim() !== "" && 
-    validatePassword(signupPassword) &&
+    validatePassword(signupPassword).isValid &&
     signupConfirmPassword === signupPassword;
 
   const handleLogin = () => {
