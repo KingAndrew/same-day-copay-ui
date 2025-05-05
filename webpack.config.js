@@ -1,4 +1,3 @@
-
 import path from 'path';
 import { fileURLToPath } from 'url';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -7,57 +6,33 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  entry: path.join(__dirname, "index.web.js"),
+  entry: "./src/index.web.js",
   output: {
-    path: path.join(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /node_modules\/(?!(react-native|@react-native|expo-camera|expo-modules-core|@expo|expo)\/).*/,
+        exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: {
-            presets: [
-              "@babel/preset-env", 
-              "@babel/preset-react", 
-              "@babel/preset-flow", 
-              ["@babel/preset-typescript", { "isTSX": true, "allExtensions": true }]
-            ],
-            plugins: [
-              "@babel/plugin-proposal-export-namespace-from",
-              "@babel/plugin-transform-runtime",
-              "@babel/plugin-transform-typescript",
-              ["@babel/plugin-transform-react-jsx", { "runtime": "automatic" }]
-            ],
-          },
         },
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/i,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: '[name].[contenthash].[ext]',
-              outputPath: 'assets/',
-            },
-          },
-        ],
+        type: 'asset/resource',
       },
       {
-        test: /\.ts$/,
-        exclude: /node_modules\/(?!(expo-modules-core|expo-camera|@expo)\/).*/,
-        use: 'ts-loader',
+        test: /\.(mp3|wav)$/i,
+        type: 'asset/resource',
       },
     ],
   },
   resolve: {
     alias: {
-      'react-native$': 'react-native-web',
-      // Add specific module resolutions for react-native components
+      'react-native': 'react-native-web',
       'react-native/Libraries/EventEmitter/': 'react-native-web/dist/vendor/react-native/EventEmitter/',
       'react-native/Libraries/vendor/emitter/': 'react-native-web/dist/vendor/react-native/emitter/',
       'react-native/Libraries/Components/View/': 'react-native-web/dist/exports/View/',

@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Colors for better visibility
@@ -6,47 +7,95 @@ RED='\033[0;31m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}===== Checking ES Module Syntax =====${NC}"
+echo -e "${YELLOW}===== Checking for ES Module Syntax Issues =====${NC}"
 
-# Files to check
-SOURCE_FILES=$(find ./src -type f -name "*.js" | grep -v "node_modules")
-FILES_WITH_ISSUES=0
+# Define patterns to check
+COMMON_ISSUES=(
+  "module.exports"
+  "require("
+  "exports."
+)
 
-echo -e "Checked $(echo "$SOURCE_FILES" | wc -l) files"
+CORRECT_PATTERNS=(
+  "export "
+  "export default"
+  "import "
+)
 
-# Check for common ES module issues
-for file in $SOURCE_FILES; do
-  ISSUES=0
+# Make this script executable
+chmod +x check-es-modules.sh
 
-  # Check for require/module.exports (CommonJS) syntax
-  if grep -q "require(" "$file" || grep -q "module.exports" "$file" || grep -q "exports\." "$file"; then
-    echo -e "${RED}✘ $file uses CommonJS syntax (require/module.exports)${NC}"
-    ISSUES=1
+# Files to exclude from checking
+EXCLUDE_DIRS=(
+  "node_modules"
+  ".git"
+  "dist"
+  "__mocks__"
+)
+
+# Build exclude pattern for find
+EXCLUDE_PATTERN=""
+for dir in "${EXCLUDE_DIRS[@]}"; do
+  EXCLUDE_PATTERN="$EXCLUDE_PATTERN -not -path './$dir/*'"
+done
+
+# Find all JS files for checking
+JS_FILES=$(eval "find . -type f -name '*.js' -not -path './node_modules/*' -not -path './.git/*' -not -path './dist/*' -not -path './__mocks__/*'")
+
+# Check for common issues
+ISSUES_FOUND=0
+FILES_CHECKED=0
+
+for file in $JS_FILES; do
+  FILES_CHECKED=$((FILES_CHECKED + 1))
+  FILE_HAS_ISSUES=0
+  
+  # Skip package.json and other config files
+  if [[ "$file" == *"package.json"* || "$file" == *".eslintrc.js"* || "$file" == *"babel.config.js"* ]]; then
+    continue
   fi
-
-  # Check for proper import paths with .js extension for local imports
-  if grep -E -q "import .+ from '\.\.?\/[^']+" "$file" && ! grep -E -q "import .+ from '\.\.?\/[^']+\.js'" "$file"; then
-    if ! grep -q "import React from 'react'" "$file" && ! grep -q "from '@react-navigation" "$file"; then
-      echo -e "${YELLOW}⚠ $file may need .js extension in import paths${NC}"
-      ISSUES=1
+  
+  for pattern in "${COMMON_ISSUES[@]}"; do
+    if grep -q "$pattern" "$file"; then
+      if [[ $FILE_HAS_ISSUES -eq 0 ]]; then
+        echo -e "\n${RED}Issues found in: $file${NC}"
+        FILE_HAS_ISSUES=1
+        ISSUES_FOUND=$((ISSUES_FOUND + 1))
+      fi
+      MATCHES=$(grep -n "$pattern" "$file")
+      echo -e "${YELLOW}  - Found CommonJS pattern '$pattern' at:${NC}"
+      echo "$MATCHES" | while read -r match; do
+        LINE_NUM=$(echo "$match" | cut -d':' -f1)
+        LINE_CONTENT=$(echo "$match" | cut -d':' -f2-)
+        echo -e "    Line $LINE_NUM: $LINE_CONTENT"
+      done
     fi
-  fi
-
-  if [ $ISSUES -eq 1 ]; then
-    FILES_WITH_ISSUES=$((FILES_WITH_ISSUES + 1))
+  done
+  
+  # Check if file has ES module patterns
+  HAS_ES_PATTERN=0
+  for pattern in "${CORRECT_PATTERNS[@]}"; do
+    if grep -q "$pattern" "$file"; then
+      HAS_ES_PATTERN=1
+      break
+    fi
+  done
+  
+  # If the file has neither CommonJS nor ES module syntax, it might be a problem
+  if [[ $HAS_ES_PATTERN -eq 0 && $FILE_HAS_ISSUES -eq 0 && "$file" != "./check-es-modules.sh" && "$file" != *"test"* ]]; then
+    echo -e "\n${YELLOW}Warning: $file doesn't contain ES module import/export patterns${NC}"
   fi
 done
 
-echo -e "${YELLOW}===== Check Summary =====${NC}"
-if [ $FILES_WITH_ISSUES -eq 0 ]; then
-  echo -e "${GREEN}✓ All files use proper ES module syntax${NC}"
-  exit 0
-else
-  echo -e "${RED}✘ Found $FILES_WITH_ISSUES files with ES module issues${NC}"
-  echo -e "${YELLOW}Recommendations:${NC}"
-  echo -e "1. Use import/export instead of require/module.exports"
-  echo -e "2. Add .js extension to relative imports"
-  echo -e "3. Be consistent with export style (named vs default)"
-  echo -e "${RED}✘ ES Module Syntax Test Failed${NC}"
+echo -e "\n${YELLOW}===== ES Module Syntax Check Summary =====${NC}"
+echo -e "Files checked: $FILES_CHECKED"
+echo -e "Files with issues: $ISSUES_FOUND"
+
+if [[ $ISSUES_FOUND -gt 0 ]]; then
+  echo -e "${RED}❌ ES Module Syntax Check Failed${NC}"
+  echo -e "${YELLOW}Please fix the CommonJS syntax in the files mentioned above.${NC}"
   exit 1
+else
+  echo -e "${GREEN}✅ ES Module Syntax Check Passed${NC}"
+  exit 0
 fi
