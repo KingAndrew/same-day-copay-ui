@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants';
-import { AppLogo, AppButton } from '../components';
+import { Colors } from '../constants/index.js';
+import { AppLogo, AppButton } from '../components/index.js';
 
 const HomeScreen = ({ navigateTo }) => (
   <View style={styles.screen}>

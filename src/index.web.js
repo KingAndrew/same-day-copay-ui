@@ -2,7 +2,10 @@
 // Entry point for the web version of the app
 import { AppRegistry } from 'react-native';
 import App from './App.jsx';
-import { name as appName } from '../app.json';
+import appInfo from '../app.json';
+
+// Use the name property from app.json
+const appName = appInfo.name || "SameDayCopayUI";
 
 // Register the App component
 AppRegistry.registerComponent(appName, () => App);
