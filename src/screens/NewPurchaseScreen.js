@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Colors, URLs } from '../constants';
-import { AppButton } from '../components';
+import { Colors, URLs } from '../constants/index.js';
+import { AppButton } from '../components/index.js';
 
 const NewPurchaseScreen = ({ navigateTo, frontReceiptImage, backReceiptImage }) => {
   const [currentStep, setCurrentStep] = useState(1);

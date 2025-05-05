@@ -1,4 +1,3 @@
-
 import AboutScreen from './AboutScreen.js';
 import AccountHistoryScreen from './AccountHistoryScreen.js';
 import AccountSetupScreen from './AccountSetupScreen.js';

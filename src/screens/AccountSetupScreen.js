@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Colors } from '../constants';
-import { ScreenTemplate, AppButton, TabSelector, FormInput } from '../components';
+import { Colors } from '../constants/index.js';
+import { ScreenTemplate, AppButton, TabSelector, FormInput } from '../components/index.js';
 import { dataAPI } from '../utils/dataAPI.js'; // Import the dataAPI from utils directory
 
 

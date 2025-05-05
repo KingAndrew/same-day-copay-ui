@@ -1,8 +1,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
-import { Colors } from '../constants';
-import { AppButton, ScreenTemplate } from '../components';
+import { Colors } from '../constants/index.js';
+import { AppButton, ScreenTemplate } from '../components/index.js';
 // Import only the mock camera for web
 import { Camera } from '../components/CameraMock';
 

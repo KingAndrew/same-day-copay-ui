@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants';
-import { ScreenTemplate } from '../components';
+import { Colors } from '../constants/index.js';
+import { ScreenTemplate } from '../components/index.js';
 
 const AboutScreen = ({ navigateTo }) => (
   <ScreenTemplate title="About" navigateTo={navigateTo}>

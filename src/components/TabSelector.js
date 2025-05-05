@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants';
+import { Colors } from '../constants/index.js';
 
 const TabSelector = ({ activeTab, setActiveTab, tabs }) => {
   // If no tabs are provided, use default login/signup tabs
@@ -9,12 +8,12 @@ const TabSelector = ({ activeTab, setActiveTab, tabs }) => {
     { id: 'login', label: 'Login' },
     { id: 'signup', label: 'Sign up' }
   ];
-  
+
   // Calculate the indicator position based on active tab
   const tabWidth = 100 / tabItems.length;
   const activeIndex = tabItems.findIndex(tab => tab.id === activeTab) || 0;
   const [indicatorLeft, setIndicatorLeft] = useState(`${activeIndex * tabWidth}%`);
-  
+
   // Update indicator position with animation effect
   useEffect(() => {
     const index = tabItems.findIndex(tab => tab.id === activeTab);

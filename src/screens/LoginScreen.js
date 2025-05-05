@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Colors } from '../constants';
-import { AppLogo, AppButton, FormInput, TabSelector } from '../components';
+import { Colors } from '../constants/index.js';
+import { AppLogo, AppButton, FormInput, TabSelector } from '../components/index.js';
 
 const LoginScreen = ({ navigateTo, setUserData }) => {
   const [activeTab, setActiveTab] = useState("login");
