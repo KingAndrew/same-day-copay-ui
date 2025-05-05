@@ -90,6 +90,19 @@ args = "chmod +x auto-fix.sh"
 task = "shell.exec"
 args = "./auto-fix.sh"
 
+[[workflows.workflow]]
+name = "Auto Fix All"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x auto-fix.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./auto-fix.sh"
+
 [[ports]]
 localPort = 3000
 externalPort = 3000
