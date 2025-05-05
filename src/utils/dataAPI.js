@@ -37,12 +37,27 @@ export const dataAPI = {
     }
   },
 
+  // Generate a sequential user ID
+  generateUserId: () => {
+    // Simple implementation that uses a timestamp + random number
+    const timestamp = new Date().getTime();
+    const random = Math.floor(Math.random() * 10000);
+    return `user_${timestamp}_${random}`;
+  },
+
   // User-specific data methods
   saveUserData: async (email, keyPath, data) => {
     if (!email) {
       console.error("Cannot save user data: No email provided");
       return false;
     }
+    
+    // If we're saving personal data, add a userId if it doesn't exist
+    if (keyPath === 'accountSetup.personal' && !data.userId) {
+      data.userId = dataAPI.generateUserId();
+      console.log(`Generated user ID: ${data.userId} for user ${email}`);
+    }
+    
     console.log(`Saving data for user ${email} at ${keyPath}:`, data);
     const fullPath = `${email}.${keyPath}`;
     return dataAPI.saveData(fullPath, data);

@@ -137,13 +137,15 @@ const LoginScreen = ({
   const handleSignup = () => {
     if (isSignupFormValid) {
       // Save the new user data
-      setUserData({
+      const userData = {
         username: `${signupFirstName} ${signupLastName}`,
         firstName: signupFirstName,
         lastName: signupLastName,
         email: signupEmail,
         totalRefunded: 0,
-      });
+        // Note: userId will be generated on the server side in dataAPI.saveUserData
+      };
+      setUserData(userData);
       // Navigate to main menu after successful signup
       navigateTo("main-menu");
     }
@@ -289,16 +291,11 @@ const LoginScreen = ({
               value={signupConfirmPassword}
               onChangeText={setSignupConfirmPassword}
               placeholder="Confirm your password"
-              secureTextEntry={!showConfirmPassword}
+              secureTextEntry={true}
               inputId="confirmpassword"
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
               error={signupConfirmPassword && signupPassword !== signupConfirmPassword ? "Passwords do not match" : ""}
-              rightIcon={
-                <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
-                  <Text style={styles.visibilityIcon}>{showConfirmPassword ? '👁️' : '👁️‍🗨️'}</Text>
-                </TouchableOpacity>
-              }
             />
 
             <AppButton
