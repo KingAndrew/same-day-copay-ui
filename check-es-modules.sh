@@ -31,16 +31,43 @@ EXCLUDE_DIRS=(
   ".git"
   "dist"
   "__mocks__"
+  ".config"
 )
 
-# Build exclude pattern for find
-EXCLUDE_PATTERN=""
+# Specific directories to check (focus on your code)
+INCLUDE_DIRS=(
+  "./src"
+)
+
+# Files to exclude specifically
+EXCLUDE_FILES=(
+  "**/package.json"
+  "**/package-lock.json"
+  "**/.eslintrc.js"
+  "**/babel.config.js"
+  "**/metro.config.js"
+  "**/webpack.config.js"
+  "**/jest.config.js"
+  "**/*.test.js"
+)
+
+echo -e "${YELLOW}Checking source code in these directories: ${INCLUDE_DIRS[@]}${NC}"
+
+# Build find command with includes
+FIND_CMD="find ${INCLUDE_DIRS[@]} -type f -name '*.js' -o -name '*.jsx'"
+
+# Add exclusions for directories
 for dir in "${EXCLUDE_DIRS[@]}"; do
-  EXCLUDE_PATTERN="$EXCLUDE_PATTERN -not -path './$dir/*'"
+  FIND_CMD="$FIND_CMD | grep -v '$dir'"
 done
 
-# Find all JS files for checking
-JS_FILES=$(eval "find . -type f -name '*.js' -not -path './node_modules/*' -not -path './.git/*' -not -path './dist/*' -not -path './__mocks__/*'")
+# Add exclusions for specific files
+for file in "${EXCLUDE_FILES[@]}"; do
+  FIND_CMD="$FIND_CMD | grep -v '$file'"
+done
+
+# Execute the find command
+JS_FILES=$(eval "$FIND_CMD")
 
 # Check for common issues
 ISSUES_FOUND=0
@@ -49,11 +76,6 @@ FILES_CHECKED=0
 for file in $JS_FILES; do
   FILES_CHECKED=$((FILES_CHECKED + 1))
   FILE_HAS_ISSUES=0
-  
-  # Skip package.json and other config files
-  if [[ "$file" == *"package.json"* || "$file" == *".eslintrc.js"* || "$file" == *"babel.config.js"* ]]; then
-    continue
-  fi
   
   for pattern in "${COMMON_ISSUES[@]}"; do
     if grep -q "$pattern" "$file"; then
@@ -82,7 +104,7 @@ for file in $JS_FILES; do
   done
   
   # If the file has neither CommonJS nor ES module syntax, it might be a problem
-  if [[ $HAS_ES_PATTERN -eq 0 && $FILE_HAS_ISSUES -eq 0 && "$file" != "./check-es-modules.sh" && "$file" != *"test"* ]]; then
+  if [[ $HAS_ES_PATTERN -eq 0 && $FILE_HAS_ISSUES -eq 0 && "$file" != "./check-es-modules.sh" ]]; then
     echo -e "\n${YELLOW}Warning: $file doesn't contain ES module import/export patterns${NC}"
   fi
 done
