@@ -38,6 +38,7 @@ run_test() {
 }
 
 # Run each test one by one
+run_test "./check-es-modules.sh" "ES Module Syntax"
 run_test "./run-dataapi-test.sh" "DataAPI"
 run_test "./run-mock-data-test.sh" "Mock Data"
 run_test "./run-account-setup-test.sh" "Account Setup"

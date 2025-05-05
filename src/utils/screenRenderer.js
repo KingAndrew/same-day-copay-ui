@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   HomeScreen,
@@ -9,74 +8,28 @@ import {
   AccountHistoryScreen,
   AboutScreen,
   SnapReceiptScreen,
-} from "../screens";
+} from "../screens/index.js";
 
-const renderScreen = (
-  currentScreen, 
-  handleNavigate, 
-  userData, 
-  frontReceiptImage, 
-  backReceiptImage, 
-  setFrontReceiptImage, 
-  setBackReceiptImage
-) => {
-  if (currentScreen === "main-menu") {
-    return (
-      <MainMenuScreen 
-        navigateTo={handleNavigate} 
-        userData={userData.userData}
-      />
-    );
-  } else if (currentScreen === "login") {
-    return (
-      <LoginScreen
-        navigateTo={handleNavigate}
-        setUserData={userData.setUserData}
-      />
-    );
-  } else if (currentScreen === "new-purchase") {
-    return (
-      <NewPurchaseScreen
-        navigateTo={handleNavigate}
-        frontReceiptImage={frontReceiptImage}
-        backReceiptImage={backReceiptImage}
-      />
-    );
-  } else if (currentScreen === "account-setup") {
-    return (
-      <AccountSetupScreen 
-        navigateTo={handleNavigate} 
-        userData={userData.userData}
-      />
-    );
-  } else if (currentScreen === "account-history") {
-    return (
-      <AccountHistoryScreen 
-        navigateTo={handleNavigate} 
-      />
-    );
-  } else if (currentScreen === "about") {
-    return (
-      <AboutScreen 
-        navigateTo={handleNavigate} 
-      />
-    );
-  } else if (currentScreen === "snap-receipt") {
-    return (
-      <SnapReceiptScreen
-        navigateTo={handleNavigate}
-        isFrontSide={!frontReceiptImage}
-        setFrontReceiptImage={setFrontReceiptImage}
-        setBackReceiptImage={setBackReceiptImage}
-      />
-    );
-  } else {
-    return (
-      <HomeScreen 
-        navigateTo={handleNavigate} 
-      />
-    );
+// Add your screen rendering logic here
+export function renderScreen(currentScreen, props) {
+  switch (currentScreen) {
+    case 'Home':
+      return <HomeScreen {...props} />;
+    case 'Login':
+      return <LoginScreen {...props} />;
+    case 'MainMenu':
+      return <MainMenuScreen {...props} />;
+    case 'NewPurchase':
+      return <NewPurchaseScreen {...props} />;
+    case 'AccountSetup':
+      return <AccountSetupScreen {...props} />;
+    case 'AccountHistory':
+      return <AccountHistoryScreen {...props} />;
+    case 'About':
+      return <AboutScreen {...props} />;
+    case 'SnapReceipt':
+      return <SnapReceiptScreen {...props} />;
+    default:
+      return <HomeScreen {...props} />;
   }
-};
-
-export default renderScreen;
+}

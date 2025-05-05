@@ -1,204 +1,197 @@
 
+import { mockDataSource } from './mockDataSource.js';
+
 /**
- * Data Access API
- *
- * This module provides a consistent interface for data storage and retrieval,
- * with the ability to switch between different storage backends.
+ * Data API Module
+ * Provides methods for data access, storage and manipulation
  */
+class DataAPI {
+  constructor() {
+    this.dataSource = mockDataSource;
+    this.debugMode = false;
+  }
 
-import mockData from "./mockDataSource.js";
-
-// In a real app, this would be more sophisticated with actual backend API calls
-// or local storage interactions
-export const dataAPI = {
   /**
-   * Get data by key
-   * @param {string} key - Dot notation path to the data (e.g., "user.preferences.theme")
-   * @returns {Promise<any>} - The data at the specified path
+   * Enable or disable debug mode
+   * @param {boolean} enabled - Whether to enable debug mode
    */
-  getData: async function (key) {
-    try {
-      // First check if the key exists directly in mockData 
-      // This is critical for mock tests
-      if (key in mockData) {
-        console.log(`Direct key access for '${key}':`, mockData[key]);
-        return mockData[key];
-      }
-      
-      // If not found directly, try traversing nested objects
-      const parts = key.split(".");
-      let current = mockData;
-
-      // Traverse the object following the key path
-      for (const part of parts) {
-        if (current && typeof current === "object" && part in current) {
-          current = current[part];
-        } else {
-          console.log(`Key path '${key}' not found in mockData`);
-          return null; // Path doesn't exist
-        }
-      }
-
-      return current;
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      return null;
-    }
-  },
+  setDebugMode(enabled) {
+    this.debugMode = enabled;
+  }
 
   /**
-   * Get user-specific data by user ID and key
-   * @param {string} userId - The user identifier
-   * @param {string} key - Dot notation path to the data (e.g., "preferences.theme")
-   * @returns {Promise<any>} - The user data at the specified path
+   * Log debug messages if debug mode is enabled
+   * @param {string} message - Message to log
+   * @param {any} data - Optional data to log
    */
-  getUserData: async function (userId, key) {
-    try {
-      // Combine userId and key to form the full path
-      const fullKey = `${userId}.${key}`;
-      return await this.getData(fullKey);
-    } catch (error) {
-      console.error("Error retrieving user data:", error);
-      return null;
+  debugLog(message, data = null) {
+    if (this.debugMode) {
+      if (data) {
+        console.log(`${message}:`, data);
+      } else {
+        console.log(message);
+      }
     }
-  },
+  }
 
   /**
-   * Save data by key
-   * @param {string} key - Dot notation path to save the data at
+   * Save data for a specific key
+   * @param {string} key - The key to save data under
    * @param {any} data - The data to save
-   * @returns {Promise<boolean>} - Success indicator
+   * @returns {boolean} - Success status
    */
-  saveData: async function (key, data) {
+  saveData(key, data) {
     try {
-      // Important: For dot notation keys, we need to store them exactly as provided
-      // This is critical for the mock tests to pass
-      mockData[key] = data;
+      this.debugLog(`Saving data for key '${key}'`, data);
       
-      console.log(`Saved data for key '${key}':`, mockData[key]);
+      // Split the key path if it contains dots (for nested objects)
+      const keyParts = key.split('.');
       
-      // The code below is for nested object traversal
-      // But for mock tests, we need the direct key storage above
-      
-      /*
-      // Split the key on dots to traverse nested objects
-      const parts = key.split(".");
-
-      // If it's a simple key, just set it directly in mockData
-      if (parts.length === 1) {
-        mockData[key] = data;
-        return true;
-      }
-
-      // For nested keys, traverse and create objects as needed
-      let current = mockData;
-
-      // Navigate to the parent object where we'll set the final property
-      for (let i = 0; i < parts.length - 1; i++) {
-        const part = parts[i];
-
-        // Create path if it doesn't exist
-        if (!(part in current)) {
-          current[part] = {};
+      if (keyParts.length === 1) {
+        // Simple key, just set it directly
+        this.dataSource.setData(key, data);
+      } else {
+        // Handle nested keys
+        const topLevelKey = keyParts[0];
+        let currentObject = this.dataSource.getData(topLevelKey) || {};
+        
+        // Create a reference to the current position in the object
+        let currentPosition = currentObject;
+        
+        // Navigate through the object hierarchy except for the last key
+        for (let i = 1; i < keyParts.length - 1; i++) {
+          const part = keyParts[i];
+          
+          // Create nested object if it doesn't exist
+          if (!currentPosition[part]) {
+            currentPosition[part] = {};
+          }
+          
+          // Move to the next level
+          currentPosition = currentPosition[part];
         }
-
-        current = current[part];
+        
+        // Set the value at the final position
+        const lastKey = keyParts[keyParts.length - 1];
+        currentPosition[lastKey] = data;
+        
+        // Save the entire object back
+        this.dataSource.setData(topLevelKey, currentObject);
       }
-
-      // Set the value on the final object
-      const finalKey = parts[parts.length - 1];
-      current[finalKey] = data;
-      */
       
       return true;
     } catch (error) {
-      console.error("Error saving data:", error);
-      return false;
-    }
-  },
-
-  /**
-   * Save user-specific data by user ID and key
-   * @param {string} userId - The user identifier
-   * @param {string} key - Dot notation path within the user's data
-   * @param {any} data - The data to save
-   * @returns {Promise<boolean>} - Success indicator
-   */
-  saveUserData: async function (userId, key, data) {
-    try {
-      // Combine userId and key to form the full path
-      const fullKey = `${userId}.${key}`;
-      return await this.saveData(fullKey, data);
-    } catch (error) {
-      console.error("Error saving user data:", error);
-      return false;
-    }
-  },
-
-  /**
-   * Delete data by key
-   * @param {string} key - Dot notation path to delete
-   * @returns {Promise<boolean>} - Success indicator
-   */
-  deleteData: async function (key) {
-    try {
-      // Check if the key exists directly in mockData
-      // This is crucial for tests to pass
-      if (key in mockData) {
-        console.log(`Deleting data for direct key '${key}'`);
-        delete mockData[key];
-        return true;
-      }
-      
-      const parts = key.split(".");
-
-      // For nested keys, find the parent object
-      let current = mockData;
-
-      // Navigate to the parent object containing the property to delete
-      for (let i = 0; i < parts.length - 1; i++) {
-        const part = parts[i];
-
-        if (current && typeof current === "object" && part in current) {
-          current = current[part];
-        } else {
-          console.log(`Path '${key}' doesn't exist while trying to delete`);
-          return false; // Path doesn't exist
-        }
-      }
-
-      // Delete the property from the parent object
-      const finalKey = parts[parts.length - 1];
-      if (finalKey in current) {
-        delete current[finalKey];
-        console.log(`Successfully deleted nested key '${key}'`);
-        return true;
-      }
-
-      console.log(`Final key '${finalKey}' doesn't exist in path '${key}'`);
-      return false; // Final key doesn't exist
-    } catch (error) {
-      console.error("Error deleting data:", error);
-      return false;
-    }
-  },
-
-  /**
-   * Delete user-specific data by user ID and key
-   * @param {string} userId - The user identifier
-   * @param {string} key - Dot notation path within the user's data
-   * @returns {Promise<boolean>} - Success indicator
-   */
-  deleteUserData: async function (userId, key) {
-    try {
-      // Combine userId and key to form the full path
-      const fullKey = `${userId}.${key}`;
-      return await this.deleteData(fullKey);
-    } catch (error) {
-      console.error("Error deleting user data:", error);
+      this.debugLog(`Error saving data: ${error.message}`);
       return false;
     }
   }
-};
 
-export default dataAPI;
+  /**
+   * Get data for a specific key
+   * @param {string} key - The key to retrieve data for
+   * @returns {any} - The retrieved data or null if not found
+   */
+  getData(key) {
+    try {
+      // Split the key path if it contains dots (for nested objects)
+      const keyParts = key.split('.');
+      
+      if (keyParts.length === 1) {
+        // Simple key, get it directly
+        const data = this.dataSource.getData(key);
+        this.debugLog(`Direct key access for '${key}'`, data);
+        return data;
+      } else {
+        // Handle nested keys
+        const topLevelKey = keyParts[0];
+        let currentObject = this.dataSource.getData(topLevelKey);
+        
+        if (!currentObject) {
+          this.debugLog(`Key path '${key}' not found - top level key missing`);
+          return null;
+        }
+        
+        // Navigate through the object hierarchy
+        for (let i = 1; i < keyParts.length; i++) {
+          const part = keyParts[i];
+          
+          if (currentObject[part] === undefined) {
+            this.debugLog(`Key path '${key}' not found at part '${part}'`);
+            return null;
+          }
+          
+          currentObject = currentObject[part];
+        }
+        
+        this.debugLog(`Nested key access for '${key}'`, currentObject);
+        return currentObject;
+      }
+    } catch (error) {
+      this.debugLog(`Error getting data: ${error.message}`);
+      return null;
+    }
+  }
+
+  /**
+   * Delete data for a specific key
+   * @param {string} key - The key to delete data for
+   * @returns {boolean} - Success status
+   */
+  deleteData(key) {
+    try {
+      this.debugLog(`Deleting data for direct key '${key}'`);
+      
+      // Split the key path if it contains dots (for nested objects)
+      const keyParts = key.split('.');
+      
+      if (keyParts.length === 1) {
+        // Simple key, delete it directly
+        this.dataSource.deleteData(key);
+      } else {
+        // Handle nested keys
+        const topLevelKey = keyParts[0];
+        let currentObject = this.dataSource.getData(topLevelKey);
+        
+        if (!currentObject) {
+          this.debugLog(`Cannot delete - key path '${key}' not found`);
+          return false;
+        }
+        
+        // Navigate through the object hierarchy until the second last part
+        let currentPosition = currentObject;
+        for (let i = 1; i < keyParts.length - 1; i++) {
+          const part = keyParts[i];
+          
+          if (currentPosition[part] === undefined) {
+            this.debugLog(`Cannot delete - key path '${key}' not found at part '${part}'`);
+            return false;
+          }
+          
+          currentPosition = currentPosition[part];
+        }
+        
+        // Delete the property at the final level
+        const lastKey = keyParts[keyParts.length - 1];
+        if (currentPosition[lastKey] !== undefined) {
+          delete currentPosition[lastKey];
+          
+          // Save the modified object back
+          this.dataSource.setData(topLevelKey, currentObject);
+        } else {
+          this.debugLog(`Cannot delete - final key '${lastKey}' not found`);
+          return false;
+        }
+      }
+      
+      return true;
+    } catch (error) {
+      this.debugLog(`Error deleting data: ${error.message}`);
+      return false;
+    }
+  }
+}
+
+// Create and export a singleton instance
+const dataAPI = new DataAPI();
+
+export { dataAPI };

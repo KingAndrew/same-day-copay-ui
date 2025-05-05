@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Colors } from '../constants';
 import { ScreenTemplate, AppButton, TabSelector, FormInput } from '../components';
-import { dataAPI } from '../utils/dataAPI'; // Import the dataAPI from utils directory
+import { dataAPI } from '../utils/dataAPI.js'; // Import the dataAPI from utils directory
 
 
 const SectionHeader = ({ title }) => (

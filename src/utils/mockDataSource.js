@@ -1,92 +1,61 @@
-
 /**
- * Mock Data Source
- * 
- * This module provides mock data for development and testing.
- * In a production environment, this would be replaced with actual API calls.
+ * MockDataSource class
+ * Simulates a data storage provider for testing
  */
+class MockDataSource {
+  constructor() {
+    this.mockData = {};
+  }
 
-// Mock data store - simulating a database
-const mockData = {
-  // Demo user account data
-  David: {
-    accountSetup: {
-      personal: {
-        firstName: "David",
-        lastName: "Smith",
-        preferredName: "Dave",
-        email: "david.smith@example.com",
-        phoneNumber: "555-123-4567"
-      },
-      insurance: {
-        provider: "Anthem Blue Cross and Blue Shield",
-        memberId: "ANT123456789",
-        groupNumber: "GRPX987654",
-        planType: "PPO",
-        deductible: 1500,
-        copay: 30
-      },
-      payment: {
-        cardType: "Visa",
-        lastFourDigits: "4242",
-        expiryDate: "04/25",
-        billingZip: "90210"
-      }
-    },
-    purchases: [
-      {
-        id: "P001",
-        date: "2023-09-15",
-        provider: "City Pharmacy",
-        medication: "Amoxicillin",
-        totalCost: 45.99,
-        insurancePaid: 35.99,
-        outOfPocket: 10.00,
-        receiptImage: "receipt_p001.jpg"
-      },
-      {
-        id: "P002",
-        date: "2023-10-02",
-        provider: "MedPlus",
-        medication: "Lisinopril",
-        totalCost: 55.50,
-        insurancePaid: 40.50,
-        outOfPocket: 15.00,
-        receiptImage: "receipt_p002.jpg"
-      }
-    ]
-  },
-  
-  // System data
-  system: {
-    insuranceProviders: [
-      "Aetna",
-      "Anthem Blue Cross and Blue Shield",
-      "Blue Cross and Blue Shield of Alabama",
-      "Cigna",
-      "Humana",
-      "Kaiser Permanente",
-      "Medicare",
-      "Medicaid",
-      "UnitedHealthcare"
-    ],
-    commonMedications: [
-      "Atorvastatin (Lipitor)",
-      "Levothyroxine (Synthroid)",
-      "Lisinopril (Prinivil, Zestril)",
-      "Metformin (Glucophage)",
-      "Amlodipine (Norvasc)",
-      "Metoprolol (Lopressor, Toprol XL)",
-      "Omeprazole (Prilosec)",
-      "Simvastatin (Zocor)",
-      "Losartan (Cozaar)",
-      "Albuterol (Ventolin, Proventil)"
-    ]
-  },
-  
-  // Add the test.key for compatibility with existing tests
-  "test.key": { value: "test-value" }
-};
+  /**
+   * Set data for a key
+   * @param {string} key - The key to store data under
+   * @param {any} data - The data to store
+   */
+  setData(key, data) {
+    // Create a deep copy to prevent reference issues
+    this.mockData[key] = JSON.parse(JSON.stringify(data));
+  }
 
-// Make sure mockData is mutable and export it as the default export
-export default mockData;
+  /**
+   * Get data for a key
+   * @param {string} key - The key to retrieve data for
+   * @returns {any} - The retrieved data or null if not found
+   */
+  getData(key) {
+    if (this.mockData[key] === undefined) {
+      return null;
+    }
+
+    // Return a deep copy to prevent reference issues
+    return JSON.parse(JSON.stringify(this.mockData[key]));
+  }
+
+  /**
+   * Delete data for a key
+   * @param {string} key - The key to delete data for
+   */
+  deleteData(key) {
+    delete this.mockData[key];
+  }
+
+  /**
+   * Clear all stored data
+   */
+  clearAll() {
+    this.mockData = {};
+  }
+
+  /**
+   * Get all stored data (for debugging)
+   * @returns {Object} - All stored data
+   */
+  getAllData() {
+    return JSON.parse(JSON.stringify(this.mockData));
+  }
+}
+
+// Create and export a singleton instance
+const mockDataSource = new MockDataSource();
+
+export { mockDataSource };
