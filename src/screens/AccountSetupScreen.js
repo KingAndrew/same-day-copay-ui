@@ -58,6 +58,18 @@ const AccountSetupScreen = ({
           setInsuranceProviders(providers);
         }
 
+        // Set initial default data if email is available
+        if (email) {
+          // Set default data values from user object
+          setPersonalData(prevData => ({
+            ...prevData,
+            firstName: userData?.firstName || email,
+            lastName: userData?.lastName || '',
+            email: userData?.email || email,
+            preferredName: userData?.preferredName || ''
+          }));
+        }
+
         // Load user specific data if available
         const personalInfo = await dataAPI.getUserData(email, 'accountSetup.personal');
         console.log('Loaded personal data:', personalInfo);
@@ -85,7 +97,7 @@ const AccountSetupScreen = ({
     };
 
     loadData();
-  }, [email]);
+  }, [email, userData]);
 
   const handlePersonalChange = (field, value) => {
     setPersonalData({

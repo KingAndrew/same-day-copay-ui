@@ -25,6 +25,7 @@ export const dataAPI = {
         if (result && result[part] !== undefined) {
           result = result[part];
         } else {
+          console.log(`Path ${keyPath} doesn't exist or is undefined`);
           return null; // Path doesn't exist
         }
       }
@@ -38,12 +39,20 @@ export const dataAPI = {
 
   // User-specific data methods
   saveUserData: async (email, keyPath, data) => {
+    if (!email) {
+      console.error("Cannot save user data: No email provided");
+      return false;
+    }
     console.log(`Saving data for user ${email} at ${keyPath}:`, data);
     const fullPath = `${email}.${keyPath}`;
     return dataAPI.saveData(fullPath, data);
   },
 
   getUserData: async (email, keyPath) => {
+    if (!email) {
+      console.log("Cannot get user data: No email provided");
+      return null;
+    }
     const fullPath = `${email}.${keyPath}`;
     return dataAPI.getData(fullPath);
   },

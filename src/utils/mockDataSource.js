@@ -1,6 +1,32 @@
 
 // Mock data for development and testing
 export const mockData = {
+  // Add a specific section for the user "David" or "David Smith"
+  David: {
+    accountSetup: {
+      personal: {
+        firstName: "David",
+        lastName: "Smith",
+        email: "david.smith@example.com",
+        preferredName: "Dave"
+      },
+      bank: {
+        bankName: "First Citizens Bank",
+        routingNumber: "123456789",
+        accountNumber: "987654321"
+      },
+      insurance: {
+        provider: "Blue Cross and Blue Shield of California",
+        policyNumber: "BC123456",
+        groupNumber: "GRP-789012"
+      },
+      sameDay: {
+        paymentMethod: "Credit Card",
+        preferredBank: "Chase"
+      }
+    }
+  },
+  
   userData: {
     id: "user123",
     firstName: "John",
