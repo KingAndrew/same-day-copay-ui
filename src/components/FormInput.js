@@ -14,7 +14,8 @@ const FormInput = ({
   setFocusedInput,
   error,
   onFocus,
-  onBlur
+  onBlur,
+  rightIcon
 }) => {
   // Determine if this input is currently focused
   const isFocused = focusedInput === inputId;
@@ -32,20 +33,28 @@ const FormInput = ({
   return (
     <View style={styles.formControl}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput
-        style={[
-          styles.input,
-          isFocused && styles.focusedInput,
-          error && styles.inputError
-        ]}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[
+            styles.input,
+            isFocused && styles.focusedInput,
+            error && styles.inputError,
+            rightIcon && styles.inputWithIcon
+          ]}
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          secureTextEntry={secureTextEntry}
+          keyboardType={keyboardType}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        {rightIcon && (
+          <View style={styles.rightIconContainer}>
+            {rightIcon}
+          </View>
+        )}
+      </View>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
@@ -63,6 +72,11 @@ const styles = StyleSheet.create({
     color: Colors.NAVY_BLUE,
     fontFamily: 'Montserrat, sans-serif',
   },
+  inputContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   input: {
     backgroundColor: Colors.LIGHT_GRAY,
     borderRadius: 4,
@@ -71,6 +85,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.LIGHT_GRAY,
     fontFamily: 'Montserrat, sans-serif',
+    flex: 1,
+  },
+  inputWithIcon: {
+    paddingRight: 40, // Make room for the icon
   },
   focusedInput: {
     borderColor: Colors.NAVY_BLUE,
@@ -85,6 +103,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
     fontFamily: 'Montserrat, sans-serif',
+  },
+  rightIconContainer: {
+    position: 'absolute',
+    right: 5,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 

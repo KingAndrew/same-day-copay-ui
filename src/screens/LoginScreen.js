@@ -33,6 +33,11 @@ const LoginScreen = ({
   const [hasLowercase, setHasLowercase] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
   const [hasSpecial, setHasSpecial] = useState(false);
+  
+  // Password visibility states
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Email validation
   const validateEmail = (email) => {
@@ -179,10 +184,15 @@ const LoginScreen = ({
               value={password}
               onChangeText={setPassword}
               placeholder="Enter your password"
-              secureTextEntry={true}
+              secureTextEntry={!showLoginPassword}
               inputId="password"
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
+              rightIcon={
+                <TouchableOpacity onPress={() => setShowLoginPassword(!showLoginPassword)}>
+                  <Text style={styles.visibilityIcon}>{showLoginPassword ? '👁️' : '👁️‍🗨️'}</Text>
+                </TouchableOpacity>
+              }
             />
 
             <AppButton
@@ -234,13 +244,18 @@ const LoginScreen = ({
               value={signupPassword}
               onChangeText={setSignupPassword}
               placeholder="Create a password"
-              secureTextEntry={true}
+              secureTextEntry={!showSignupPassword}
               inputId="password"
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
               error={passwordError}
               onFocus={() => setShowPasswordTooltip(true)}
               onBlur={() => setShowPasswordTooltip(false)}
+              rightIcon={
+                <TouchableOpacity onPress={() => setShowSignupPassword(!showSignupPassword)}>
+                  <Text style={styles.visibilityIcon}>{showSignupPassword ? '👁️' : '👁️‍🗨️'}</Text>
+                </TouchableOpacity>
+              }
             />
 
             {showPasswordTooltip && (
@@ -274,11 +289,16 @@ const LoginScreen = ({
               value={signupConfirmPassword}
               onChangeText={setSignupConfirmPassword}
               placeholder="Confirm your password"
-              secureTextEntry={true}
+              secureTextEntry={!showConfirmPassword}
               inputId="confirmpassword"
               focusedInput={focusedInput}
               setFocusedInput={setFocusedInput}
               error={signupConfirmPassword && signupPassword !== signupConfirmPassword ? "Passwords do not match" : ""}
+              rightIcon={
+                <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+                  <Text style={styles.visibilityIcon}>{showConfirmPassword ? '👁️' : '👁️‍🗨️'}</Text>
+                </TouchableOpacity>
+              }
             />
 
             <AppButton
@@ -363,6 +383,11 @@ const styles = StyleSheet.create({
   validRequirement: {
     color: Colors.FOREST_GREEN,
     fontWeight: '600',
+  },
+  visibilityIcon: {
+    fontSize: 20,
+    padding: 5,
+    color: Colors.NAVY_BLUE,
   }
 });
 
