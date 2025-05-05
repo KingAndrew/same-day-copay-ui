@@ -129,13 +129,41 @@ if [ -f "src/index.web.js" ]; then
   echo -e "${GREEN}Fixed App import in src/index.web.js${NC}"
 fi
 
-# Also fix App.jsx if it has multiple extensions in its imports
+# Fix App.jsx thoroughly - this file is critical and needs special handling
 if [ -f "src/App.jsx" ]; then
-  # Fix HomeScreen import 
+  # Direct approach to fix ALL imports in App.jsx without regex
+  # First make a backup
+  cp "src/App.jsx" "src/App.jsx.bak"
+  
+  # Fix HomeScreen import - forcing exact format
   perl -i -pe 's/import HomeScreen from .+;/import HomeScreen from '\''\.\/screens\/HomeScreen\.js'\'';/g' "src/App.jsx"
-  # Fix screens/index.js import if needed
-  perl -i -pe 's/from '\''\.\/screens\/index\.js(\.js)+['"]/from '\''\.\/screens\/index\.js'\''/g' "src/App.jsx"
+  
+  # Fix screens import with proper destructuring - forcing exact format
+  perl -i -pe 's/import\s*{\s*[^}]*}\s*from\s*['"'"']\.\/screens\/index[^'"'"']*['"'"'];/import { 
+  LoginScreen, 
+  MainMenuScreen,
+  AccountSetupScreen, 
+  AccountHistoryScreen,
+  AboutScreen,
+  NewPurchaseScreen,
+  SnapReceiptScreen
+} from '\''\.\/screens\/index\.js'\'';/g' "src/App.jsx"
+  
+  # Remove any duplicate extensions in remaining lines
+  perl -i -pe 's/(\.js|\.jsx)(\.js|\.jsx)+/\1/g' "src/App.jsx"
+
   echo -e "${GREEN}Fixed imports in src/App.jsx${NC}"
+fi
+
+# Special fix for screens/index.js which commonly has import issues
+if [ -f "src/screens/index.js" ]; then
+  echo -e "${YELLOW}Fixing imports in src/screens/index.js...${NC}"
+  cp "src/screens/index.js" "src/screens/index.js.bak"
+  
+  # Fix all import lines to use the correct single extension
+  perl -i -pe 's/import (\w+) from ['"'"']\.\/(\w+)(\.js)+['"'"'];/import \1 from '\''\.\/$2\.js'\'';/g' "src/screens/index.js"
+  
+  echo -e "${GREEN}Fixed imports in src/screens/index.js${NC}"
 fi
 
 # Check and fix ALL js and jsx files for duplicate extensions
@@ -143,6 +171,9 @@ echo -e "${YELLOW}Scanning all JS/JSX files for duplicate extensions...${NC}"
 find "${INCLUDE_DIRS[@]}" -type f \( -name "*.js" -o -name "*.jsx" \) | while read -r file; do
   # Always run the fix on every file to be thorough
   fix_duplicate_extensions "$file"
+  
+  # Additional aggressive cleanup for any remaining duplicated extensions
+  perl -i -pe 's/(\.js|\.jsx)(\.js|\.jsx)+/\1/g' "$file"
 done
 
 echo -e "\n${YELLOW}===== ES Module Import Fix Summary =====${NC}"
