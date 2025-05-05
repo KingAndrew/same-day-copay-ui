@@ -360,3 +360,72 @@ describe('Integration Tests', () => {
     expect(true).toBe(true);
   });
 });
+
+import { dataAPI } from '../dataAPI';
+import { mockData } from '../mockDataSource';
+
+describe('Data API Coverage Tests', () => {
+  beforeEach(() => {
+    // Reset the data before each test
+    dataAPI.resetAllData();
+  });
+
+  test('getUserData returns mock data when no user data is set', () => {
+    expect(dataAPI.getUserData()).toEqual(mockData.userData);
+  });
+
+  test('setUserData and getUserData work correctly', () => {
+    const testData = { firstName: 'Jane', lastName: 'Smith' };
+    dataAPI.setUserData(testData);
+    expect(dataAPI.getUserData()).toEqual(testData);
+  });
+
+  test('getAccountInfo returns mock data when no account info is set', () => {
+    expect(dataAPI.getAccountInfo()).toEqual(mockData.accountInfo);
+  });
+
+  test('setAccountInfo and getAccountInfo work correctly', () => {
+    const testData = { accountId: 'TEST123', status: 'Testing' };
+    dataAPI.setAccountInfo(testData);
+    expect(dataAPI.getAccountInfo()).toEqual(testData);
+  });
+
+  test('getInsuranceInfo returns mock data when no insurance info is set', () => {
+    expect(dataAPI.getInsuranceInfo()).toEqual(mockData.insuranceInfo);
+  });
+
+  test('setInsuranceInfo and getInsuranceInfo work correctly', () => {
+    const testData = { provider: 'Test Provider', policyNumber: 'TEST456' };
+    dataAPI.setInsuranceInfo(testData);
+    expect(dataAPI.getInsuranceInfo()).toEqual(testData);
+  });
+
+  test('getPaymentMethods returns mock data when no payment methods are added', () => {
+    expect(dataAPI.getPaymentMethods()).toEqual(mockData.paymentMethods);
+  });
+
+  test('addPaymentMethod and getPaymentMethods work correctly', () => {
+    const newMethod = { type: 'creditCard', cardType: 'Mastercard', lastFour: '1234' };
+    dataAPI.addPaymentMethod(newMethod);
+    const methods = dataAPI.getPaymentMethods();
+    expect(methods.length).toBe(1);
+    expect(methods[0].cardType).toBe('Mastercard');
+  });
+
+  test('removePaymentMethod works correctly', () => {
+    const newMethod = { type: 'creditCard', cardType: 'Mastercard', lastFour: '1234' };
+    dataAPI.addPaymentMethod(newMethod);
+    const methods = dataAPI.getPaymentMethods();
+    const id = methods[0].id;
+    expect(dataAPI.removePaymentMethod(id)).toBe(true);
+    expect(dataAPI.getPaymentMethods().length).toBe(0);
+  });
+
+  test('removePaymentMethod returns false when id does not exist', () => {
+    expect(dataAPI.removePaymentMethod('non-existent-id')).toBe(false);
+  });
+
+  test('getCopayHistory returns mock data', () => {
+    expect(dataAPI.getCopayHistory()).toEqual(mockData.copayHistory);
+  });
+});

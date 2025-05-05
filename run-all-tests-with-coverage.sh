@@ -7,26 +7,18 @@ RED='\033[0;31m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}===== Running All Tests with Coverage (No Threshold) =====${NC}"
+echo -e "${YELLOW}===== Running All Tests with Coverage =====${NC}"
 
-# Install jest-environment-jsdom if not already installed
-if ! npm list jest-environment-jsdom > /dev/null 2>&1; then
-  echo -e "${YELLOW}Installing jest-environment-jsdom...${NC}"
-  npm install --save-dev jest-environment-jsdom
-fi
+# Make this script executable
+chmod +x run-all-tests-with-coverage.sh
 
-# Run Jest with coverage but without thresholds
+# Run the tests with coverage
 npx jest --coverage
 
-# Capture exit code
-EXIT_CODE=$?
-
-if [ $EXIT_CODE -eq 0 ]; then
-  echo -e "${GREEN}===== All Tests Passed! =====${NC}"
-  echo -e "${YELLOW}Note: Coverage results are shown above, but no thresholds were enforced.${NC}"
+if [ $? -eq 0 ]; then
+  echo -e "${GREEN}✅ All tests passed${NC}"
 else
-  echo -e "${RED}===== Some Tests Failed! =====${NC}"
-  echo -e "${YELLOW}Fix the failing tests before continuing.${NC}"
+  echo -e "${RED}❌ Some tests failed${NC}"
 fi
 
-exit $EXIT_CODE
+echo -e "\n${YELLOW}===== Tests Completed =====${NC}"

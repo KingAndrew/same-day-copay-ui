@@ -1,72 +1,78 @@
 
 import { mockData } from './mockDataSource.js';
 
-// Data API implementation for accessing application data
-// This provides a unified interface for data operations
-export const dataAPI = {
-  /**
-   * Retrieves data for the specified key
-   * @param {string} key - The data key to retrieve
-   * @returns {Promise<Object>} - Promise resolving to the data object
-   */
-  async getData(key) {
-    try {
-      console.log(`Getting data for key: ${key}`);
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Return mock data
-      return mockData[key];
-    } catch (error) {
-      console.error('Error in getData:', error);
-      return null;
-    }
-  },
-  
-  /**
-   * Saves data for the specified key
-   * @param {string} key - The data key to save
-   * @param {Object} data - The data to save
-   * @returns {Promise<boolean>} - Promise resolving to success status
-   */
-  async saveData(key, data) {
-    try {
-      console.log(`Saving data for key: ${key}`, data);
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Save to mock data
-      mockData[key] = data;
-      return true;
-    } catch (error) {
-      console.error('Error in saveData:', error);
-      return false;
-    }
-  },
-  
-  /**
-   * Deletes data for the specified key
-   * @param {string} key - The data key to delete
-   * @returns {Promise<boolean>} - Promise resolving to success status
-   */
-  async deleteData(key) {
-    try {
-      console.log(`Deleting data for key: ${key}`);
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Delete from mock data
-      if (key in mockData) {
-        delete mockData[key];
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Error in deleteData:', error);
-      return false;
-    }
-  }
+// In-memory storage for user data
+const userDataStore = {
+  userData: null,
+  accountInfo: null,
+  insuranceInfo: null,
+  paymentMethods: [],
 };
 
-// Export default for compatibility with tests
-export default { dataAPI };
+// The main data API object
+export const dataAPI = {
+  // User data methods
+  getUserData: () => {
+    return userDataStore.userData || mockData.userData;
+  },
+  
+  setUserData: (data) => {
+    userDataStore.userData = { ...data };
+    return true;
+  },
+  
+  // Account methods
+  getAccountInfo: () => {
+    return userDataStore.accountInfo || mockData.accountInfo;
+  },
+  
+  setAccountInfo: (data) => {
+    userDataStore.accountInfo = { ...data };
+    return true;
+  },
+  
+  // Insurance methods
+  getInsuranceInfo: () => {
+    return userDataStore.insuranceInfo || mockData.insuranceInfo;
+  },
+  
+  setInsuranceInfo: (data) => {
+    userDataStore.insuranceInfo = { ...data };
+    return true;
+  },
+  
+  // Payment methods
+  getPaymentMethods: () => {
+    return userDataStore.paymentMethods.length > 0 
+      ? userDataStore.paymentMethods 
+      : mockData.paymentMethods;
+  },
+  
+  addPaymentMethod: (method) => {
+    userDataStore.paymentMethods.push({ ...method, id: Date.now().toString() });
+    return true;
+  },
+  
+  removePaymentMethod: (id) => {
+    const index = userDataStore.paymentMethods.findIndex(method => method.id === id);
+    if (index !== -1) {
+      userDataStore.paymentMethods.splice(index, 1);
+      return true;
+    }
+    return false;
+  },
+  
+  // Copay history
+  getCopayHistory: () => {
+    return mockData.copayHistory;
+  },
+  
+  // Reset all data (for testing)
+  resetAllData: () => {
+    userDataStore.userData = null;
+    userDataStore.accountInfo = null;
+    userDataStore.insuranceInfo = null;
+    userDataStore.paymentMethods = [];
+    return true;
+  }
+};
