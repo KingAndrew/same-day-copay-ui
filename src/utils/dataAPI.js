@@ -1,3 +1,4 @@
+
 /**
  * Data Access API
  *
@@ -33,6 +34,23 @@ const dataAPI = {
       return current;
     } catch (error) {
       console.error("Error retrieving data:", error);
+      return null;
+    }
+  },
+
+  /**
+   * Get user-specific data by user ID and key
+   * @param {string} userId - The user identifier
+   * @param {string} key - Dot notation path to the data (e.g., "preferences.theme")
+   * @returns {Promise<any>} - The user data at the specified path
+   */
+  getUserData: async function (userId, key) {
+    try {
+      // Combine userId and key to form the full path
+      const fullKey = `${userId}.${key}`;
+      return await this.getData(fullKey);
+    } catch (error) {
+      console.error("Error retrieving user data:", error);
       return null;
     }
   },
@@ -76,6 +94,24 @@ const dataAPI = {
       return true;
     } catch (error) {
       console.error("Error saving data:", error);
+      return false;
+    }
+  },
+
+  /**
+   * Save user-specific data by user ID and key
+   * @param {string} userId - The user identifier
+   * @param {string} key - Dot notation path within the user's data
+   * @param {any} data - The data to save
+   * @returns {Promise<boolean>} - Success indicator
+   */
+  saveUserData: async function (userId, key, data) {
+    try {
+      // Combine userId and key to form the full path
+      const fullKey = `${userId}.${key}`;
+      return await this.saveData(fullKey, data);
+    } catch (error) {
+      console.error("Error saving user data:", error);
       return false;
     }
   },
@@ -125,6 +161,23 @@ const dataAPI = {
       return false;
     }
   },
+
+  /**
+   * Delete user-specific data by user ID and key
+   * @param {string} userId - The user identifier
+   * @param {string} key - Dot notation path within the user's data
+   * @returns {Promise<boolean>} - Success indicator
+   */
+  deleteUserData: async function (userId, key) {
+    try {
+      // Combine userId and key to form the full path
+      const fullKey = `${userId}.${key}`;
+      return await this.deleteData(fullKey);
+    } catch (error) {
+      console.error("Error deleting user data:", error);
+      return false;
+    }
+  }
 };
 
 // Export the dataAPI object

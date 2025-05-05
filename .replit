@@ -5,7 +5,7 @@ channel = "stable-24_05"
 packages = ["unixtools.netstat", "killall"]
 
 [workflows]
-runButton = "Run All Tests"
+runButton = "Fix and Test"
 
 [[workflows.workflow]]
 name = "Run"
@@ -66,6 +66,19 @@ args = "./run-dataapi-test.sh"
 
 [[workflows.workflow]]
 name = "Run Account Setup Test"
+author = 41550643
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "chmod +x run-account-setup-test.sh"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run-account-setup-test.sh"
+
+[[workflows.workflow]]
+name = "Fix and Test"
 author = 41550643
 mode = "sequential"
 
